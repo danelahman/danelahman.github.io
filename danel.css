@@ -10,6 +10,14 @@ h4 {color:#ff2222; font-family: Arial, Helvetica, sans-serif;}
 
 th, td {font-family: Arial, Helvetica, sans-serif;}
 
+hr {
+    border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #808080; /* old IE */
+    background-color: #808080; /* Modern Browsers */
+}
+
 th {font-weight:bold; text-align:justify;}
 
 B {color:#043C6B; font-weight:bold;}
