@@ -12,19 +12,19 @@ data _×_ (A B : Set) : Set where
 _××_ : {A B C D : Set} → (A → C) → (B → D) → A × B → C × D
 (f ×× g) (a , b) = (f a) , (g b)
 
-postulate Value : Set
-          Vars  : Set
-          _=?=_   : Vars → Vars → Bool
+postulate Values : Set
+          Vars   : Set
+          _=?=_  : Vars → Vars → Bool
 
 data Command : Set where
   skip  : Command
-  _:=_  : Vars → Value → Command
+  _:=_  : Vars → Values → Command
   _,_   : Command → Command → Command
 
 Memory : Set
-Memory = Vars → Value
+Memory = Vars → Values
 
-_[_/_] : Memory → Value → Vars → Memory
+_[_/_] : Memory → Values → Vars → Memory
 (m [ v / x ]) y with x =?= y
 (m [ v / x ]) y | true = v
 (m [ v / x ]) y | false = m y
@@ -34,7 +34,7 @@ data ⟨_⟩_⟨_⟩ : (Memory → Set) → Command → (Memory → Set) → Set
        → ⟨ P ⟩ skip ⟨ P ⟩
   assignment : (P : Memory → Set)
              → (x : Vars)
-             → (v : Value)
+             → (v : Values)
              → ⟨ (λ m → P (m [ v / x ])) ⟩ x := v ⟨ P ⟩
   composition : (P Q R : Memory → Set)
               → (c1 c2 : Command)
