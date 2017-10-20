@@ -30,11 +30,12 @@ _××_ : {A B C D : Set} → (A → C) → (B → D) → A × B → C × D
 (f ×× g) (a , b) = (f a) , (g b)
 
 
--- Values and variables with decidable equality
+-- Assumed types of values and variables with boolean-decidable equality
 
 postulate Values : Set
           Vars   : Set
           _=?=_  : Vars → Vars → Bool
+
 
 -- A universe of propositions for conditionals
 
@@ -106,29 +107,33 @@ data ⟨_⟩_⟨_⟩ : (Memory → Set) → Command → (Memory → Set) → Set
               → ⟨ P1 ⟩ c ⟨ Q1 ⟩
 
 
--- Framing of state-independent predicates (for simplicity, given by a proposition)
+-- Framing of state-independent predicates
 
 framing-lemma : (P Q : Memory → Set)
-              → (R : Set)
+              → (R : Memory → Set)
+              → (i : {m1 m2 : Memory} → R m1 → R m2) -- state independence
               → (c : Command)
               → ⟨ P ⟩ c ⟨ Q ⟩
-              → ⟨ (λ m → P m × R) ⟩ c ⟨ (λ m → Q m × R) ⟩
-framing-lemma P .P R .skip skip
+              → ⟨ (λ m → P m × R m) ⟩ c ⟨ (λ m → Q m × R m) ⟩
+framing-lemma P .P R i .skip skip
   = skip
-framing-lemma .(λ m → Q (λ y → (m [ v / x ]) y)) Q R .(x := v) (assignment x v)
-  = assignment x v
-framing-lemma P Q R (c1 , c2) (composition S p q)
-  = composition (λ m → S m × R)
-                (framing-lemma P S R c1 p)
-                (framing-lemma S Q R c2 q)
-framing-lemma P Q R (if B then c1 else c2) (conditional p q)
+framing-lemma .(λ m → Q (λ y → (m [ v / x ]) y)) Q R i .(x := v) (assignment x v)
+  = consequence (λ m → λ { (q , r) → q , i r})
+                (λ m qr → qr)
+                (assignment x v)
+framing-lemma P Q R i (c1 , c2) (composition S p q)
+  = composition (λ m → S m × R m)
+                (framing-lemma P S R i c1 p)
+                (framing-lemma S Q R i c2 q)
+framing-lemma P Q R i (if B then c1 else c2) (conditional p q)
   = conditional (consequence (λ m → ×-assoc2)
-                             (λ m p → p)
-                             (framing-lemma (λ m → ⟦ B m ⟧ × P m) Q R c1 p))
+                             (λ m qr → qr)
+                             (framing-lemma (λ m → ⟦ B m ⟧ × P m) Q R i c1 p))
                 (consequence (λ m → ×-assoc2)
-                             (λ m q → q)
-                             (framing-lemma (λ m → ⟦ ¬ (B m) ⟧ × P m) Q R c2 q))
-framing-lemma P Q R c (consequence {.P} {P2} {.Q} {Q2} imp1 imp2 p)
+                             (λ m qr → qr)
+                             (framing-lemma (λ m → ⟦ ¬ (B m) ⟧ × P m) Q R i c2 q))
+framing-lemma P Q R i c (consequence {.P} {P2} {.Q} {Q2} imp1 imp2 p)
   = consequence (λ m → (imp1 m) ×× (λ r → r))
                 (λ m → (imp2 m) ×× (λ r → r))
-                (framing-lemma P2 Q2 R c p)
+                (framing-lemma P2 Q2 R i c p)
+
