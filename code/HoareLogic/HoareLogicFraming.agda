@@ -49,12 +49,12 @@ mutual
     ¬_  : Prop → Prop
 
   ⟦_⟧ : Prop → Set
-  ⟦ ⊤ ⟧ = One
-  ⟦ ⊥ ⟧ = Zero
+  ⟦ ⊤ ⟧     = One
+  ⟦ ⊥ ⟧     = Zero
   ⟦ P ∧ Q ⟧ = ⟦ P ⟧ × ⟦ Q ⟧
   ⟦ P ∨ Q ⟧ = ⟦ P ⟧ + ⟦ Q ⟧
   ⟦ P ⇒ Q ⟧ = ⟦ P ⟧ → ⟦ Q ⟧
-  ⟦ ¬ P ⟧ = ⟦ P ⟧ → Zero
+  ⟦ ¬ P ⟧   = ⟦ P ⟧ → Zero
 
 
 -- Memories and memory updates
@@ -71,10 +71,11 @@ _[_/_] : Memory → Values → Vars → Memory
 -- Commands
 
 data Command : Set where
-  skip  : Command
-  _:=_  : Vars → Values → Command
-  _,_   : Command → Command → Command
+  skip          : Command
+  _:=_          : Vars → Values → Command
+  _,_           : Command → Command → Command
   if_then_else_ : (Memory → Prop) → Command → Command → Command
+  while_do_     : (Memory → Prop) → Command → Command
 
 
 -- Hoare triples
@@ -99,6 +100,11 @@ data ⟨_⟩_⟨_⟩ : (Memory → Set) → Command → (Memory → Set) → Set
               → ⟨ (λ m → ⟦ B m ⟧ × P m) ⟩ c1 ⟨ Q ⟩
               → ⟨ (λ m → ⟦ (¬ (B m)) ⟧ × P m ) ⟩ c2 ⟨ Q ⟩
               → ⟨ P ⟩ if B then c1 else c2 ⟨ Q ⟩
+  while : {P : Memory → Set}
+        → {B : Memory → Prop}
+        → {c : Command}
+        → ⟨ (λ m → P m × ⟦ B m ⟧) ⟩ c ⟨ P ⟩
+        → ⟨ P ⟩ while B do c ⟨ (λ m → ⟦ B m ⟧ × P m) ⟩
   consequence : {P1 P2 Q1 Q2 : Memory → Set}
               → {c : Command}
               → (imp1 : (m : Memory) → P1 m → P2 m)
@@ -132,6 +138,12 @@ framing-lemma P Q R i (if B then c1 else c2) (conditional p q)
                 (consequence (λ m → ×-assoc2)
                              (λ m qr → qr)
                              (framing-lemma (λ m → ⟦ ¬ (B m) ⟧ × P m) Q R i c2 q))
+framing-lemma P .(λ m → ⟦ B m ⟧ × P m) R i (while B do c) (while p) 
+  = consequence (λ m pr → pr)
+                (λ m → ×-assoc2)
+                (while (consequence (λ m → λ {((p , r) , b) → (p , b) , r})
+                                    (λ m pr → pr)
+                                    (framing-lemma (λ m → P m × ⟦ B m ⟧) P R i c p))) 
 framing-lemma P Q R i c (consequence {.P} {P2} {.Q} {Q2} imp1 imp2 p)
   = consequence (λ m → (imp1 m) ×× (λ r → r))
                 (λ m → (imp2 m) ×× (λ r → r))
