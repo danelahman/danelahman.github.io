@@ -104,7 +104,7 @@ data ⟨_⟩_⟨_⟩ : (Memory → Set) → Command → (Memory → Set) → Set
         → {B : Memory → Prop}
         → {c : Command}
         → ⟨ (λ m → P m × ⟦ B m ⟧) ⟩ c ⟨ P ⟩
-        → ⟨ P ⟩ while B do c ⟨ (λ m → ⟦ B m ⟧ × P m) ⟩
+        → ⟨ P ⟩ while B do c ⟨ (λ m → ⟦ ¬ (B m) ⟧ × P m) ⟩
   consequence : {P1 P2 Q1 Q2 : Memory → Set}
               → {c : Command}
               → (imp1 : (m : Memory) → P1 m → P2 m)
@@ -138,7 +138,7 @@ framing-lemma P Q R i (if B then c1 else c2) (conditional p q)
                 (consequence (λ m → ×-assoc2)
                              (λ m qr → qr)
                              (framing-lemma (λ m → ⟦ ¬ (B m) ⟧ × P m) Q R i c2 q))
-framing-lemma P .(λ m → ⟦ B m ⟧ × P m) R i (while B do c) (while p) 
+framing-lemma P .(λ m → ⟦ ¬ (B m) ⟧ × P m) R i (while B do c) (while p) 
   = consequence (λ m pr → pr)
                 (λ m → ×-assoc2)
                 (while (consequence (λ m → λ {((p , r) , b) → (p , b) , r})
