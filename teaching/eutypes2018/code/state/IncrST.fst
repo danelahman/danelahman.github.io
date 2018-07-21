@@ -5,8 +5,10 @@ open FStar.Ref
 // val incr : r:ref int -> St unit
 
 // BEGIN: incr_type
-val incr : r:ref int -> ST unit (requires (fun h0 -> True))
-    (ensures (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + 1))
+val incr : r:ref int -> 
+  ST unit (requires (fun _ -> True))
+          (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
+                                    sel h2 r == sel h0 r + 1))
 // END: incr_type
 let incr r = (r := (!r + 1))
 

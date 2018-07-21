@@ -571,7 +571,7 @@ let rec progress #e #t h =
 
 * {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}**
 
-* {.fragment} **[Extensional equality]{color:DarkRed}**
+* {.fragment} **[Extensional equality]{color:DarkRed}** (`=`, `==`, `===`)
 
 <!------------------------------------------------------------------------------>
 

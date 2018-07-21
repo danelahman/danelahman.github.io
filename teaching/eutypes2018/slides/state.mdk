@@ -42,39 +42,54 @@ Ohrid, Macedonia, 10 August, 2018
 
 * {.fragment} **[Refinements]{color:DarkRed}**
   - **Refined value types**: `x:t{p}`
-  - **Refined computation types**: `Pure t pre post`
+  - **Refined computation types**: `Pure t pre post ` , ` Div t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
 * {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}**
 
-* {.fragment} **[Extensional equality]{color:DarkRed}**
+* {.fragment} **[Extensional equality]{color:DarkRed}** (`=`, `==`, `===`)
+
+<!-------------------------------------------------------------------------------->
+
+## Schedule ##
+
+* Yesterday: A Gentle Introduction to F\* (Purely Functional Programs)
+
+* **Today: Verifying Stateful Programs in F\***
+
+* Tomorrow: Monotonic State in F\*
+
+* Tomorrow: F\*'s Extensible Effect System and its Tactics Framework
 
 <!------------------------------------------------------------------------------>
 
 ## Verifying stateful programs ## {#stateful1}
 <!-- ### Variant #1: intrinsically (at definition time) ### -->
 
-* State in F\*: **mutable references**
+* The `St` effect---programming with **mutable references**
   ```
   val incr : r:ref int -> St unit
-  let incr r = (r := (!r + 1))
+  let incr r =
+    r := !r + 1
   ```
 
-* {.fragment} Hoare logic-style **[pre-conditions]{color:DarkGreen}** and **[post-conditions]{color:DarkRed}**
+* {.fragment} Hoare logic-style **[preconditions]{color:DarkGreen}** and **[postconditions]{color:DarkRed}** with `ST`
   ```
   [INCLUDE=../../../code/state/IncrST.fst:incr_type]
   ```
-* {.fragment} Beyond what can be expressed with refinements
-* {.fragment} stateful **[pre-condition]{color:DarkGreen}** is **[relation on initial states]{color:DarkGreen}**
-* {.fragment} **[post-condition]{color:DarkRed}** is **[relation on initial states, results, and final states]{color:DarkRed}**
-* {.fragment} the more complex the effect, the more complex the specs (and proofs)
+  - {.fragment} **[precondition]{color:DarkGreen}** is a **[predicate on initial states]{color:DarkGreen}**
+  - {.fragment} **[postcondition]{color:DarkRed}** is a **[relation on initial states, results, and final states]{color:DarkRed}**
 
-<!-- `St` is actually just an abbreviation -->
-<!-- St t = ST t (requires True) (ensures (fun _ _ _ -> True)) -->
+* {.fragment} `St` is again just an abbreviation
+```
+St t = ST t (requires True) (ensures (fun _ _ _ -> True))
+```
+
+* {.fragment} Sub-effecting: `Tot <: St` and in fact also `Div <: St`
 
 <!------------------------------------------------------------------------------>
 
-## Heap and ST interfaces (much simplified) ##
+## `Heap` and `ST` interfaces (much simplified) ##
 ```
 module Heap
 [INCLUDE=../../../code/state/Heap.fsti:heap_model]
@@ -87,29 +102,12 @@ module ST
 ```
 ~
 
-<!-- leaving out alloc here, since it's not interesting for our examples,
-     where allocation happens outside the code that we verify -->
-     
-<!-- simplifying out the `contains` for now. Only used in IncrST.fst:two_refs -->
-
-<!-- For read the spec we give is in fact more complicated than what we
-     have in ulib/FStar.ST.fst, so this is not a simplification!
-abstract let read (#a:Type) (#rel:preorder a) (r:mref a rel) :
-  STATE a (fun p h -> p (sel h r) h) = ...
-     It's maybe still helps to illustrate modifies on very simple examples,
-     although it's still quite debatable if the cheat is worth it.
-  TODO: maybe fix this; that would also match Danel's monotonic.mdk
--->
-
 <!------------------------------------------------------------------------------>
 
-## Verifying incr (intuition) ##
+## Verifying `incr` (intuition) ##
 
 ```
-[INCLUDE=../../../code/state/ST.fsti:ops]
-```
-```
-[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
+let incr r = r := !r + 1
 ```
 ~Fragment
 ```
@@ -118,9 +116,18 @@ abstract let read (#a:Type) (#rel:preorder a) (r:mref a rel) :
 ~
 ~Fragment
 ```
-[INCLUDE=../../../code/state/IncrST.fst:modifies_trans]
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
+```
+```
+[INCLUDE=../../../code/state/ST.fsti:ops]
 ```
 ~
+<!--~Fragment
+```
+[INCLUDE=../../../code/state/IncrST.fst:modifies_trans]
+```
+~-->
+
 <!-- modifies !{} h0 h1 /\ modifies !{r} h1 h2 ==> modifies !{r} h0 h2 -->
 
 <!------------------------------------------------------------------------------>
@@ -132,12 +139,14 @@ abstract let read (#a:Type) (#rel:preorder a) (r:mref a rel) :
 ```
 
 ```
-  G |- e1 : ST t1 (requires (fun h0 -> pre)) (ensures (fun h0 x1 h1 -> post))
+  G |- e1 : ST t1 (requires (fun h0 -> pre))
+                  (ensures  (fun h0 x1 h1 -> post))
+                  
   G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0. post))
-                         (ensures (fun h1 x2 h2 -> post'))
-  ---------------------------------------------------------------------------
+                         (ensures  (fun h1 x2 h2 -> post'))
+  --------------------------------------------------------------------------------------
   G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
-                      (ensures (fun h x2 h2 -> exists x1 h1. post /\ post'))
+                                 (ensures  (fun h x2 h2 -> exists x1 h1. post /\ post'))
 ```
 
 <!------------------------------------------------------------------------------>
@@ -182,7 +191,7 @@ abstract let read (#a:Type) (#rel:preorder a) (r:mref a rel) :
 
 * ... and on `int` being unbounded (mathematical) integers
 
-* {.fragment} Exercise: sketch hand proof that this code is correct
+* {.fragment} **Exercise 1:** sketch a hand proof that this code is correct
 
 <!-- TODO: write down solution for this one -->
 
