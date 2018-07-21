@@ -3,8 +3,7 @@ include ../Makefile.include
 all:
 	$(FSTAR) Incr.fst
 	$(FSTAR) Sum.fst
-	$(FSTAR) RefinedStackLength.fst
-	$(FSTAR) RefinedStackLengthClient.fst
+	$(FSTAR) Stack.fst
 	$(FSTAR) SumST.fst
 	$(FSTAR) InitFreezeMST.fst
 
