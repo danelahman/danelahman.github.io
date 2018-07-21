@@ -1,8 +1,10 @@
 module Stack
 
 let stack = list int
-  
-let empty = admit ()
+
+(* replace these admits with real definitions and proofs *)
+
+let empty = admit () 
 let push = admit ()
 let is_empty = admit ()
 let pop = admit ()

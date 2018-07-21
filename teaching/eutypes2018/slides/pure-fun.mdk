@@ -233,7 +233,7 @@ type nat = x:int{x>=0}
   let rec factorial n = (if n = 0 then 1 else n * (factorial (n - 1)))
   ```
 
-* {.fragment} Exercise: How about giving this weak type to factorial?
+* {.fragment} **Quiz:** How about giving this weak type to factorial?
   ```
   val factorial : int -> Tot int
   ```
@@ -516,13 +516,6 @@ let rec rev_involutive (#a:Type) l =
 
 <!------------------------------------------------------------------------------>
 
-## Exercise 1: Summing: 0 + 1 + 2 + 3 + ... ##
-```
-[INCLUDE=../../../ex/Sum.fst]
-```
-
-<!------------------------------------------------------------------------------>
-
 ## Verifying pure programs ## {#pure3}
 ### Variant #3: extrinsically using proof terms ###
 
@@ -578,6 +571,12 @@ let rec progress #e #t h =
 <!------------------------------------------------------------------------------>
 
 # Exercises #
+
+## Exercise 1: Summing: 0 + 1 + 2 + 3 + ... ##
+```
+[INCLUDE=../../../ex/Sum.fst]
+```
+
 ## Interface for simply typed stacks ##
 `Stack.fsti`
 ```
@@ -615,9 +614,8 @@ got expression "s1" of type "Stack.stack"
 ```
 [INCLUDE=../../../ex/RefinedStack.fsti]
 ```
-* {.fragment} **Hint:** you need to refine types with `is_empty`, see lemmas in `Stack.fsti`
 
-* {.fragment} **Goal:** type a variant of `StackClient.fsti` (now without `Some?.v`'s)
+* {.fragment} **Goal:** type a variant of `StackClient.fst` (now without `Some?.v`'s)
 ```
 let main =
 
