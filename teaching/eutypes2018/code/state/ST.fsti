@@ -6,10 +6,10 @@ open FStar.ST
 // Much simpler types for alloc, !, and :=
 
 // BEGIN: alloc
-  val alloc : #a:Type -> init:a -> ST (ref a)
-    (requires (fun _ -> True))
-    (ensures  (fun h0 r h1 -> modifies !{} h0 h1 /\ sel h1 r == init /\
-                              ~(h0 `contains` r) /\ h1 `contains` r))
+  val alloc : #a:Type -> init:a -> 
+    ST (ref a) (requires (fun _ -> True))
+               (ensures  (fun h0 r h1 -> modifies !{} h0 h1 /\ sel h1 r == init /\
+                                         ~(h0 `contains` r) /\ h1 `contains` r))
 // END: alloc
 
 // BEGIN: ops

@@ -191,7 +191,7 @@ let incr r = r := !r + 1
 
 * ... and on `int` being unbounded (mathematical) integers
 
-* {.fragment} **Exercise 1:** sketch a hand proof that this code is correct
+* {.fragment} **Exercise 1:** Sketch a hand proof that this code is correct
 
 <!-- TODO: write down solution for this one -->
 
