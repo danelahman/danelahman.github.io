@@ -1,6 +1,6 @@
 [INCLUDE=presentation]
 Title         : Program Verification with F*
-Author        : Catalin Hritcu
+Author        : Danel Ahman
 Affiliation   : Inria Paris
 Reveal Url    : ../reveal.js
 Reveal Theme  : white
@@ -21,14 +21,33 @@ Package       : xypic
 ~Center
 [![fstar-logo]](https://www.fstar-lang.org)
 
-**[C&#259;t&#259;lin Hri&#355;cu, Inria Paris](http://prosecco.gforge.inria.fr/personal/hritcu/)**
+**[Danel Ahman, Inria Paris](https://danelahman.github.io/)**
 
-[EPIT 2018 Software Verification Spring School](http://projects.lsv.fr/epit18/)
+[EUTypes Summer School](https://sites.google.com/view/2018eutypesschool/home/)
 
-Aussois, France, 8 May, 2018
+Ohrid, Macedonia, 10 August, 2018
 ~
 
 [fstar-logo]: ../../stuff/fstar-new.png { width=200px }
+
+<!------------------------------------------------------------------------------>
+
+## Recap of yesterday: Functional core of F\* ## {#fcore}
+
+* **[Variant of dependent type theory]{color:DarkBlue}**
+  - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
+
+* {.fragment} **[Recursion and semantic termination check]{color:DarkRed}**
+  - potential non-termination is an effect
+
+* {.fragment} **[Refinements]{color:DarkRed}**
+  - **Refined value types**: `x:t{p}`
+  - **Refined computation types**: `Pure t pre post`
+  - computationally and proof irrelevant, discharged by SMT
+
+* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}**
+
+* {.fragment} **[Extensional equality]{color:DarkRed}**
 
 <!------------------------------------------------------------------------------>
 
