@@ -193,8 +193,6 @@ let incr r = r := !r + 1
 
 * {.fragment} **Exercise 1:** Sketch a hand proof that this code is correct
 
-<!-- TODO: write down solution for this one -->
-
 <!-- ~Block {.console} -->
 <!-- ```text -->
 <!-- ... -->
@@ -255,9 +253,6 @@ let incr r = r := !r + 1
 
 * {.fragment} **Exercise 2:** Strengthen the spec of `sum_st'` to remove the `admit` in `sum_st`
 
-
-<!-- TODO: SumST.fst: the non-linear arith part of it is very flaky!
-           do it with tactics maybe? canonizer!? -->
 
 
 <!------------------------------------------------------------------------------>

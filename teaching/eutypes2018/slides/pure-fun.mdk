@@ -434,15 +434,6 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 <!-- This code (uselessly) exposes eqtype which is not nice -->
 
-<!-- Doing code/state/SumST.fst:sum_rec_correct instead
-
-     TODO: in general series would be very well suited for the crypto audience
-     
-     TODO: sum of squares? ... things get more and more non-linear
-           https://brilliant.org/wiki/sum-of-n-n2-or-n3/
-    
-     TODO: Alternating series? https://en.wikipedia.org/wiki/Alternating_series
--->
 
 <!------------------------------------------------------------------------------>
 
@@ -639,8 +630,3 @@ let main =
 * Sunday: Monotonic State in F\*
 
 * Sunday: F\*'s Extensible Effect System and its Tactics Framework
-
-<!-- TODO: this whole part is targetted at functional programmers
-           - that was fine in Nancy and Aussois,
-             but it might be a problem elsewhere
--->
