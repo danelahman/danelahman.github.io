@@ -394,19 +394,19 @@ let main() : St unit =
 
 * Low\* code (`BufferAlloc.fst`)
   ```
-  let f (): Stack UInt64.t (requires (fun _ -> True))
-                           (ensures  (fun _ _ _ -> True))
+  let f (): Stack UInt64.t (requires (fun _ -> True)) (ensures  (fun _ _ _ -> True))
                            
     = push_frame ();                        (* pushing a new stack frame *)
     
-      let b = B.alloca 1UL 64ul in
+      let b = LowStar.Buffer.alloca 1UL 64ul in
       assert (b.(42ul) = 1UL);              (* high-level reasoning in F*'s logic *)
 
       b.(42ul) <- b.(42ul) +^ 42UL;
       let r = b.(42ul) in
       
       pop_frame ();                         (* popping the stack frame we pushed above, *)
-      assert (r = 43UL);                    (* so as to ensure that equal_domains holds *)
+                                            (* so as to ensure that equal_domains holds *)
+      assert (r = 43UL);                    
       r
   ```
 
