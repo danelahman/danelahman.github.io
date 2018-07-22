@@ -15,5 +15,6 @@ let rec count_st (n:nat)
            (ensures  (fun h0 x h1 -> x == n /\ 
                                      modifies !{} h0 h1)) 
   = let r = alloc 0 in 
-    count_st' r n; !r
+    count_st' r n; 
+    !r
 // END: count_st
