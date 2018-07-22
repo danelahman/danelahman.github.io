@@ -80,15 +80,17 @@ Ohrid, Macedonia, 10 August, 2018
             (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
                                       sel h2 r == sel h0 r + 1))
   ```
-  - {.fragment} **[precondition]{color:DarkGreen}** is a **[predicate on initial states]{color:DarkGreen}**
-  - {.fragment} **[postcondition]{color:DarkRed}** is a **[relation on initial states, results, and final states]{color:DarkRed}**
+  - {.fragment} **[precondition]{color:DarkGreen}** (`requires`) is a **[predicate on initial states]{color:DarkGreen}**
+  - {.fragment} **[postcondition]{color:DarkRed}** (`ensures`) **[relates initial states, results, and final states]{color:DarkRed}**
 
-* {.fragment} `St` is again just an abbreviation
-```
-St t = ST t (requires True) (ensures (fun _ _ _ -> True))
-```
+* {.fragment} `St` is again just an abbreviation for `ST` with trivial pre-postconditions
 
 * {.fragment} Sub-effecting: `Tot <: St` and in fact also `Div <: St`
+  - {.fragment} as such, `ST` has a standard partial correctness reading, i.e., 
+  ```
+  e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
+  ```
+
 
 <!------------------------------------------------------------------------------>
 
