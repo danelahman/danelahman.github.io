@@ -9,9 +9,11 @@
 
 uint64_t BufferAlloc_f()
 {
-  uint64_t b[64U] = { 0U };
-  b[0U] = b[0U] + (uint64_t)32U;
-  uint64_t r = b[0U];
+  uint64_t b[64U];
+  for (uint32_t _i = 0U; _i < (uint32_t)64U; ++_i)
+    b[_i] = (uint64_t)1U;
+  b[42U] = b[42U] + (uint64_t)42U;
+  uint64_t r = b[42U];
   return r;
 }
 
