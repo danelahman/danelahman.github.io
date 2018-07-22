@@ -254,7 +254,7 @@ let incr r = r := !r + 1
 [INCLUDE=../../../ex/SumST.fst:sum_st]
 ```
 
-* {.fragment} **Exercise 2:** Strengthen the spec of `sum_st'` to remove the `admit` in `sum_st`
+* {.fragment} **Exercise 2:** Strengthen the spec of `sum_st'` to remove `admit` in `sum_st`
 
 
 
@@ -294,8 +294,10 @@ let main() : St unit =
   add 3 r;
   (* r := []  -- fails: expected type nlist; got type list int *)
   complex_procedure r;
-  let nl = read r in 
-  assert ([3,2,1] `is_suffix_of` nl)  (* -- fails, even if complex_procedure restricted 
+  let l = read r in 
+  assert ([3,2,1] `is_suffix_of` l)   (* -- fails, even if we would make nlist abstract 
+                                            and move it and its operations to their own 
+                                            module, so as to restrict complex_procedure
                                             to `add` and `read` operations on ref. r *)  
 ```
 

@@ -6284,29 +6284,23 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 </section>
 <section id="sec-stateful-sum--1-2-3-" class="section section2" data-section-depth="2" data-line="247"><h3 id="heading-sec-stateful-sum--1-2-3-" class="h2" data-heading-depth="2" style="display:block">Stateful sum: 1 + 2 + 3 + &#8230;</h3>
 <div class="fragment" data-line="248">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="249" data-line-first="250;out/state/../../../ex/SumST.fst:14" style="display:block"><code data-line="250;out/state/../../../ex/SumST.fst:14"><span style="color:blue">let</span> <span style="color:blue">rec</span> sum_rec (n:nat) = 
-  <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> n + sum_rec (n - <span class="constant" style="color:purple">1</span>) <span style="color:blue">else</span> <span class="constant" style="color:purple">0</span>
-
-<span style="color:blue">let</span> sum_tot (n:nat) = ((n+<span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>
-
-<span style="color:blue">let</span> <span style="color:blue">rec</span> sum_rec_correct (n:nat) : <span style="color:blue">Lemma</span> (sum_rec n = sum_tot n) = 
-  <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> sum_rec_correct (n - <span class="constant" style="color:purple">1</span>)</code></pre></div>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="253" data-line-first="254;out/state/../../../ex/SumST.fst:32" style="display:block"><code data-line="254;out/state/../../../ex/SumST.fst:32"><span style="color:blue">let</span> <span style="color:blue">rec</span> sum_st&#39; (r:ref nat) (n:nat) 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="249" data-line-first="250;out/state/../../../ex/SumST.fst:8" style="display:block"><code data-line="250;out/state/../../../ex/SumST.fst:8"><span style="color:blue">let</span> sum_tot (n:nat) = ((n+<span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> equal to sum_rec, see 1st lecture exercises </span><span style="color:darkgreen">*)</span></code></pre></div>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="253" data-line-first="254;out/state/../../../ex/SumST.fst:27" style="display:block"><code data-line="254;out/state/../../../ex/SumST.fst:27"><span style="color:blue">let</span> <span style="color:blue">rec</span> sum_st&#39; (r:ref nat) (n:nat) 
   : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True)) =
-  <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> (r := !r + n; 
-                 sum_st&#39; r (n - <span class="constant" style="color:purple">1</span>))
+            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True)) 
+  = <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> (r := !r + n; 
+                   sum_st&#39; r (n - <span class="constant" style="color:purple">1</span>))
 
 <span style="color:blue">let</span> <span style="color:blue">rec</span> sum_st (n:nat) 
   : <span style="color:blue">ST</span> nat (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_rec n /\ 
+           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_tot n /\ 
                                      modifies !{} h0 h1))                                    
   = <span style="color:blue">let</span> r = alloc <span class="constant" style="color:purple">0</span> <span style="color:blue">in</span> 
     sum_st&#39; r n; 
     <span style="color:blue">admit</span> (); 
     !r</code></pre>
 <ul class="ul list-star compact" data-line="257">
-<li class="li ul-li list-star-li compact-li fragment" data-line="257"><span data-line="257"></span><strong class="strong-star2">Exercise 2:</strong><span data-line="257"></span> Strengthen the spec of <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st&#39;</code><span data-line="257"></span> to remove the <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">admit</span></code><span data-line="257"></span> in <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st</code><span data-line="257"></span>
+<li class="li ul-li list-star-li compact-li fragment" data-line="257"><span data-line="257"></span><strong class="strong-star2">Exercise 2:</strong><span data-line="257"></span> Strengthen the spec of <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st&#39;</code><span data-line="257"></span> to remove <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">admit</span></code><span data-line="257"></span> in <span data-line="257"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st</code><span data-line="257"></span>
 </li></ul>
 <!------------------------------------------------------------------------------>
 
@@ -6359,11 +6353,13 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
   add <span class="constant" style="color:purple">3</span> r;
   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> r := []  -- fails: expected type nlist; got type list int </span><span style="color:darkgreen">*)</span>
   complex_procedure r;
-  <span style="color:blue">let</span> nl = read r <span style="color:blue">in</span> 
-  <span style="color:blue">assert</span> ([<span class="constant" style="color:purple">3</span>,<span class="constant" style="color:purple">2</span>,<span class="constant" style="color:purple">1</span>] `is_suffix_of` nl)  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> -- fails, even if complex_procedure restricted </span>
+  <span style="color:blue">let</span> l = read r <span style="color:blue">in</span> 
+  <span style="color:blue">assert</span> ([<span class="constant" style="color:purple">3</span>,<span class="constant" style="color:purple">2</span>,<span class="constant" style="color:purple">1</span>] `is_suffix_of` l)   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> -- fails, even if we would make nlist abstract </span>
+<span style="color:darkgreen">                                            and move it and its operations to their own </span>
+<span style="color:darkgreen">                                            module, so as to restrict complex_procedure</span>
 <span style="color:darkgreen">                                            to `add` and `read` operations on ref. r </span><span style="color:darkgreen">*)</span>  </code></pre>
-<ul class="ul list-star compact" data-line="302">
-<li class="li ul-li list-star-li compact-li fragment" data-line="302"><span data-line="302"></span><strong class="strong-star2">Tomorrow:</strong><span data-line="302"></span> We<span data-line="302"></span>&#39;<span data-line="302"></span>ll see how monotonicity helps us prove such assertions
+<ul class="ul list-star compact" data-line="304">
+<li class="li ul-li list-star-li compact-li fragment" data-line="304"><span data-line="304"></span><strong class="strong-star2">Tomorrow:</strong><span data-line="304"></span> We<span data-line="304"></span>&#39;<span data-line="304"></span>ll see how monotonicity helps us prove such assertions
 </li></ul>
 </section></div></div><span data-line=""></span></div>
 </body>
