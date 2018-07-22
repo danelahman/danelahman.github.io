@@ -350,6 +350,7 @@ let main() : St unit =
     + C string literals
     + few system-level functions from the C standard library
   - see [https://fstarlang.github.io/lowstar/html/](https://fstarlang.github.io/lowstar/html/) for Low*'s own tutorial
+  - get KreMLin from [https://github.com/FStarLang/kremlin](https://github.com/FStarLang/kremlin)
 
 **[The code (Low\*) is low-level, but the verification (F\*) is not]{color:DarkRed}**<br/><br/>
 
