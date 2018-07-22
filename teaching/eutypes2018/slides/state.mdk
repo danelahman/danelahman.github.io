@@ -253,6 +253,9 @@ let incr r = r := !r + 1
 [INCLUDE=../../../ex/SumST.fst:sum_st]
 ```
 
+* {.fragment} **Exercise 2:** Strengthen the spec of `sum_st'` to remove the `admit` in `sum_st`
+
+
 <!-- TODO: SumST.fst: the non-linear arith part of it is very flaky!
            do it with tactics maybe? canonizer!? -->
 
@@ -276,19 +279,27 @@ let incr r = r := !r + 1
 
 ## Stateful invariants ##
 
+* Mutable non-empty lists (for append-only logs, almost)
+
 ```
 type nlist = xs:list int{Cons? xs}
 
 let create (x:int) : St (ref nlist) = alloc #nlist [x]
 
-let add (x:int) (r:ref nlist) : St unit =  r := x :: !r 
+let add (x:int) (r:ref nlist) : St unit =  r := x :: !r
+
+let read (r:ref nlist) : St nlist = !r
 
 let main() : St unit =
   let r = create 1 in
   add 2 r;
-  add 3 r
+  add 3 r;
   (* r := []  -- fails: expected type nlist; got type list int *)
+  complex_procedure r;
+  let nl = read r in 
+  (* assert ([3,2,1] `is_prefix_of` nl)  -- fails, even if complex_procedure restricted 
+                                            to create/add/read operations on ref. r *)  
 ```
 
-<!-- TODO: Danel thinks this is till not good enough;
-           he has anyway a better example on his slide (complex_procedure) -->
+* {.fragment} **Tomorrow:** We'll see how monotonicity helps proving such assertions
+
