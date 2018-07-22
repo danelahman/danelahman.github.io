@@ -6322,11 +6322,12 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
        r2 := !r1 + !r2;            <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fibonacci </span><span style="color:darkgreen">(</span><span style="color:darkgreen">i+1) = fibonacci i + fibonacci </span><span style="color:darkgreen">(</span><span style="color:darkgreen">i-1) </span><span style="color:darkgreen">*)</span>
        r1 := temp;                                     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fibonacci i we already have </span><span style="color:darkgreen">*)</span>
        fibonacci_st&#39; (i+<span class="constant" style="color:purple">1</span>) n r1 r2)        <span style="color:darkgreen">(*</span><span style="color:darkgreen"> tail-recursive call to compute the rest </span><span style="color:darkgreen">*)</span></code></pre></div>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="272" data-line-first="273;out/state/../../../code/state/FibonacciST.fst:35" style="display:block"><code data-line="273;out/state/../../../code/state/FibonacciST.fst:35"><span style="color:blue">let</span> fibonacci_st (n:nat) 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="272" data-line-first="273;out/state/../../../code/state/FibonacciST.fst:36" style="display:block"><code data-line="273;out/state/../../../code/state/FibonacciST.fst:36"><span style="color:blue">let</span> fibonacci_st (n:nat) 
   : <span style="color:blue">ST</span> nat (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x = fibonacci n /\ 
                                      modifies !{} h0 h1)) 
-  = <span style="color:blue">if</span> n &lt;= <span class="constant" style="color:purple">1</span> <span style="color:blue">then</span> <span class="constant" style="color:purple">1</span>
+  = <span style="color:blue">if</span> n &lt;= <span class="constant" style="color:purple">1</span> 
+    <span style="color:blue">then</span> <span class="constant" style="color:purple">1</span>
     <span style="color:blue">else</span> (<span style="color:blue">let</span> r1 = alloc <span class="constant" style="color:purple">1</span> <span style="color:blue">in</span>
           <span style="color:blue">let</span> r2 = alloc <span class="constant" style="color:purple">1</span> <span style="color:blue">in</span>
           fibonacci_st&#39; <span class="constant" style="color:purple">1</span> n r1 r2;

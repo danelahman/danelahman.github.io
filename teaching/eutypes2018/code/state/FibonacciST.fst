@@ -27,7 +27,8 @@ let fibonacci_st (n:nat)
   : ST nat (requires (fun _ -> True))
            (ensures  (fun h0 x h1 -> x = fibonacci n /\ 
                                      modifies !{} h0 h1)) 
-  = if n <= 1 then 1
+  = if n <= 1 
+    then 1
     else (let r1 = alloc 1 in
           let r2 = alloc 1 in
           fibonacci_st' 1 n r1 r2;
