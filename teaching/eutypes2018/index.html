@@ -7,8 +7,8 @@
 <body>
 <h1>Program verification with F*</h1>
 
-<p>Course at <a href="https://sites.google.com/view/2018eutypesschool/home">2018 EUTypes Summer School on
-Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXTWGrNPU2">Ohrid, Macedonia</a> on 8-12 August, 2018</p>
+<p>Course at <a href="https://sites.google.com/view/2018eutypesschool/home" target="_blank">2018 EUTypes Summer School on
+Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXTWGrNPU2" target="_blank">Ohrid, Macedonia</a> on 8-12 August, 2018</p>
 
 <p><i>(Based on <a href="https://fstar-lang.org/#papers" target="_blank">past courses</a> by C&#259;t&#259;lin Hri&#355;cu and various other members of the F* team)</i></p>
 
@@ -27,10 +27,12 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 
 <p>Saturday, 11 August, 2018:</p>
 <ul>
-<li>16:30--17:30 Verifying Stateful Programs with F*</li>
+<li>16:30--17:30 Verifying Stateful Programs with F* (<a href="slides/out/state/state.html" target="_blank">slides</a>)</li>
 <ul>
-<li style="margin-top:5px">Exercise 1: Sketch a hand proof of the correctness of integer reference swapping (<a href="code/state/SwapIntRefsST.fst" target="_blank">SwapIntRefsST.fst</a>)</li>
-<li style="margin-bottom:5px">Exercise 2: Stateful summing 1 + 2 + 3 + ... (<a href="ex/SumST.fst" target="_blank">SumST.fst</a>)</li>  
+<li style="margin-top:5px">F*'s heap-based memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Heap.fst" target="_blank">FStar.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a></li>
+<li>Code: <a href="code/state/IncrST.fst" target="_blank">IncrST.fst</a> <a href="code/state/Incr2ST.fst" target="_blank">Incr2ST.fst</a> (increment function), <a href="code/state/SwapRefsST.fst" target="_blank">SwapRefsST.fst</a> (reference swapping), <a href="code/state/CountST.fst" target="_blank">CountST.fst</a> (stateful counting), <a href="code/state/FibonacciST.fst" target="_blank">FibonacciST.fst</a> (stateful fibonacci) </li>
+<li>Exercise 1: Sketch a hand proof of the correctness of integer reference swapping (<a href="code/state/SwapIntRefsST.fst" target="_blank">SwapIntRefsST.fst</a>)</li>
+<li style="margin-bottom:10px">Exercise 2: Stateful summing 1 + 2 + 3 + ... (<a href="ex/SumST.fst" target="_blank">SumST.fst</a>)</li>  
 </ul> 
 <li style="margin-bottom:20px">17:30--18:30 Exercise Class</li>
 </ul>
