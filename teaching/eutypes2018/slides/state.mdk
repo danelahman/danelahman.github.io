@@ -69,8 +69,7 @@ Ohrid, Macedonia, 10 August, 2018
 * The `St` effect---programming with **mutable references**
   ```
   val incr : r:ref int -> St unit
-  let incr r =
-    r := !r + 1
+  let incr r = r := !r + 1
   ```
 
 * {.fragment} Hoare logic-style **[preconditions]{color:DarkGreen}** and **[postconditions]{color:DarkRed}** with `ST`
