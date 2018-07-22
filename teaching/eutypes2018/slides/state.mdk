@@ -59,7 +59,7 @@ Ohrid, Macedonia, 10 August, 2018
 
 * Tomorrow: Monotonic State in F\*
 
-* Tomorrow: F\*'s Extensible Effect System and its Tactics Framework
+* Tomorrow: F\*'s Extensible Effect System and Metaprogramming in F\*
 
 <!------------------------------------------------------------------------------>
 
@@ -435,4 +435,4 @@ let main() : St unit =
 
 * **Tomorrow: Monotonic State in F\***
 
-* **Tomorrow: F\*'s Extensible Effect System and its Tactics Framework**
+* **Tomorrow: F\*'s Extensible Effect System and Metaprogramming in F\***

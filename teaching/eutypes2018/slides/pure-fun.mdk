@@ -41,7 +41,7 @@ Ohrid, Macedonia, 10 August, 2018
 
 * Sunday: Monotonic State in F\*
 
-* Sunday: F\*'s Extensible Effect System and its Tactics Framework
+* Sunday: F\*'s Extensible Effect System and Metaprogramming in F\*
 
 ~Fragment
 Slides, code, and exercises <br/>@<br/>
@@ -629,4 +629,4 @@ let main =
 
 * Sunday: Monotonic State in F\*
 
-* Sunday: F\*'s Extensible Effect System and its Tactics Framework
+* Sunday: F\*'s Extensible Effect System and Metaprogramming in F\*

@@ -5963,7 +5963,7 @@
 <p data-line="42"><span data-line="42"></span>Sunday: Monotonic State in F<span data-line="42"></span>*<span data-line="42"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="44">
-<p data-line="44"><span data-line="44"></span>Sunday: F<span data-line="44"></span>*<span data-line="44"></span>&#39;<span data-line="44"></span>s Extensible Effect System and its Tactics Framework
+<p data-line="44"><span data-line="44"></span>Sunday: F<span data-line="44"></span>*<span data-line="44"></span>&#39;<span data-line="44"></span>s Extensible Effect System and Metaprogramming in F<span data-line="44"></span>*<span data-line="44"></span>
 </p></li></ul>
 
 <div class="fragment" data-line="46">
@@ -6589,9 +6589,9 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
   <span style="color:blue">admit</span>() <span style="color:darkgreen">(*</span><span style="color:darkgreen"> replace this admit by a real proof </span><span style="color:darkgreen">*)</span>
 </code></pre></section>
 <section id="sec-interface-for-simply-typed-stacks" class="section section2" data-section-depth="2" data-line="576"><h3 id="heading-sec-interface-for-simply-typed-stacks" class="h2" data-heading-depth="2" style="display:block">Interface for simply typed stacks</h3>
-<p class="p noindent" data-line="577"><span data-line="577"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Stack.fsti</code><span data-line="577"></span>
+<p class="p noindent" data-line="577"><span data-line="577"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span>.fsti</code><span data-line="577"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="578" data-line-first="579;out/pure-fun/../../../ex/Stack.fsti:1" style="display:block"><code data-line="579;out/pure-fun/../../../ex/Stack.fsti:1"><span style="color:blue">module</span> Stack
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="578" data-line-first="579;out/pure-fun/../../../ex/Stack.fsti:1" style="display:block"><code data-line="579;out/pure-fun/../../../ex/Stack.fsti:1"><span style="color:blue">module</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">val</span> stack : <span style="color:blue">Type0</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> type of stacks </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">val</span> empty : stack
@@ -6620,10 +6620,10 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 <span style="color:blue">val</span> lemma_top_pop_push : s:stack{~(is_empty s)} <span style="color:blue">-&gt;</span> i:int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">Lemma</span> (push (Some?.v (top s)) (Some?.v (pop s)) == s)
 </code></pre></section>
-<section id="sec-exercise-2--implement-stackfsti-using-lists-of-ints" class="section section2" data-section-depth="2" data-line="582"><h3 id="heading-sec-exercise-2--implement-stackfsti-using-lists-of-ints" class="h2" data-heading-depth="2" style="display:block">Exercise 2: implement <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Stack.fsti</code> using lists of ints</h3>
-<p class="p noindent" data-line="583"><span data-line="583"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Stack.fst</code><span data-line="583"></span>
+<section id="sec-exercise-2--implement-stackfsti-using-lists-of-ints" class="section section2" data-section-depth="2" data-line="582"><h3 id="heading-sec-exercise-2--implement-stackfsti-using-lists-of-ints" class="h2" data-heading-depth="2" style="display:block">Exercise 2: implement <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span>.fsti</code> using lists of ints</h3>
+<p class="p noindent" data-line="583"><span data-line="583"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span>.fst</code><span data-line="583"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="584" data-line-first="585;out/pure-fun/../../../ex/Stack.fst:1" style="display:block"><code data-line="585;out/pure-fun/../../../ex/Stack.fst:1"><span style="color:blue">module</span> Stack
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="584" data-line-first="585;out/pure-fun/../../../ex/Stack.fst:1" style="display:block"><code data-line="585;out/pure-fun/../../../ex/Stack.fst:1"><span style="color:blue">module</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">let</span> stack = list int
 
@@ -6648,7 +6648,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="590" data-line-first="591;out/pure-fun/../../../ex/StackClient.fst:1" style="display:block"><code data-line="591;out/pure-fun/../../../ex/StackClient.fst:1"><span style="color:blue">module</span> StackClient
 
-<span style="color:blue">open</span> Stack
+<span style="color:blue">open</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">let</span> main =
   <span style="color:blue">let</span> s0 = empty <span style="color:darkgreen">(*</span><span style="color:darkgreen"> &lt;: stack </span><span style="color:darkgreen">*)</span> <span style="color:blue">in</span>
@@ -6673,7 +6673,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="596" data-line-first="597;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1" style="display:block"><code data-line="597;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1"><span style="color:blue">module</span> StackClientBad
 
-<span style="color:blue">open</span> Stack
+<span style="color:blue">open</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">let</span> main =
   <span style="color:blue">let</span> s0 = empty <span style="color:blue">in</span>
@@ -6728,7 +6728,7 @@ got expression &quot;s1&quot; of type &quot;Stack.stack&quot;</code></pre></div>
 <p data-line="630"><span data-line="630"></span>Sunday: Monotonic State in F<span data-line="630"></span>*<span data-line="630"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="632">
-<p data-line="632"><span data-line="632"></span>Sunday: F<span data-line="632"></span>*<span data-line="632"></span>&#39;<span data-line="632"></span>s Extensible Effect System and its Tactics Framework
+<p data-line="632"><span data-line="632"></span>Sunday: F<span data-line="632"></span>*<span data-line="632"></span>&#39;<span data-line="632"></span>s Extensible Effect System and Metaprogramming in F<span data-line="632"></span>*<span data-line="632"></span>
 </p></li></ul></section></div></div><span data-line=""></span></div>
 </body>
 <script>
