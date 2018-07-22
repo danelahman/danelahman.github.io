@@ -10,7 +10,8 @@ val incr : r:ref int ->
           (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
                                     sel h2 r == sel h0 r + 1))
 // END: incr_type
-let incr r = (r := (!r + 1))
+let incr r = 
+  r := !r + 1
 
 // BEGIN: modifies_trans
 let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :

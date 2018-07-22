@@ -6049,9 +6049,9 @@
 <section id="sec-heap-and-st-interfaces-much-simplified" class="section section2" data-section-depth="2" data-line="97"><h3 id="heading-sec-heap-and-st-interfaces-much-simplified" class="h2" data-heading-depth="2" style="display:block"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Heap</code> and <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> interfaces (much simplified)</h3>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="98" data-line-first="99" style="display:block"><code data-line="99"><span style="color:blue">module</span> Heap
   <span style="color:blue">val</span> heap : <span style="color:blue">Type</span>
-  <span style="color:blue">val</span> ref : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
+  <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
-  <span style="color:blue">val</span> sel : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in ghost effect, meaning this </span><span style="color:darkgreen">*)</span>
+  <span style="color:blue">val</span> sel    : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in ghost effect, meaning this  </span><span style="color:darkgreen">*)</span>
   <span style="color:blue">val</span> addr_of: #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat          <span style="color:darkgreen">(*</span><span style="color:darkgreen"> code can only be used in specs </span><span style="color:darkgreen">*)</span>
 
   <span style="color:blue">let</span> modifies (s:set nat) (h0 h1 : heap) =
@@ -6366,7 +6366,39 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 <ul class="ul list-star compact" data-line="306">
 <li class="li ul-li list-star-li compact-li fragment" data-line="306"><span data-line="306"></span><strong class="strong-star2">Tomorrow:</strong><span data-line="306"></span> We<span data-line="306"></span>&#39;<span data-line="306"></span>ll see how monotonicity helps us prove such assertions
 </li></ul>
-</section></div></div><span data-line=""></span></div>
+<!------------------------------------------------------------------------------>
+
+
+</section>
+<section id="sec-summary--verifying-stateful-programs" class="section section2" data-section-depth="2" data-line="310"><h3 id="heading-sec-summary--verifying-stateful-programs" class="h2" data-heading-depth="2" style="display:block">Summary: Verifying Stateful Programs</h3>
+<ul class="ul list-star loose" data-line="312">
+<li class="li ul-li list-star-li loose-li" data-line="312">
+<p data-line="312"><span data-line="312"></span><strong class="strong-star2"><span style="color:DarkBlue">ML-style garbage-collected memory model</span></strong><span data-line="312"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="313" data-line-first="314" style="display:block"><code data-line="314"><span style="color:blue">val</span> heap : <span style="color:blue">Type</span>
+<span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
+
+<span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a
+<span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat
+
+<span style="color:blue">val</span> modifies : s:set nat <span style="color:blue">-&gt;</span> h0:heap <span style="color:blue">-&gt;</span> h1:heap <span style="color:blue">-&gt;</span> prop</code></pre></li>
+<li class="li ul-li list-star-li loose-li" data-line="323">
+<p data-line="323"><span data-line="323"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code> effect for simple ML-style programming</span></strong><span data-line="323"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="324" data-line-first="325" style="display:block"><code data-line="325"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> <span style="color:blue">St</span> unit
+<span style="color:blue">let</span> incr r = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li" data-line="329">
+<p data-line="329"><span data-line="329"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> effect for pre- and postcondition based (intrinsic) reasoning</span></strong><span data-line="329"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="330" data-line-first="331" style="display:block"><code data-line="331"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
+          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + <span class="constant" style="color:purple">1</span>))</code></pre></li>
+<li class="li ul-li list-star-li loose-li" data-line="336">
+<p data-line="336"><span data-line="336"></span><strong class="strong-star2"><span style="color:DarkBlue">Refinement types can enforce (some) stateful invariants</span></strong><span data-line="336"></span>
+</p></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="338">
+<p data-line="338"><span data-line="338"></span><strong class="strong-star2"><span style="color:DarkRed">But what about verifying low-level (C) code I hear you say?</span></strong><span data-line="338"></span>
+</p></li></ul></section></div></div><span data-line=""></span></div>
 </body>
 <script>
     // initialize printing

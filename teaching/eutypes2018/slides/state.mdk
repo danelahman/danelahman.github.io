@@ -305,3 +305,34 @@ let main() : St unit =
 
 * {.fragment} **Tomorrow:** We'll see how monotonicity helps us prove such assertions
 
+<!------------------------------------------------------------------------------>
+
+## Summary: Verifying Stateful Programs ##
+
+* **[ML-style garbage-collected memory model]{color:DarkBlue}**
+  ```
+  val heap : Type
+  val ref  : Type -> Type
+
+  val sel     : #a:Type -> heap -> ref a -> GTot a
+  val addr_of : #a:Type -> ref a -> GTot nat
+
+  val modifies : s:set nat -> h0:heap -> h1:heap -> prop
+  ```
+
+* **[`St` effect for simple ML-style programming]{color:DarkBlue}**
+  ```
+  val incr : r:ref int -> St unit
+  let incr r = r := !r + 1
+  ```
+
+* **[`ST` effect for pre- and postcondition based (intrinsic) reasoning]{color:DarkBlue}**
+  ```
+  val incr : r:ref int -> 
+    ST unit (requires (fun h0 -> True))                        
+            (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + 1))
+  ```
+
+* **[Refinement types can enforce (some) stateful invariants]{color:DarkBlue}**
+
+* {.fragment} **[But what about verifying low-level (C) code I hear you say?]{color:DarkRed}**
