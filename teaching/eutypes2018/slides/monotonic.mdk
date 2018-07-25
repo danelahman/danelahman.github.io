@@ -361,7 +361,7 @@ let read #a (r:eref a) : ST a (requires (fun h      -> ~(Empty? (sel h r))))
                                                        (sel h r == Mutable v \/
                                                         sel h r == Frozen v     )))
   = match (!r) with | Mutable v | Frozen v -> v
-                                     (* Exercise: Which other type could read have? *)
+                    (* Exercise: Can you give read a heap-independent precondition? *)
 
 let write #a (r:eref a) (v:a) : ST unit (requires (fun h     -> ~(Frozen? (sel h r))))
                                         (ensures  (fun _ _ h -> sel h r == Mutable v))
@@ -443,6 +443,8 @@ let main() : St unit =
 
   * no initialization preconditions for reading
 
+
+* Show this works as expected with client code similar to previous slide
 
 
 <!------------------------------------------------------------------------------>

@@ -6228,7 +6228,7 @@ complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style=
                                                        (sel h r == Mutable v \/
                                                         sel h r == Frozen v     )))
   = <span style="color:blue">match</span> (!r) <span style="color:blue">with</span> | Mutable v | Frozen v <span style="color:blue">-&gt;</span> v
-                                     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Which other type could read have? </span><span style="color:darkgreen">*)</span>
+                    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Can you give read a heap-independent precondition? </span><span style="color:darkgreen">*)</span>
 
 <span style="color:blue">let</span> write #a (r:eref a) (v:a) : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h     <span style="color:blue">-&gt;</span> ~(Frozen? (sel h r))))
                                         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h <span style="color:blue">-&gt;</span> sel h r == Mutable v))
@@ -6305,36 +6305,40 @@ complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style=
 <p data-line="444"><span data-line="444"></span>no initialization preconditions for reading
 </p></li></ul>
 </li></ol>
+
+<ul class="ul list-star compact" data-line="447">
+<li class="li ul-li list-star-li compact-li" data-line="447"><span data-line="447"></span>Show this works as expected with client code similar to previous slide
+</li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-questions" class="section section2" data-section-depth="2" data-line="450"><h3 id="heading-sec-questions" class="h2" data-heading-depth="2" style="display:block">Questions?</h3>
-<p class="p noindent" data-line="452"><span data-line="452"></span><br /><span data-line="452"></span><br /><span data-line="452"></span>
+<section id="sec-questions" class="section section2" data-section-depth="2" data-line="452"><h3 id="heading-sec-questions" class="h2" data-heading-depth="2" style="display:block">Questions?</h3>
+<p class="p noindent" data-line="454"><span data-line="454"></span><br /><span data-line="454"></span><br /><span data-line="454"></span>
 </p>
-<p class="p indent" data-line="454"><span data-line="454"></span>For more information:
+<p class="p indent" data-line="456"><span data-line="456"></span>For more information:
 </p>
-<p class="p indent" data-line="456"><span data-line="456"></span><br /><span data-line="456"></span>
+<p class="p indent" data-line="458"><span data-line="458"></span><br /><span data-line="458"></span>
 </p>
-<p class="p indent" data-line="458"><span data-line="458"></span>D. Ahman, C. Fournet, C. Hritcu, K. Maillard, A. Rastogi, N. Swamy<span data-line="458"></span><br /><span data-line="458"></span>
-<span data-line="459"></span><strong class="strong-star2">Recalling a Witness: Foundations and Applications of Monotonic State</strong><span data-line="459"></span><br /><span data-line="459"></span>
+<p class="p indent" data-line="460"><span data-line="460"></span>D. Ahman, C. Fournet, C. Hritcu, K. Maillard, A. Rastogi, N. Swamy<span data-line="460"></span><br /><span data-line="460"></span>
+<span data-line="461"></span><strong class="strong-star2">Recalling a Witness: Foundations and Applications of Monotonic State</strong><span data-line="461"></span><br /><span data-line="461"></span>
 POPL 2018
 </p><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-bonus-material--how-the-sausage-is-made" class="section section2" data-section-depth="2" data-line="464"><h3 id="heading-sec-bonus-material--how-the-sausage-is-made" class="h2" data-heading-depth="2" style="display:block">Bonus Material: How the Sausage is Made</h3>
-<p class="p noindent" data-line="466"><span data-line="466"></span><br /><span data-line="466"></span>
+<section id="sec-bonus-material--how-the-sausage-is-made" class="section section2" data-section-depth="2" data-line="466"><h3 id="heading-sec-bonus-material--how-the-sausage-is-made" class="h2" data-heading-depth="2" style="display:block">Bonus Material: How the Sausage is Made</h3>
+<p class="p noindent" data-line="468"><span data-line="468"></span><br /><span data-line="468"></span>
 </p>
-<p class="p indent" data-line="468"><span data-line="468"></span>(see FStar.Monotonic.Heap, FStar.ST, and FStar.MRef)
+<p class="p indent" data-line="470"><span data-line="470"></span>(see FStar.Monotonic.Heap, FStar.ST, and FStar.MRef)
 </p><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-bonus-material--temporarily-escaping-the-preorder" class="section section2" data-section-depth="2" data-line="472"><h3 id="heading-sec-bonus-material--temporarily-escaping-the-preorder" class="h2" data-heading-depth="2" style="display:block">Bonus Material: Temporarily Escaping the Preorder</h3>
-<p class="p noindent" data-line="474"><span data-line="474"></span><br /><span data-line="474"></span>
+<section id="sec-bonus-material--temporarily-escaping-the-preorder" class="section section2" data-section-depth="2" data-line="474"><h3 id="heading-sec-bonus-material--temporarily-escaping-the-preorder" class="h2" data-heading-depth="2" style="display:block">Bonus Material: Temporarily Escaping the Preorder</h3>
+<p class="p noindent" data-line="476"><span data-line="476"></span><br /><span data-line="476"></span>
 </p>
-<p class="p indent" data-line="476"><span data-line="476"></span>(see Snapshots.fst)
+<p class="p indent" data-line="478"><span data-line="478"></span>(see Snapshots.fst)
 </p></section></div></div><span data-line=""></span></div>
 </body>
 <script>

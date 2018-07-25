@@ -44,9 +44,6 @@ let write (#a:Type) (r:eref a) (v:a) =
 let freeze (#a:Type) (r:eref a) = 
   r := Frozen (Mutable?.v !r)
 
-(* TODO: for some reason needed to mark these as private, otherwise
-./InitFreezeMST.fst(35,41-35,43): (Error) Interface of InitFreezeMST violates its abstraction (add a 'private' qualifier to 'write'?): Too many arguments to function of type a:Type0 -> Prims.Tot (Preorder.preorder (InitFreezeMST.rstate a)); got 3 arguments (see also ./STx.fst(95,25-95,34)) *)
-
 assume val complex_procedure (r:eref int) : St unit
 
 let main() : St unit =
