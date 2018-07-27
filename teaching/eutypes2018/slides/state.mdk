@@ -66,7 +66,7 @@ Ohrid, Macedonia, 10 August, 2018
 ## Verifying stateful programs ## {#stateful1}
 <!-- ### Variant #1: intrinsically (at definition time) ### -->
 
-* The `St` effect---programming with **mutable references**
+* The `St` effect---programming with [mutable references]{color:DarkBlue}
   ```
   val incr : r:ref int -> St unit
   let incr r =
@@ -82,15 +82,15 @@ Ohrid, Macedonia, 10 August, 2018
   ```
   - {.fragment} **[precondition]{color:DarkGreen}** (`requires`) is a **[predicate on initial states]{color:DarkGreen}**
   - {.fragment} **[postcondition]{color:DarkRed}** (`ensures`) **[relates initial states, results, and final states]{color:DarkRed}**
+<!--  - {.fragment}
+    ```
+    e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
+    ```-->
 
 * {.fragment} `St` is again just an abbreviation for `ST` with trivial pre-postconditions
 
-* {.fragment} Sub-effecting: `Tot <: St` and in fact also `Div <: St`
-  - {.fragment} as such, `ST` has a standard partial correctness reading, i.e., 
-  ```
-  e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
-  ```
-
+* {.fragment} **Sub-effecting:** `Pure <: ST` and in fact also `Div <: ST`
+  - {.fragment} as such, think of `ST` as having a [partial correctness]{color:DarkBlue} reading
 
 <!------------------------------------------------------------------------------>
 
@@ -311,8 +311,7 @@ let main() : St unit =
 
 * **[ML-style garbage-collected memory model]{color:DarkBlue}**
   ```
-  val heap : Type
-  val ref  : Type -> Type
+  val heap : Type          val ref  : Type -> Type
 
   val sel     : #a:Type -> heap -> ref a -> GTot a
   val addr_of : #a:Type -> ref a -> GTot nat
@@ -322,20 +321,18 @@ let main() : St unit =
 
 * **[`St` effect for simple ML-style programming]{color:DarkBlue}**
   ```
-  val incr : r:ref int -> St unit
-  let incr r = r := !r + 1
+  let incr (r:ref int) : St unit = r := !r + 1
   ```
 
 * **[`ST` effect for pre- and postcondition based (intrinsic) reasoning]{color:DarkBlue}**
   ```
-  val incr : r:ref int -> 
-    ST unit (requires (fun h0 -> True))                        
-            (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + 1))
+  ST unit (requires (fun h0 -> True))                        
+          (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + 1))
   ```
 
 * **[Refinement types can enforce (some) stateful invariants]{color:DarkBlue}**
 
-* {.fragment} **[But what about verifying low-level (e.g., C) code I hear you say?]{color:DarkRed}**
+* {.fragment} **[But what about verifying low-level (e.g., C) code, I hear you say?]{color:DarkRed}**
 
 <!------------------------------------------------------------------------------>
 
@@ -347,12 +344,11 @@ let main() : St unit =
     + C memory model
     + stack- and heap-allocated arrays
     + machine integers
-    + C string literals
     + few system-level functions from the C standard library
   - see [https://fstarlang.github.io/lowstar/html/](https://fstarlang.github.io/lowstar/html/) for Low*'s own tutorial
   - get KreMLin from [https://github.com/FStarLang/kremlin](https://github.com/FStarLang/kremlin)
 
-**[The code (Low\*) is low-level, but the verification (F\*) is not]{color:DarkRed}**<br/><br/>
+**[The code (Low\*) is low-level, but the verification (F\*) is not]{color:DarkRed}**<br/>
 
 * {.fragment} **Vale** (Verified Assembly Language for Everest)
   - for even lower level programming and verification within F\*
@@ -380,10 +376,10 @@ let main() : St unit =
 
   ```
   let equal_domains (m0 m1: mem) =
-    get_tip m0 == get_tip m1 /\               (* leaves the C call stack intact *)
+    get_tip m0 == get_tip m1 /\                (* leaves the C call stack intact *)
     Set.equal (Map.domain (get_hmap m0))
-              (Map.domain (get_hmap m1)) /\   (* does not (de)allocate any heap regions *)
-    same_refs_in_all_regions m0 m1            (* does not allocate in existing regions *)
+              (Map.domain (get_hmap m1)) /\    (* does not (de)allocate any heap regions *)
+    same_refs_in_all_regions m0 m1             (* does not allocate in existing regions *)
   ```
 
 * {.fragment} Additional effects for [heap-allocating]{color:DarkBlue} and [arbitrary]{color:DarkRed} low-level code
@@ -392,38 +388,36 @@ let main() : St unit =
 
 ## Low*: a small example ##
 
-* Low\* code (`BufferAlloc.fst`)
-  ```
-  let f (): Stack UInt64.t (requires (fun _ -> True)) (ensures  (fun _ _ _ -> True))
-                           
-    = push_frame ();                        (* pushing a new stack frame *)
+```
+let f (): Stack UInt64.t (requires (fun _ -> True)) (ensures  (fun _ _ _ -> True))
+                         
+  = push_frame ();                        (* pushing a new stack frame *)
     
-      let b = LowStar.Buffer.alloca 1UL 64ul in
-      assert (b.(42ul) = 1UL);              (* high-level reasoning in F*'s logic *)
+    let b = LowStar.Buffer.alloca 1UL 64ul in
+    assert (b.(42ul) = 1UL);              (* high-level reasoning in F*'s logic *)
 
-      b.(42ul) <- b.(42ul) +^ 42UL;
-      let r = b.(42ul) in
+    b.(42ul) <- b.(42ul) +^ 42UL;
+    let r = b.(42ul) in
       
-      pop_frame ();                         (* popping the stack frame we pushed above, *)
-                                            (* so as to ensure that equal_domains holds *)
-      assert (r = 43UL);                    
-      r
-  ```
-
-* {.fragment} C code generated by KreMLin (`BufferAlloc.c`)
-  ```
-  uint64_t f()
-  {
-    uint64_t b[64U];
+    pop_frame ();                         (* popping the stack frame we pushed above, *)
+                                          (* so as to ensure that equal_domains holds *)
+    assert (r = 43UL);                    
+    r
+```
+\ 
+```
+uint64_t f()
+{
+  uint64_t b[64U];
     
-    for (uint32_t _i = 0U; _i < (uint32_t)64U; ++_i)
-      b[_i] = (uint64_t)1U;
+  for (uint32_t _i = 0U; _i < (uint32_t)64U; ++_i)
+    b[_i] = (uint64_t)1U;
       
-    b[42U] = b[42U] + (uint64_t)42U;
-    uint64_t r = b[42U];
-    return r;
-  }
-  ```
+  b[42U] = b[42U] + (uint64_t)42U;
+  uint64_t r = b[42U];
+  return r;
+}
+```
 
 <!------------------------------------------------------------------------------>
 
