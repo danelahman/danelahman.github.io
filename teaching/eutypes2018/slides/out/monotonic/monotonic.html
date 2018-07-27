@@ -5971,97 +5971,110 @@
 
 </section>
 <section id="sec-state-in-f-" class="section section2" data-section-depth="2" data-line="47"><h3 id="heading-sec-state-in-f-" class="h2" data-heading-depth="2" style="display:block">State in F*</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="49" data-line-first="50" style="display:block"><code data-line="50"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> So far we have seen how to use F</span><span style="color:darkgreen">*</span><span style="color:darkgreen"> to verify simple stateful programs, e.g., </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">val</span> sum_st : n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> nat (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> True))
-                             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_rec n /\
-                                                       modifies !{} h0 h1))
-
-<span style="color:darkgreen">(*</span><span style="color:darkgreen"> In this lecture, you will see that standard refs alone are often unsatisfactory </span><span style="color:darkgreen">*)</span></code></pre>
-<p class="p noindent para-continued" data-line="58"><span data-line="58"></span><br>
+<ul class="ul list-star loose" data-line="49">
+<li class="li ul-li list-star-li loose-li" data-line="49">
+<p data-line="49"><span data-line="49"></span>So far we have seen how to use F<span data-line="49"></span>*<span data-line="49"></span> to verify simple stateful programs
 </p>
-<div class="fragment" data-line="59">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="60" data-line-first="61" style="display:block"><code data-line="61"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> WARNING: I will omit trivial requires preconditions on these slides, e.g.,  </span><span style="color:darkgreen">*)</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="50" data-line-first="51" style="display:block"><code data-line="51"> <span style="color:blue">val</span> sum_st : n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> nat (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _       <span style="color:blue">-&gt;</span> True))
+                              (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_rec n /\
+                                                        modifies !{} h0 h1))
+</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="57">
+<p data-line="57"><span data-line="57"></span>In this lecture, we<span data-line="57"></span>&#39;<span data-line="57"></span>ll see that<span data-line="57"></span> <span style="color:DarkBlue">standard refs.</span><span data-line="57"></span> alone are often<span data-line="57"></span> <span style="color:DarkRed">unsatisfactory</span><span data-line="57"></span>
+</p></li></ul>
 
-<span style="color:blue">val</span> sum_st : n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> nat (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_rec n /\
-                                                      modifies !{} h0 h1))</code></pre></div><!------------------------------------------------------------------------------>
+<p class="p noindent" data-line="59"><span data-line="59"></span>&#160;<span data-line="59"></span>
+</p>
+<ul class="ul list-star compact" data-line="61">
+<li class="li ul-li list-star-li compact-li fragment" data-line="61"><span data-line="61"></span><strong class="strong-star2">Note:</strong><span data-line="61"></span> I<span data-line="61"></span>&#39;<span data-line="61"></span>ll omit trivial requires clauses for readability
+
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="62" data-line-first="63" style="display:block"><code data-line="63"><span style="color:blue">val</span> sum_st : n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> nat <span style="color:darkgreen">(*</span><span style="color:darkgreen">(</span><span style="color:darkgreen">requires </span><span style="color:darkgreen">(</span><span style="color:darkgreen">fun _ -&gt; True))</span><span style="color:darkgreen">*)</span>
+                             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x == sum_rec n /\
+                                                       modifies !{} h0 h1))</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-hello-world-aka-monotonic-counters" class="section section2" data-section-depth="2" data-line="70"><h3 id="heading-sec-hello-world-aka-monotonic-counters" class="h2" data-heading-depth="2" style="display:block">Hello World (aka Monotonic Counters)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="72" data-line-first="73" style="display:block"><code data-line="73"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> A simple interface for monotonic counters </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">val</span> create: i:int     <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> counter (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h c h&#39; <span style="color:blue">-&gt;</span> fresh c h h&#39; /\ ...))
+<section id="sec-hello-world-aka-monotonic-counters" class="section section2" data-section-depth="2" data-line="71"><h3 id="heading-sec-hello-world-aka-monotonic-counters" class="h2" data-heading-depth="2" style="display:block">Hello World (aka Monotonic Counters)</h3>
+<ul class="ul list-star loose" data-line="73">
+<li class="li ul-li list-star-li loose-li" data-line="73">
+<p data-line="73"><span data-line="73"></span>A simple interface for monotonic counters
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="74" data-line-first="75" style="display:block"><code data-line="75"><span style="color:blue">val</span> create: i:int     <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> counter (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h c h&#39; <span style="color:blue">-&gt;</span> fresh c h h&#39; /\ ...))
 <span style="color:blue">val</span> read  : c:counter <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> int     (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h i h&#39; <span style="color:blue">-&gt;</span> sel h&#39; c = i /\ h == h&#39;))
-<span style="color:blue">val</span> incr  : c:counter <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> unit    (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h _ h&#39; <span style="color:blue">-&gt;</span> sel h&#39; c = sel h c + <span class="constant" style="color:purple">1</span> /\ ...))</code></pre>
-<div class="fragment" data-line="79">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="80" data-line-first="81" style="display:block"><code data-line="81"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> An example program using monotonic counters </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit = 
+<span style="color:blue">val</span> incr  : c:counter <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> unit    (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h _ h&#39; <span style="color:blue">-&gt;</span> sel h&#39; c = sel h c + <span class="constant" style="color:purple">1</span> /\ ...))</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="80">
+<p data-line="80"><span data-line="80"></span>An example program using monotonic counters
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="81" data-line-first="82" style="display:block"><code data-line="82"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =                   
   <span style="color:blue">let</span> c = create <span class="constant" style="color:purple">0</span> <span style="color:blue">in</span> incr c;
 
   <span style="color:blue">let</span> i = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (i &gt; <span class="constant" style="color:purple">0</span>);
 
   complex_procedure c;                   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> complex_procedure : counter -&gt; St unit </span><span style="color:darkgreen">*)</span>
-  
-  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) assertion failed </span><span style="color:darkgreen">*)</span></code></pre></div>
-<div class="fragment" data-line="93">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="94" data-line-first="95" style="display:block"><code data-line="95"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> A naive but unsatisfactory fix for this particular example </span><span style="color:darkgreen">*)</span>
 
-complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h      <span style="color:blue">-&gt;</span> sel h c &gt; <span class="constant" style="color:purple">0</span>))
-                                         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h&#39; <span style="color:blue">-&gt;</span> sel h&#39; c &gt; <span class="constant" style="color:purple">0</span>))</code></pre></div><!------------------------------------------------------------------------------>
+  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) assertion failed </span><span style="color:darkgreen">*)</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="92">
+<p data-line="92"><span data-line="92"></span>A sound but naive and unsatisfactory fix for this particular example
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="93" data-line-first="94" style="display:block"><code data-line="94">complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h      <span style="color:blue">-&gt;</span> sel h c &gt; <span class="constant" style="color:purple">0</span>))
+                                         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h&#39; <span style="color:blue">-&gt;</span> sel h&#39; c &gt; <span class="constant" style="color:purple">0</span>))</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-uses-of-monotonic-state-in-f-" class="section section2" data-section-depth="2" data-line="104"><h3 id="heading-sec-uses-of-monotonic-state-in-f-" class="h2" data-heading-depth="2" style="display:block">Uses of Monotonic State in F*</h3>
-<ol class="ol loose" data-line="106">
-<li class="li ol-li loose-li" data-line="106">
-<p data-line="106"><span data-line="106"></span>For implementing a range of memory models 
+<section id="sec-uses-of-monotonic-state-in-f-" class="section section2" data-section-depth="2" data-line="101"><h3 id="heading-sec-uses-of-monotonic-state-in-f-" class="h2" data-heading-depth="2" style="display:block">Uses of Monotonic State in F*</h3>
+<ol class="ol loose" data-line="103">
+<li class="li ol-li loose-li" data-line="103">
+<p data-line="103"><span data-line="103"></span>For implementing a range of memory models 
 </p>
-<ul class="ul list-star compact" data-line="108">
-<li class="li ul-li list-star-li compact-li" data-line="108"><span data-line="108"></span>Untyped references
+<ul class="ul list-star compact" data-line="105">
+<li class="li ul-li list-star-li compact-li" data-line="105"><span data-line="105"></span>Untyped references
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="109"><span data-line="109"></span>Typed references
+<li class="li ul-li list-star-li compact-li" data-line="106"><span data-line="106"></span>Typed references
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="110"><span data-line="110"></span><strong class="strong-star2">Monotonic references</strong><span data-line="110"></span>
+<li class="li ul-li list-star-li compact-li" data-line="107"><span data-line="107"></span><strong class="strong-star2">Monotonic references</strong><span data-line="107"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="111"><span data-line="111"></span>Region-based hyper-heaps and hyper-stacks
+<li class="li ul-li list-star-li compact-li" data-line="108"><span data-line="108"></span>Region-based hyper-heaps and hyper-stacks
 </li></ul>
 </li>
-<li class="li ol-li loose-li" data-line="113">
-<p data-line="113"><span data-line="113"></span>Reasoning about various kinds of <span data-line="113"></span><strong class="strong-star2">counters</strong><span data-line="113"></span>
+<li class="li ol-li loose-li" data-line="110">
+<p data-line="110"><span data-line="110"></span>Reasoning about various kinds of <span data-line="110"></span><strong class="strong-star2">counters</strong><span data-line="110"></span>
 </p></li>
-<li class="li ol-li loose-li" data-line="115">
-<p data-line="115"><span data-line="115"></span>Reasoning about idealized monotonic <span data-line="115"></span><strong class="strong-star2">logs</strong><span data-line="115"></span>
+<li class="li ol-li loose-li" data-line="112">
+<p data-line="112"><span data-line="112"></span>Reasoning about idealized monotonic <span data-line="112"></span><strong class="strong-star2">logs</strong><span data-line="112"></span>
 </p></li>
-<li class="li ol-li loose-li" data-line="117">
-<p data-line="117"><span data-line="117"></span>Initializing and freezing <span data-line="117"></span><strong class="strong-star2">references</strong><span data-line="117"></span> and <span data-line="117"></span><strong class="strong-star2">arrays</strong><span data-line="117"></span>
+<li class="li ol-li loose-li" data-line="114">
+<p data-line="114"><span data-line="114"></span>Initializing and freezing <span data-line="114"></span><strong class="strong-star2">references</strong><span data-line="114"></span> and <span data-line="114"></span><strong class="strong-star2">arrays</strong><span data-line="114"></span>
 </p></li>
-<li class="li ol-li loose-li" data-line="119">
-<p data-line="119"><span data-line="119"></span>Modelling <span data-line="119"></span><strong class="strong-star2">ghost state</strong><span data-line="119"></span> of protocols
+<li class="li ol-li loose-li" data-line="116">
+<p data-line="116"><span data-line="116"></span>Modelling <span data-line="116"></span><strong class="strong-star2">ghost state</strong><span data-line="116"></span> of protocols
 </p></li>
-<li class="li ol-li loose-li" data-line="121">
-<p data-line="121"><span data-line="121"></span>&#8230;<span data-line="121"></span>
+<li class="li ol-li loose-li" data-line="118">
+<p data-line="118"><span data-line="118"></span>&#8230;<span data-line="118"></span>
 </p></li></ol>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-monotonic-state-in-f--part-1" class="section section2" data-section-depth="2" data-line="125"><h3 id="heading-sec-monotonic-state-in-f--part-1" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 1)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="127" data-line-first="128" style="display:block"><code data-line="128"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> The main user-facing interface is monotonic references </span><span style="color:darkgreen">(</span><span style="color:darkgreen">see FStar.Monotonic.Heap) </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">type</span> mref (a:<span style="color:blue">Type0</span>) (rel:preorder a) = ... <span style="color:darkgreen">(*</span><span style="color:darkgreen"> if time, in the end of the lecture </span><span style="color:darkgreen">*)</span>
+<section id="sec-monotonic-state-in-f--part-1" class="section section2" data-section-depth="2" data-line="122"><h3 id="heading-sec-monotonic-state-in-f--part-1" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 1)</h3>
+<ul class="ul list-star loose" data-line="124">
+<li class="li ul-li list-star-li loose-li" data-line="124">
+<p data-line="124"><span data-line="124"></span>The main user-facing interface is<span data-line="124"></span> <span style="color:DarkBlue">monotonic references</span><span data-line="124"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="125" data-line-first="126" style="display:block"><code data-line="126"><span style="color:blue">type</span> mref (a:<span style="color:blue">Type0</span>) (rel:preorder a) = ... <span style="color:darkgreen">(*</span><span style="color:darkgreen"> defined using something more general </span><span style="color:darkgreen">*)</span>
 
 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> where </span><span style="color:darkgreen">*)</span>
 
 <span style="color:blue">type</span> relation (a:<span style="color:blue">Type</span>) = a <span style="color:blue">-&gt;</span> a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>
 
 <span style="color:blue">type</span> preorder (a:<span style="color:blue">Type</span>) = rel:relation a{
-  (<span style="color:blue">forall</span> (x:a). rel x x) /\ (<span style="color:blue">forall</span> (x y z:a). rel x y /\ rel y z ==&gt; rel x z)}</code></pre>
-<div class="fragment" data-line="139">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="140" data-line-first="141" style="display:block"><code data-line="141"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Accompanied by stateful actions </span><span style="color:darkgreen">(</span><span style="color:darkgreen">see FStar.ST) </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">val</span> alloc : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> init:a <span style="color:blue">-&gt;</span>
+  (<span style="color:blue">forall</span> (x:a). rel x x) /\
+  (<span style="color:blue">forall</span> (x y z:a). rel x y /\ rel y z ==&gt; rel x z)}</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="137">
+<p data-line="137"><span data-line="137"></span>Accompanied by stateful actions<span data-line="137"></span> <span style="color:Gray">(defined using smth. more general)</span><span data-line="137"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="138" data-line-first="139" style="display:block"><code data-line="139"><span style="color:blue">val</span> alloc : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> init:a <span style="color:blue">-&gt;</span>
   <span style="color:blue">ST</span> (mref a rel) (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 r h1 <span style="color:blue">-&gt;</span> fresh r h0 h1 /\ sel h1 r == init /\ ...))
 
 <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span>
@@ -6069,156 +6082,188 @@ complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style=
 
 <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span>
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> rel (sel h0 r) v))       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> note the precondition </span><span style="color:darkgreen">*)</span>
-          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ sel h1 r == v))</code></pre></div><!------------------------------------------------------------------------------>
+          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ sel h1 r == v))</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-monotonic-state-in-f--part-2" class="section section2" data-section-depth="2" data-line="158"><h3 id="heading-sec-monotonic-state-in-f--part-2" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 2)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="160" data-line-first="161" style="display:block"><code data-line="161"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> We can now implement monotonic counters as follows </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> counter = mref int (<span style="color:blue">fun</span> n m <span style="color:blue">-&gt;</span> n &lt;= m)
+<section id="sec-monotonic-state-in-f--part-2" class="section section2" data-section-depth="2" data-line="153"><h3 id="heading-sec-monotonic-state-in-f--part-2" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 2)</h3>
+<ul class="ul list-star loose" data-line="155">
+<li class="li ul-li list-star-li loose-li" data-line="155">
+<p data-line="155"><span data-line="155"></span>We can now implement monotonic counters as follows
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="156" data-line-first="157" style="display:block"><code data-line="157"><span style="color:blue">let</span> counter = mref int (<span style="color:blue">fun</span> n m <span style="color:blue">-&gt;</span> n &lt;= m)
 
 <span style="color:blue">let</span> create i = alloc i                                        <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fresh c h h&#39; </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">let</span> read   c = !c                                             <span style="color:darkgreen">(*</span><span style="color:darkgreen"> sel h&#39; c = i </span><span style="color:darkgreen">*)</span>
-<span style="color:blue">let</span> incr   c = c := (!c + <span class="constant" style="color:purple">1</span>)                                  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> sel h&#39; c = sel h c + 1 </span><span style="color:darkgreen">*)</span></code></pre>
-<div class="fragment" data-line="169">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="170" data-line-first="171" style="display:block"><code data-line="171"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> But by themselves these definitions are not enough to verify the example </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit = 
+<span style="color:blue">let</span> incr   c = c := (!c + <span class="constant" style="color:purple">1</span>)                                  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> sel h&#39; c = sel h c + 1 </span><span style="color:darkgreen">*)</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="164">
+<p data-line="164"><span data-line="164"></span>By themselves these definitions are<span data-line="164"></span> <span style="color:DarkRed">not enough</span><span data-line="164"></span> to verify the example
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="165" data-line-first="166" style="display:block"><code data-line="166"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =                   
   <span style="color:blue">let</span> c = create <span class="constant" style="color:purple">0</span> <span style="color:blue">in</span> incr c;
 
   <span style="color:blue">let</span> i = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (i &gt; <span class="constant" style="color:purple">0</span>);
   complex_procedure c;                   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> complex_procedure : counter -&gt; St unit </span><span style="color:darkgreen">*)</span>
-  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) assertion failed </span><span style="color:darkgreen">*)</span></code></pre></div>
-<div class="fragment" data-line="181">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="182" data-line-first="183" style="display:block"><code data-line="183"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Solution idea: Observe that </span><span style="color:darkgreen">(</span><span style="color:darkgreen">fun j -&gt; j &gt; 0) is a stable predicate wrt &lt;= </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> stable (#a:<span style="color:blue">Type</span>) (p:predicate a) (rel:preorder a) 
-  = <span style="color:blue">forall</span> (x y:a). p x /\ rel x y ==&gt; p y</code></pre></div><!------------------------------------------------------------------------------>
+  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) assertion failed </span><span style="color:darkgreen">*)</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="174">
+<p data-line="174"><span data-line="174"></span><strong class="strong-star2">Idea:</strong><span data-line="174"></span> observe that <span data-line="174"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">(<span style="color:blue">fun</span> j <span style="color:blue">-&gt;</span> j &gt; <span class="constant" style="color:purple">0</span>)</code><span data-line="174"></span> is a stable predicate wrt <span data-line="174"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">&lt;=</code><span data-line="174"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="176" data-line-first="177" style="display:block"><code data-line="177"><span style="color:blue">let</span> stable (#a:<span style="color:blue">Type</span>) (p:predicate a) (rel:preorder a) 
+  = <span style="color:blue">forall</span> (x y:a). p x /\ rel x y ==&gt; p y</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-monotonic-state-in-f--part-3" class="section section2" data-section-depth="2" data-line="192"><h3 id="heading-sec-monotonic-state-in-f--part-3" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 3)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="194" data-line-first="195" style="display:block"><code data-line="195"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> To make easy use of this idea in verification, F</span><span style="color:darkgreen">*</span><span style="color:darkgreen"> defines </span><span style="color:darkgreen">(</span><span style="color:darkgreen">in FStar.MRef): </span><span style="color:darkgreen">*)</span></code></pre>
-<div class="fragment" data-line="197">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="198" data-line-first="199" style="display:block"><code data-line="199"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> A new pure proposition witnessing the validity of a stable predicate </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">type</span> token (#a:<span style="color:blue">Type0</span>) (#rel:preorder a) (r:mref a rel) (p:a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>)</code></pre></div>
-<div class="fragment" data-line="204">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="205" data-line-first="206" style="display:block"><code data-line="206"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Two stateful actions to witness and recall such tokens </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">val</span> witness_token : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span> p:(a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>) <span style="color:blue">-&gt;</span> 
+<section id="sec-monotonic-state-in-f--part-3" class="section section2" data-section-depth="2" data-line="183"><h3 id="heading-sec-monotonic-state-in-f--part-3" class="h2" data-heading-depth="2" style="display:block">Monotonic State in F* (part 3)</h3>
+<ul class="ul list-star loose" data-line="185">
+<li class="li ul-li list-star-li loose-li" data-line="185">
+<p data-line="185"><span data-line="185"></span>To make use of monotonicity in verification, F<span data-line="185"></span>*<span data-line="185"></span> defines the following:
+</p></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="187">
+<p data-line="187"><span data-line="187"></span>A new pure proposition witnessing the validity of a stable predicate
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="188" data-line-first="189" style="display:block"><code data-line="189"><span style="color:blue">type</span> token (#a:<span style="color:blue">Type0</span>) (#rel:preorder a) (r:mref a rel) (p:a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>)    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> a modality </span><span style="color:darkgreen">*)</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="192">
+<p data-line="192"><span data-line="192"></span>Two stateful actions to<span data-line="192"></span> <span style="color:DarkBlue">witness</span><span data-line="192"></span> and<span data-line="192"></span> <span style="color:DarkBlue">recall</span><span data-line="192"></span> such tokens (intro/elim)
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="193" data-line-first="194" style="display:block"><code data-line="194"><span style="color:blue">val</span> witness_token : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span> p:(a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>) <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> p (sel h0 r) /\ stable p rel))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ token r p))
 
 <span style="color:blue">val</span> recall_token : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a b <span style="color:blue">-&gt;</span> p:(a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>) <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _       <span style="color:blue">-&gt;</span> token r p))
-          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ p (sel h1 r)))</code></pre></div>
-<div class="fragment" data-line="217">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="218" data-line-first="219" style="display:block"><code data-line="219"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> As a bonus, we also have the recalling of the existence of GCd references, &quot;for free&quot; </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">val</span> recall : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span>
-  <span style="color:blue">ST</span> unit (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ h1 `contains` r))</code></pre></div><!------------------------------------------------------------------------------>
+          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ p (sel h1 r)))</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="203">
+<p data-line="203"><span data-line="203"></span>And as a bonus, recalling the existence of GCd references, <span data-line="203"></span>&#8220;for free&#8221;<span data-line="203"></span>
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="204" data-line-first="205" style="display:block"><code data-line="205"><span style="color:blue">val</span> recall : #a:<span style="color:blue">Type0</span> <span style="color:blue">-&gt;</span> #rel:preorder a <span style="color:blue">-&gt;</span> r:mref a rel <span style="color:blue">-&gt;</span>
+  <span style="color:blue">ST</span> unit (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ h1 `contains` r))</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-hello-world-revisited" class="section section2" data-section-depth="2" data-line="228"><h3 id="heading-sec-hello-world-revisited" class="h2" data-heading-depth="2" style="display:block">Hello World (revisited)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="229" data-line-first="230" style="display:block"><code data-line="230"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Recall that we defined monotonic counters as follows </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> counter = mref int (<span style="color:blue">fun</span> n m <span style="color:blue">-&gt;</span> n &lt;= m)
+<section id="sec-hello-world-revisited" class="section section2" data-section-depth="2" data-line="211"><h3 id="heading-sec-hello-world-revisited" class="h2" data-heading-depth="2" style="display:block">Hello World (revisited)</h3>
+<ul class="ul list-star loose" data-line="213">
+<li class="li ul-li list-star-li loose-li" data-line="213">
+<p data-line="213"><span data-line="213"></span>Recall that we defined monotonic counters as follows
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="214" data-line-first="215" style="display:block"><code data-line="215"><span style="color:blue">let</span> counter = mref int (<span style="color:blue">fun</span> n m <span style="color:blue">-&gt;</span> n &lt;= m)
 
 <span style="color:blue">let</span> create i = alloc i
 <span style="color:blue">let</span> read   c = !c
-<span style="color:blue">let</span> incr   c = c := (!c + <span class="constant" style="color:purple">1</span>)</code></pre>
-<div class="fragment" data-line="238">
-
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="240" data-line-first="241" style="display:block"><code data-line="241"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Using witness_token and recall_token, we can now verify the example </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit = 
+<span style="color:blue">let</span> incr   c = c := (!c + <span class="constant" style="color:purple">1</span>)</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="222">
+<p data-line="222"><span data-line="222"></span>Using <span data-line="222"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">witness_token</code><span data-line="222"></span> and <span data-line="222"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">recall_token</code><span data-line="222"></span>, we can now verify our example
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="223" data-line-first="224" style="display:block"><code data-line="224"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =                   
   <span style="color:blue">let</span> c = create <span class="constant" style="color:purple">0</span> <span style="color:blue">in</span> incr c;
 
   <span style="color:blue">let</span> i = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (i &gt; <span class="constant" style="color:purple">0</span>);
-
   witness_token c (<span style="color:blue">fun</span> i <span style="color:blue">-&gt;</span> i &gt; <span class="constant" style="color:purple">0</span>);
+
   complex_procedure c;                   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> complex_procedure : counter -&gt; St unit </span><span style="color:darkgreen">*)</span>
-  recall_token c (<span style="color:blue">fun</span> i <span style="color:blue">-&gt;</span> i &gt; <span class="constant" style="color:purple">0</span>);
   
-  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> success </span><span style="color:darkgreen">*)</span></code></pre></div><!------------------------------------------------------------------------------>
+  recall_token c (<span style="color:blue">fun</span> i <span style="color:blue">-&gt;</span> i &gt; <span class="constant" style="color:purple">0</span>);
+  <span style="color:blue">let</span> j = read c <span style="color:blue">in</span> <span style="color:blue">assert</span> (j &gt; <span class="constant" style="color:purple">0</span>)       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> success </span><span style="color:darkgreen">*)</span></code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-typed-references" class="section section2" data-section-depth="2" data-line="258"><h3 id="heading-sec-typed-references" class="h2" data-heading-depth="2" style="display:block">Typed References</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="260" data-line-first="261" style="display:block"><code data-line="261"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Typed references from yesterday&#39;s lecture are just an instance of mrefs </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">type</span> ref a = mref a (<span style="color:blue">fun</span> _ _ <span style="color:blue">-&gt;</span> True)</code></pre>
-<p class="p noindent para-continued" data-line="265"><span data-line="265"></span>&#160;<span data-line="265"></span>
+<section id="sec-typed-references" class="section section2" data-section-depth="2" data-line="239"><h3 id="heading-sec-typed-references" class="h2" data-heading-depth="2" style="display:block">Typed References</h3>
+<ul class="ul list-star loose" data-line="241">
+<li class="li ul-li list-star-li loose-li" data-line="241">
+<p data-line="241"><span data-line="241"></span>Typed references from yesterday<span data-line="241"></span>&#39;<span data-line="241"></span>s lecture are just an instance of mrefs
 </p>
-<div class="fragment" data-line="266">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="267" data-line-first="268" style="display:block"><code data-line="268"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> While we can&#39;t use tokens any more, we still get containment &quot;for free&quot; for GCd refs </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> recall (#a:<span style="color:blue">Type0</span>) (r:ref a)
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="242" data-line-first="243" style="display:block"><code data-line="243"><span style="color:blue">type</span> ref a = mref a (<span style="color:blue">fun</span> _ _ <span style="color:blue">-&gt;</span> True)</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="246">
+<p data-line="246"><span data-line="246"></span>We<span data-line="246"></span> <span style="color:DarkRed">can&#39;t make use of tokens based monotonicity</span><span data-line="246"></span> any more
+</p>
+<ul class="ul list-dash compact" data-line="247">
+<li class="li ul-li list-dash-li compact-li" data-line="247"><span data-line="247"></span>all values of a <span data-line="247"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">ref a</code><span data-line="247"></span> are now related
+</li>
+<li class="li ul-li list-dash-li compact-li" data-line="248"><span data-line="248"></span>so any stable predicate has to necessarily hold everywhere
+</li></ul>
+</li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="250">
+<p data-line="250"><span data-line="250"></span>But we<span data-line="250"></span> <span style="color:DarkBlue">can still get heap-containment</span><span data-line="250"></span> <span data-line="250"></span>&#8220;for free&#8221;<span data-line="250"></span> for GCd refs
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="251" data-line-first="252" style="display:block"><code data-line="252"><span style="color:blue">let</span> recall (#a:<span style="color:blue">Type0</span>) (r:ref a)
   : <span style="color:blue">ST</span> unit (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ h1 `contains` r))
 
-  = MonotonicStateSlide.recall r</code></pre></div><!------------------------------------------------------------------------------>
+  = MonotonicRefsSlide.recall r</code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-simple-monotonic-logs" class="section section2" data-section-depth="2" data-line="279"><h3 id="heading-sec-simple-monotonic-logs" class="h2" data-heading-depth="2" style="display:block">Simple Monotonic Logs</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="281" data-line-first="282" style="display:block"><code data-line="282"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> We model monotonic logs using monotonic references to lists of ints  </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> lref = mref (list int) subset
+<section id="sec-simple-monotonic-logs" class="section section2" data-section-depth="2" data-line="260"><h3 id="heading-sec-simple-monotonic-logs" class="h2" data-heading-depth="2" style="display:block">Simple Monotonic Logs</h3>
+<ul class="ul list-star loose" data-line="262">
+<li class="li ul-li list-star-li loose-li" data-line="262">
+<p data-line="262"><span data-line="262"></span>We model monotonic logs using monotonic references to lists of ints
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="263" data-line-first="264" style="display:block"><code data-line="264"><span style="color:blue">let</span> lref = mref (list int) subset
 
 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> where </span><span style="color:darkgreen">*)</span>
 
 <span style="color:blue">let</span> subset (l1 l2:list int) = <span style="color:blue">forall</span> x . x `mem` l1 ==&gt; x `mem` l2
-</code></pre>
-<div class="fragment" data-line="291">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="292" data-line-first="293" style="display:block"><code data-line="293"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> An action for adding new elements to the log </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> add_to_log (r:lref) (v:int) : <span style="color:blue">ST</span> unit (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h <span style="color:blue">-&gt;</span> v `mem` (sel h r)))
-  = r := (v :: !r)</code></pre></div>
-<div class="fragment" data-line="299">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="300" data-line-first="301" style="display:block"><code data-line="301"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =
+</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="272">
+<p data-line="272"><span data-line="272"></span>An action for adding new elements to the log
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="273" data-line-first="274" style="display:block"><code data-line="274"><span style="color:blue">let</span> add_to_log (r:lref) (v:int) : <span style="color:blue">ST</span> unit (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h <span style="color:blue">-&gt;</span> v `mem` (sel h r)))
+  = r := (v :: !r)</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="278">
+<p data-line="278"><span data-line="278"></span>Can then use <span data-line="278"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">witness_token</code><span data-line="278"></span> and <span data-line="278"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">recall_token</code><span data-line="278"></span> similarly
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="279" data-line-first="280" style="display:block"><code data-line="280"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =
   <span style="color:blue">let</span> r = alloc subset [] <span style="color:blue">in</span> add_to_log r <span class="constant" style="color:purple">42</span>;
+  witness_token r (<span style="color:blue">fun</span> xs <span style="color:blue">-&gt;</span> <span class="constant" style="color:purple">42</span> `mem` xs);
   
-  witness r (<span style="color:blue">fun</span> xs <span style="color:blue">-&gt;</span> <span class="constant" style="color:purple">42</span> `mem` xs);
   complex_procedure r;                         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> complex_procedure : lref -&gt; St unit </span><span style="color:darkgreen">*)</span>
-  recall r (<span style="color:blue">fun</span> xs <span style="color:blue">-&gt;</span> <span class="constant" style="color:purple">42</span> `mem` xs);
-
-  <span style="color:blue">let</span> xs = !r <span style="color:blue">in</span> <span style="color:blue">assert</span> (<span class="constant" style="color:purple">42</span> `mem` xs)</code></pre></div><!------------------------------------------------------------------------------>
+  
+  recall_token r (<span style="color:blue">fun</span> xs <span style="color:blue">-&gt;</span> <span class="constant" style="color:purple">42</span> `mem` xs);
+  <span style="color:blue">let</span> xs = !r <span style="color:blue">in</span> <span style="color:blue">assert</span> (<span class="constant" style="color:purple">42</span> `mem` xs)          <span style="color:darkgreen">(*</span><span style="color:darkgreen"> success </span><span style="color:darkgreen">*)</span></code></pre></li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-initializing-and-freezing-references-part-1" class="section section2" data-section-depth="2" data-line="314"><h3 id="heading-sec-initializing-and-freezing-references-part-1" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 1)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="316" data-line-first="317" style="display:block"><code data-line="317"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Contents of our initializable and freezable references </span><span style="color:darkgreen">(</span><span style="color:darkgreen">a value + a ghost state) </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">type</span> rstate (a:<span style="color:blue">Type0</span>) =
+<section id="sec-initializing-and-freezing-references-part-1" class="section section2" data-section-depth="2" data-line="292"><h3 id="heading-sec-initializing-and-freezing-references-part-1" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 1)</h3>
+<ul class="ul list-star loose" data-line="294">
+<li class="li ul-li list-star-li loose-li" data-line="294">
+<p data-line="294"><span data-line="294"></span>Contents of initializable and freezable references (value<span data-line="294"></span> <span data-line="294"></span>+ ghost state)
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="295" data-line-first="296" style="display:block"><code data-line="296"><span style="color:blue">type</span> rstate (a:<span style="color:blue">Type0</span>) =
   | Empty   : rstate a
   | Mutable : v:a <span style="color:blue">-&gt;</span> rstate a
-  | Frozen  : v:a <span style="color:blue">-&gt;</span> rstate a</code></pre>
-<div class="fragment" data-line="324">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="325" data-line-first="326" style="display:block"><code data-line="326"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> Defining a preorder for initialization and freezing </span><span style="color:darkgreen">*)</span>
-
-<span style="color:blue">let</span> evolve&#39; (a:<span style="color:blue">Type0</span>) = <span style="color:blue">fun</span> (r1 r2:rstate a) <span style="color:blue">-&gt;</span> <span style="color:blue">match</span> r1 , r2 <span style="color:blue">with</span>
+  | Frozen  : v:a <span style="color:blue">-&gt;</span> rstate a</code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="302">
+<p data-line="302"><span data-line="302"></span>Defining a preorder for initialization and freezing
+</p>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="303" data-line-first="304" style="display:block"><code data-line="304"><span style="color:blue">let</span> evolve&#39; (a:<span style="color:blue">Type0</span>) = <span style="color:blue">fun</span> (r1 r2:rstate a) <span style="color:blue">-&gt;</span> <span style="color:blue">match</span> r1 , r2 <span style="color:blue">with</span>
   | Empty      , Mutable _
   | Mutable _  , Mutable _ <span style="color:blue">-&gt;</span> True
   | Mutable v1 , Frozen v2 <span style="color:blue">-&gt;</span> v1 == v2
   | _          , _         <span style="color:blue">-&gt;</span> False
-  
-<span style="color:blue">let</span> evolve (a:<span style="color:blue">Type0</span>) : preorder (rstate a) = evolve&#39; a <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) </span><span style="color:darkgreen">*)</span> <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Why? </span><span style="color:darkgreen">*)</span></code></pre></div>
-<div class="fragment" data-line="337">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="338" data-line-first="339" style="display:block"><code data-line="339">  | Empty     , _
+
+<span style="color:blue">let</span> evolve (a:<span style="color:blue">Type0</span>) : preorder (rstate a)
+  = evolve&#39; a                             <span style="color:darkgreen">(*</span><span style="color:darkgreen"> </span><span style="color:darkgreen">(</span><span style="color:darkgreen">Error) </span><span style="color:darkgreen">*)</span> <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Why does it fail? </span><span style="color:darkgreen">*)</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="314">
+
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="315" data-line-first="316" style="display:block"><code data-line="316">  | Empty     , _
   | Mutable _ , Mutable _
   | Mutable _ , Frozen  _ <span style="color:blue">-&gt;</span> True 
   | Frozen v1 , Frozen v2 <span style="color:blue">-&gt;</span> v1 == v2
   | _         , _         <span style="color:blue">-&gt;</span> False</code></pre><!-- TODO: had a hand drawing on this on the board -->
 
-</div><!------------------------------------------------------------------------------>
+
+
+</li></ul>
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-initializing-and-freezing-references-part-2" class="section section2" data-section-depth="2" data-line="351"><h3 id="heading-sec-initializing-and-freezing-references-part-2" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 2)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="353" data-line-first="354" style="display:block"><code data-line="354"><span style="color:blue">let</span> eref (a:<span style="color:blue">Type0</span>) : <span style="color:blue">Type</span> = mref (rstate a) (evolve a)
+<section id="sec-initializing-and-freezing-references-part-2" class="section section2" data-section-depth="2" data-line="328"><h3 id="heading-sec-initializing-and-freezing-references-part-2" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 2)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="330" data-line-first="331" style="display:block"><code data-line="331"><span style="color:blue">let</span> eref (a:<span style="color:blue">Type0</span>) : <span style="color:blue">Type</span> = mref (rstate a) (evolve a)
 
 <span style="color:blue">let</span> alloc a : <span style="color:blue">ST</span> (eref a) (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ r h <span style="color:blue">-&gt;</span> Empty? (sel h r)))
   = alloc (evolve a) Empty
@@ -6228,29 +6273,35 @@ complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style=
                                                        (sel h r == Mutable v \/
                                                         sel h r == Frozen v     )))
   = <span style="color:blue">match</span> (!r) <span style="color:blue">with</span> | Mutable v | Frozen v <span style="color:blue">-&gt;</span> v
-                    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Can you give read a heap-independent precondition? </span><span style="color:darkgreen">*)</span>
+  
+                       <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: Can you give read a heap-independent precondition? </span><span style="color:darkgreen">*)</span>
+
 
 <span style="color:blue">let</span> write #a (r:eref a) (v:a) : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h     <span style="color:blue">-&gt;</span> ~(Frozen? (sel h r))))
                                         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ h <span style="color:blue">-&gt;</span> sel h r == Mutable v))
   = r := Mutable v
 
-<span style="color:blue">let</span> freeze #a (r:eref a)                 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: What type should freeze have? </span><span style="color:darkgreen">*)</span>
+
+<span style="color:blue">let</span> freeze #a (r:eref a)                    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Exercise: What type should freeze have? </span><span style="color:darkgreen">*)</span>
   = r := Frozen (Mutable?.v !r)</code></pre>
-<div class="fragment" data-line="373">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="374" data-line-first="375" style="display:block"><code data-line="375"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> Mutable? (sel h0 r)))</code></pre></div>
-<div class="fragment" data-line="378">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="379" data-line-first="380" style="display:block"><code data-line="380">        (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> Frozen? (sel h1 r) /\
+<div class="fragment" data-line="353">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="354" data-line-first="355" style="display:block"><code data-line="355"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> Mutable? (sel h0 r)))</code></pre></div>
+<div class="fragment" data-line="358">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="359" data-line-first="360" style="display:block"><code data-line="360">        (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> Frozen? (sel h1 r) /\
                                   Mutable?.v (sel h0 r) == Frozen?.v (sel h1 r)))</code></pre></div><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-initializing-and-freezing-references-part-3" class="section section2" data-section-depth="2" data-line="388"><h3 id="heading-sec-initializing-and-freezing-references-part-3" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 3)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="390" data-line-first="391" style="display:block"><code data-line="391"><span style="color:blue">let</span> alloc  (a:<span style="color:blue">Type</span>)                   = alloc (evolve a) Empty
-<span style="color:blue">let</span> read   (#a:<span style="color:blue">Type</span>) (r:eref a)       = <span style="color:blue">match</span> (!r) <span style="color:blue">with</span> | Mutable v | Frozen v <span style="color:blue">-&gt;</span> v
-<span style="color:blue">let</span> write  (#a:<span style="color:blue">Type</span>) (r:eref a) (v:a) = r := Mutable v
-<span style="color:blue">let</span> freeze (#a:<span style="color:blue">Type</span>) (r:eref a)       = r := Frozen (Mutable?.v !r)</code></pre>
-<div class="fragment" data-line="396">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="397" data-line-first="398" style="display:block"><code data-line="398"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =
+<section id="sec-initializing-and-freezing-references-part-3" class="section section2" data-section-depth="2" data-line="368"><h3 id="heading-sec-initializing-and-freezing-references-part-3" class="h2" data-heading-depth="2" style="display:block">Initializing and Freezing references (part 3)</h3><!--```
+let alloc  (a:Type)                   = alloc (evolve a) Empty
+let read   (#a:Type) (r:eref a)       = match (!r) with | Mutable v | Frozen v -> v
+let write  (#a:Type) (r:eref a) (v:a) = r := Mutable v
+let freeze (#a:Type) (r:eref a)       = r := Frozen (Mutable?.v !r)
+```-->
+
+
+
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="377" data-line-first="378" style="display:block"><code data-line="378"><span style="color:blue">let</span> main() : <span style="color:blue">St</span> unit =
   <span style="color:blue">let</span> r = alloc int <span style="color:blue">in</span>
   
   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> ignore </span><span style="color:darkgreen">(</span><span style="color:darkgreen">read r) -- fails like it should </span><span style="color:darkgreen">*)</span>
@@ -6273,72 +6324,72 @@ complex_procedure : c:counter <span style="color:blue">-&gt;</span> <span style=
   recall r (<span style="color:blue">fun</span> rs <span style="color:blue">-&gt;</span> ~(Empty? rs));
   <span style="color:blue">let</span> x = read r <span style="color:blue">in</span>
   
-  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> assert </span><span style="color:darkgreen">(</span><span style="color:darkgreen">x == 0) -- fails like it should </span><span style="color:darkgreen">*)</span>
+  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> assert </span><span style="color:darkgreen">(</span><span style="color:darkgreen">x == 0); -- fails like it should </span><span style="color:darkgreen">*)</span>
   
   recall r (<span style="color:blue">fun</span> rs <span style="color:blue">-&gt;</span> rs == Frozen <span class="constant" style="color:purple">0</span>);
-  <span style="color:blue">assert</span> (x == <span class="constant" style="color:purple">0</span>)</code></pre></div><!------------------------------------------------------------------------------>
+  <span style="color:blue">assert</span> (x == <span class="constant" style="color:purple">0</span>)</code></pre><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-exercise--initializable-and-freezable-arrays" class="section section2" data-section-depth="2" data-line="430"><h3 id="heading-sec-exercise--initializable-and-freezable-arrays" class="h2" data-heading-depth="2" style="display:block">Exercise: Initializable and Freezable Arrays</h3>
-<ol class="ol loose" data-line="432">
-<li class="li ol-li loose-li" data-line="432">
-<p data-line="432"><span data-line="432"></span>Arrays are created uninitialized
+<section id="sec-exercise--initializable-and-freezable-arrays" class="section section2" data-section-depth="2" data-line="410"><h3 id="heading-sec-exercise--initializable-and-freezable-arrays" class="h2" data-heading-depth="2" style="display:block">Exercise: Initializable and Freezable Arrays</h3>
+<ol class="ol loose" data-line="412">
+<li class="li ol-li loose-li" data-line="412">
+<p data-line="412"><span data-line="412"></span>Arrays are created uninitialized
 </p></li>
-<li class="li ol-li loose-li" data-line="434">
-<p data-line="434"><span data-line="434"></span>Only initialized elements can be read from arrays
+<li class="li ol-li loose-li" data-line="414">
+<p data-line="414"><span data-line="414"></span>Only initialized elements can be read from arrays
 </p></li>
-<li class="li ol-li loose-li" data-line="436">
-<p data-line="436"><span data-line="436"></span>Arrays can be mutated until they are frozen
+<li class="li ol-li loose-li" data-line="416">
+<p data-line="416"><span data-line="416"></span>Arrays can be mutated until they are frozen
 </p></li>
-<li class="li ol-li loose-li" data-line="438">
-<p data-line="438"><span data-line="438"></span>Only fully initialized arrays can be frozen
+<li class="li ol-li loose-li" data-line="418">
+<p data-line="418"><span data-line="418"></span>Only fully initialized arrays can be frozen
 </p></li>
-<li class="li ol-li loose-li" data-line="440">
-<p data-line="440"><span data-line="440"></span>Frozen arrays can only be read
+<li class="li ol-li loose-li" data-line="420">
+<p data-line="420"><span data-line="420"></span>Frozen arrays can only be read
 </p>
-<ul class="ul list-star loose" data-line="442">
-<li class="li ul-li list-star-li loose-li" data-line="442">
-<p data-line="442"><span data-line="442"></span>no mutation of array elements
+<ul class="ul list-star loose" data-line="422">
+<li class="li ul-li list-star-li loose-li" data-line="422">
+<p data-line="422"><span data-line="422"></span>no mutation of array elements
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="444">
-<p data-line="444"><span data-line="444"></span>no initialization preconditions for reading
+<li class="li ul-li list-star-li loose-li" data-line="424">
+<p data-line="424"><span data-line="424"></span>no initialization preconditions for reading
 </p></li></ul>
 </li></ol>
 
-<ul class="ul list-star compact" data-line="447">
-<li class="li ul-li list-star-li compact-li" data-line="447"><span data-line="447"></span>Show this works as expected with client code similar to previous slide
+<ul class="ul list-star compact" data-line="427">
+<li class="li ul-li list-star-li compact-li" data-line="427"><span data-line="427"></span>Show this works as expected with client code similar to previous slide
 </li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-questions" class="section section2" data-section-depth="2" data-line="452"><h3 id="heading-sec-questions" class="h2" data-heading-depth="2" style="display:block">Questions?</h3>
-<p class="p noindent" data-line="454"><span data-line="454"></span><br /><span data-line="454"></span><br /><span data-line="454"></span>
+<section id="sec-questions" class="section section2" data-section-depth="2" data-line="432"><h3 id="heading-sec-questions" class="h2" data-heading-depth="2" style="display:block">Questions?</h3>
+<p class="p noindent" data-line="434"><span data-line="434"></span><br /><span data-line="434"></span><br /><span data-line="434"></span>
 </p>
-<p class="p indent" data-line="456"><span data-line="456"></span>For more information:
+<p class="p indent" data-line="436"><span data-line="436"></span>For more information:
 </p>
-<p class="p indent" data-line="458"><span data-line="458"></span><br /><span data-line="458"></span>
+<p class="p indent" data-line="438"><span data-line="438"></span><br /><span data-line="438"></span>
 </p>
-<p class="p indent" data-line="460"><span data-line="460"></span>D. Ahman, C. Fournet, C. Hritcu, K. Maillard, A. Rastogi, N. Swamy<span data-line="460"></span><br /><span data-line="460"></span>
-<span data-line="461"></span><strong class="strong-star2">Recalling a Witness: Foundations and Applications of Monotonic State</strong><span data-line="461"></span><br /><span data-line="461"></span>
+<p class="p indent" data-line="440"><span data-line="440"></span>D. Ahman, C. Fournet, C. Hritcu, K. Maillard, A. Rastogi, N. Swamy<span data-line="440"></span><br /><span data-line="440"></span>
+<span data-line="441"></span><strong class="strong-star2">Recalling a Witness: Foundations and Applications of Monotonic State</strong><span data-line="441"></span><br /><span data-line="441"></span>
 POPL 2018
 </p><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-bonus-material--how-the-sausage-is-made" class="section section2" data-section-depth="2" data-line="466"><h3 id="heading-sec-bonus-material--how-the-sausage-is-made" class="h2" data-heading-depth="2" style="display:block">Bonus Material: How the Sausage is Made</h3>
-<p class="p noindent" data-line="468"><span data-line="468"></span><br /><span data-line="468"></span>
+<section id="sec-bonus-material--how-the-sausage-is-made" class="section section2" data-section-depth="2" data-line="446"><h3 id="heading-sec-bonus-material--how-the-sausage-is-made" class="h2" data-heading-depth="2" style="display:block">Bonus Material: How the Sausage is Made</h3>
+<p class="p noindent" data-line="448"><span data-line="448"></span><br /><span data-line="448"></span>
 </p>
-<p class="p indent" data-line="470"><span data-line="470"></span>(see FStar.Monotonic.Heap, FStar.ST, and FStar.MRef)
+<p class="p indent" data-line="450"><span data-line="450"></span>(see FStar.Monotonic.Heap, FStar.ST, and FStar.MRef)
 </p><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-bonus-material--temporarily-escaping-the-preorder" class="section section2" data-section-depth="2" data-line="474"><h3 id="heading-sec-bonus-material--temporarily-escaping-the-preorder" class="h2" data-heading-depth="2" style="display:block">Bonus Material: Temporarily Escaping the Preorder</h3>
-<p class="p noindent" data-line="476"><span data-line="476"></span><br /><span data-line="476"></span>
+<section id="sec-bonus-material--temporarily-escaping-the-preorder" class="section section2" data-section-depth="2" data-line="454"><h3 id="heading-sec-bonus-material--temporarily-escaping-the-preorder" class="h2" data-heading-depth="2" style="display:block">Bonus Material: Temporarily Escaping the Preorder</h3>
+<p class="p noindent" data-line="456"><span data-line="456"></span><br /><span data-line="456"></span>
 </p>
-<p class="p indent" data-line="478"><span data-line="478"></span>(see Snapshots.fst)
+<p class="p indent" data-line="458"><span data-line="458"></span>(see Snapshots.fst)
 </p></section></div></div><span data-line=""></span></div>
 </body>
 <script>
