@@ -577,7 +577,7 @@ let rec progress #e #t h =
 [INCLUDE=../../../ex/Sum.fst]
 ```
 
-## Interface for simply typed stacks ##
+## Exercise2: Simply typed stacks (the interface) ##
 `Stack.fsti`
 ```
 [INCLUDE=../../../ex/Stack.fsti:stack_types]
@@ -586,13 +586,13 @@ let rec progress #e #t h =
 [INCLUDE=../../../ex/Stack.fsti:stack_lemmas]
 ```
 
-## Exercise 2: implement `Stack.fsti` using lists of ints ##
+## Exercise 2: Simply typed stacks (the implementation) ##
 `Stack.fst`
 ```
 [INCLUDE=../../../ex/Stack.fst]
 ```
 
-## A client for simply typed stacks ##
+## Exercise 2: Simply typed stacks (the client) ##
 `StackClient.fst`
 ```
 [INCLUDE=../../../ex/StackClient.fst]
