@@ -56,7 +56,7 @@ let incr2 () : St unit
                                 else (incr 1; incr 1)
 
 let non_interference ()
-  : Lemma (forall h0 h1 n . let (_,(h0',n')) = reify (incr2 ()) (h0,n) in 
-                            let (_,(h1',n'')) = reify (incr2 ()) (h1,n) in
+  : Lemma (forall h0 h1 n . let (_ , (h0' , n' )) = reify (incr2 ()) (h0,n) in 
+                            let (_ , (h1' , n'')) = reify (incr2 ()) (h1,n) in
                             n' = n'')
   = ()
