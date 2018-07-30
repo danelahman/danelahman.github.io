@@ -236,7 +236,7 @@ sub_effect STATE ~> STEXN {
 
 <!------------------------------------------------------------------------------>
 
-## Tactics (New, Experimental) ##
+## Tactics (New, Still Experimental) ##
 
 * F\* tactics written as **effectful F\* code** (inspired by Lean, Idris)
 
@@ -251,14 +251,16 @@ sub_effect STATE ~> STEXN {
     ```
     noeq type __result a =
         | Success of a * proofstate
-        | Failed  of string    //error message
-                  * proofstate //the proofstate at time of failure
+        | Failed  of string *   (* error message *)
+                     proofstate (* the proofstate at time of failure *)
 
     let __tac (a:Type) = proofstate -> Tot (__result a)
 
-    reifiable reflectable new_effect {
+    new_effect {
       TAC : a:Type -> Effect
-      with repr     = __tac   ... }
+      with repr     = __tac
+           ...
+    }
 
     let tactic (a:Type) = unit -> Tac a
     ```
@@ -303,41 +305,43 @@ sub_effect STATE ~> STEXN {
 
 * **Pattern matcher** (metaprogramming)
 
-* **Efficient parsers and printers** (metaprogramming)
+* **Efficient low-level parsers and printers** (metaprogramming)
 
 
 <!------------------------------------------------------------------------------>
 
 ## Under the hood ##
 
-### Weakest pre-conditions (Dijkstra monads for free) ###
+### Weakest preconditions (Dijkstra monads for free) ###
 
-### SMT encoding ###
+<!-- ### SMT encoding ### -->
 
 <!------------------------------------------------------------------------------>
 
 ## Computation types indexed by predicate transformers ##
 
-Pre- and post- conditions are just syntactic sugar:
+Pre- and postconditions are just syntactic sugar:
 ```
 Pure t (pre : Type0) (post : t->Type0)
-  = PURE t (fun k -> pre /\ forall y. post y ==> k y)
+  = PURE t (fun k -> pre /\ forall y. post y ==> k y)       (* where k is the         *)
+                                                            (* "logical" continuation *)
 ```
 ```
-val factorial : x:int -> Pure int (requires (x >= 0)) (ensures (fun y -> y >= 0))
+val factorial : x:int -> Pure int (requires (x >= 0))
+                                  (ensures  (fun y -> y >= 0))
 ```
 ```
 val factorial : x:int -> Pure (fun k -> x >= 0 /\ forall y. y >= 0 ==> k y)
 ```
 ~Fragment
-Same for user-defined effects, like state:
+Same for user-defined effects, like `STATE`:
 ```
 ST t (pre : nat -> Type0) (post : nat -> t -> nat -> Type0) 
   = STATE t (fun n0 k -> pre n0 /\ forall x n1. post n0 x n1 ==> k x n1)
 ```
 ```
 val incr : unit -> St unit (requires (fun n0 -> True))
-                           (ensures (fun n0 _ n1 -> n1 = n0 + 1))
+                           (ensures  (fun n0 _ n1 -> n1 = n0 + 1))
 ```
 ```
 val incr : unit -> STATE unit (fun n0 k -> k () (n0 + 1))
@@ -346,41 +350,48 @@ val incr : unit -> STATE unit (fun n0 k -> k () (n0 + 1))
 
 ## Computing weakest preconditions, by example ##
 ```
-let incr () = STATE.bind (STATE.get()) (fun x -> STATE.put (x + 1))
+let incr () = STATE.bind (STATE.get()) (fun x ->
+              STATE.put (x + 1))
 ```
 * {.fragment} By inferring type for `incr` against following interface:
-```
-STATE.get : unit -> STATE nat (STATE.get_wp())
-STATE.put : n:nat -> STATE unit (STATE.put_wp n)
-STATE.bind : STATE 'a 'wa ->
-             (x:'a -> STATE 'b ('wb x)) ->
-             STATE 'b (STATE.bind_wp 'wa 'wb)
-```
+  ```
+  STATE.get : unit -> STATE nat (STATE.get_wp ())
+  
+  STATE.put : n:nat -> STATE unit (STATE.put_wp n)
+  
+  STATE.bind : STATE 'a 'wa ->
+               (x:'a -> STATE 'b ('wb x)) ->
+               STATE 'b (STATE.bind_wp 'wa 'wb)
+  ```
 ... we compute the weakest precondition for `incr`
-```
-val incr : unit -> STATE unit
-  (STATE.bind_wp (STATE.get_wp()) (fun x -> STATE.put_wp (x + 1)))
-```
-```
-= (fun n0 k -> k () (n0 + 1)) 
-```
-* {.fragment} **Generic way of computing weakest-preconditions for all effects**,
-provided we have a monad on predicate transformers
+  ```
+  val incr : unit -> STATE unit (STATE.bind_wp (STATE.get_wp()) (fun x ->
+                                 STATE.put_wp (x + 1)))
+  ```
+  ```
+  = (fun n0 k -> k () (n0 + 1)) 
+  ```
+* {.fragment} **Generic way of computing weakest-preconditions for all effects**
+  - provided we have a monad structure on predicate transformers
+  - instance of a more general notion of monad-indexed monad structures
 
 ## Predicate transformers monad for state ## 
 
-### aka Dijkstra monad ###
+### aka a Dijkstra monad for state ###
 
 ```
 let STATE.wp t = (t -> nat -> Type0) -> (nat -> Type0)
+
 val STATE.return_wp : 'a -> Tot (STATE.wp 'a)
+
 val STATE.bind_wp : (STATE.wp 'a) ->
                     ('a -> Tot (STATE.wp 'b)) ->
-                      Tot (STATE.wp 'b)
+                    Tot (STATE.wp 'b)
+                      
 val STATE.get_wp : unit -> Tot (STATE.wp nat)
 val STATE.put_wp : nat -> Tot (STATE.wp unit)
 ```
-* we need to implement this Dijkstra monad:
+* whose implementation is given by:
 ```
 let STATE.return_wp v = fun p -> p v
 let STATE.bind_wp wp f = fun p -> wp (fun v -> f v p)
@@ -388,26 +399,31 @@ let STATE.get_wp () = fun p n0 -> p n0 n0
 let STATE.put_wp n = fun p _ -> p () n
 ```
 * and for a while we wrote such things by hand;\
-but this is **quite tricky** and comes with **strong proof obligations**\
-(correctness with respect to effect definition, monad laws, ...)
+
+* but this is **quite tricky** and comes with **strong proof obligations**\
+  (correctness with respect to effect definition, monad laws, ...)
 
 ## Dijkstra monads for free ## {#dm4f}
 
 ```
 STATE.wp t  = (t -> nat -> Type0) -> (nat -> Type0)
+
            ~= nat -> (t * nat -> Type0) -> Type0
 ```
-* {.fragment} **This can be *automatically derived* from the state monad**
+* {.fragment} **This can be *automatically derived* from the state monad transformer**
 ```
-STATE.repr t = nat -> t * nat
+STATE.repr t = nat -> M (t * nat)
 ```
 by selective **continuation-passing style (CPS)** returning `Type0`
+  - `M` is the monad-argument of the monad transformer
+  - it marks where the CPS-translation happens
+  - type system (conservatively) restricts where the marker `M` can appear
 
 * {.fragment} **This works well for large class of monadic effects:**\
-state, exceptions, continuations, etc.
+state, exceptions, their combinations, continuations, etc.
 
-* {.fragment} From monadic effect definition we can derive a\
-**correct-by-construction weakest-precondition calculus** for this effect.
+* {.fragment} Summary: From a monadic effect definition we can derive a\
+  **correct-by-construction weakest-precondition calculus** for this effect.
 
 <!-- commented this out because of lack of time -->
 <!-- TODO: take slides 8--12 and 14 from Guido's POPL talk -->
