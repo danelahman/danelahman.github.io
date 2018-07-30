@@ -6595,7 +6595,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
   = <span style="color:blue">admit</span>()                                      <span style="color:darkgreen">(*</span><span style="color:darkgreen"> replace this admit by a real proof </span><span style="color:darkgreen">*)</span>
 </code></pre></section>
 <section id="sec-exercise2--simply-typed-stacks-the-interface" class="section section2" data-section-depth="2" data-line="580"><h3 id="heading-sec-exercise2--simply-typed-stacks-the-interface" class="h2" data-heading-depth="2" style="display:block">Exercise2: Simply typed stacks (the interface)</h3>
-<p class="p noindent" data-line="581"><span data-line="581"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Stack.fsti</code><span data-line="581"></span>
+<p class="p noindent" data-line="581"><span data-line="581"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span>.fsti</code><span data-line="581"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="582" data-line-first="583;out/pure-fun/../../../ex/Stack.fsti:10" style="display:block"><code data-line="583;out/pure-fun/../../../ex/Stack.fsti:10"><span style="color:blue">val</span> stack : <span style="color:blue">Type0</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> type of stacks </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">val</span> empty : stack
@@ -6619,9 +6619,9 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> You will also need to annotate the current and new lemmas with [SMTPat </span><span style="color:darkgreen">(</span><span style="color:darkgreen">...)]s </span><span style="color:darkgreen">*)</span>
 </code></pre></section>
 <section id="sec-exercise-2--simply-typed-stacks-the-implementation" class="section section2" data-section-depth="2" data-line="589"><h3 id="heading-sec-exercise-2--simply-typed-stacks-the-implementation" class="h2" data-heading-depth="2" style="display:block">Exercise 2: Simply typed stacks (the implementation)</h3>
-<p class="p noindent" data-line="590"><span data-line="590"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Stack.fst</code><span data-line="590"></span>
+<p class="p noindent" data-line="590"><span data-line="590"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span>.fst</code><span data-line="590"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="591" data-line-first="592;out/pure-fun/../../../ex/Stack.fst:1" style="display:block"><code data-line="592;out/pure-fun/../../../ex/Stack.fst:1"><span style="color:blue">module</span> Stack
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="591" data-line-first="592;out/pure-fun/../../../ex/Stack.fst:1" style="display:block"><code data-line="592;out/pure-fun/../../../ex/Stack.fst:1"><span style="color:blue">module</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">let</span> stack = list int
 
@@ -6643,7 +6643,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="597" data-line-first="598;out/pure-fun/../../../ex/StackClient.fst:1" style="display:block"><code data-line="598;out/pure-fun/../../../ex/StackClient.fst:1"><span style="color:blue">module</span> StackClient
 
-<span style="color:blue">open</span> Stack
+<span style="color:blue">open</span> <span style="color:blue">Stack</span>
 
 [@expect_failure]           <span style="color:darkgreen">(*</span><span style="color:darkgreen"> remove this attribute once you have completed Stack.fst </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">let</span> main() =
@@ -6669,7 +6669,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="603" data-line-first="604;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1" style="display:block"><code data-line="604;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1"><span style="color:blue">module</span> StackClientBad
 
-<span style="color:blue">open</span> Stack
+<span style="color:blue">open</span> <span style="color:blue">Stack</span>
 
 <span style="color:blue">let</span> main =
   <span style="color:blue">let</span> s0 = empty <span style="color:blue">in</span>

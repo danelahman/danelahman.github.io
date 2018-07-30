@@ -1,6 +1,6 @@
 [INCLUDE=presentation]
 Title         : Program Verification with F*
-Author        : Catalin Hritcu
+Author        : Danek Ahman
 Affiliation   : Inria Paris
 Reveal Url    : ../reveal.js
 Reveal Theme  : white
@@ -16,58 +16,50 @@ Package       : xypic
 [INCLUDE=../../stuff/latex.tex]
 ~
 
-# F*'s effects, VCs, tactics, and SMT encoding #
+# F\*'s Extensible Effect System<br/>and<br/>Metaprogramming in F\*  #
 
 ~Center
 [![fstar-logo]](https://www.fstar-lang.org)
 
-**[C&#259;t&#259;lin Hri&#355;cu, Inria Paris](http://prosecco.gforge.inria.fr/personal/hritcu/)**
+**[Danel Ahman, Inria Paris](https://danelahman.github.io/)**
 
+[EUTypes Summer School](https://sites.google.com/view/2018eutypesschool/home/)
 
-[EPIT 2018 Software Verification Spring School](http://projects.lsv.fr/epit18/)
-
-Aussois, France on 8 May, 2018
+Ohrid, Macedonia, 12 August, 2018
 ~
 
 [fstar-logo]: ../../stuff/fstar-new.png { width=200px }
 
+<!-------------------------------------------------------------------------------->
 
-<!------------------------------------------------------------------------------>
+## Schedule ##
 
-## Functional core of F\* ## {#fcore}
+* Friday: A Gentle Introduction to F\* (Purely Functional Programs)
 
-* **[Variant of dependent type theory]{color:DarkBlue}**
-  - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
+* Yesterday: Verifying Stateful Programs in F\*
 
-* **[Recursion and semantic termination check]{color:DarkRed}**
-  - potential non-termination is an effect
+* Today: Monotonic State in F\*
 
-* **[Refinements]{color:DarkRed}**
-  - **Refined value types**: `x:t{p}`
-  - **Refined computation types**: `Pure t pre post`
-  - computationally and proof irrelevant, discharged by SMT
-
-* **[Subtyping and sub-effecting]{color:DarkRed}**,
-  **[Extensional equality]{color:DarkRed}**
+* **Today: F\*'s Extensible Effect System and Metaprogramming in F\***
 
 <!------------------------------------------------------------------------------>
 
 ## This talk ##
 
-* **Monadic effects in F***
+* **Monadic effects** in F\*
 
-* **Tactics** as a user-defined, non-primitive effect
+* **Tactics** and **Metaprogramming** as a user-defined, non-primitive effect
 
-* **Under the hood:** Weakest pre-conditions (and Dijkstra monads, for free)
+* **Under the hood:** Weakest preconditions (and Dijkstra monads)
 
-* **Under the hood:** F* to SMT encoding
+<!-- * **Under the hood:** F* to SMT encoding -->
 
 <!-- commented out because of lack of time -->
 <!-- * **Verifying effectful programs extrinsically** (monadic reification) -->
 
 <!------------------------------------------------------------------------------>
 
-## Monadic effects in F\* ##
+## Monadic effects in F\*: Global State ##
 
 <!-- Effects defined using monads from total functions -->
 ```
@@ -77,13 +69,23 @@ type st (mem:Type) (a:Type) = mem -> Tot (a * mem)
 ~Fragment
 ```
 total reifiable new_effect {
- STATE_m (mem:Type) : a:Type -> Effect
- with repr = st mem;
-      return = fun (a:Type) (x:a) (m:mem) -> x, m;
-      bind = fun (a b:Type) (f:st mem a) (g:a -> st mem b) (m:mem) ->
-             let z, m' = f m in g z m';
-      get = fun () (m:mem) -> m, m;
-      put = fun (m:mem) _ -> (), m  }
+  STATE_m (mem:Type) : a:Type -> Effect
+ 
+  with (* functional representation of the global state effect *)
+       repr   = st mem;
+
+       (* standard monadic return and bind for the state monad *)
+       return = fun (a:Type) (x:a) (m:mem) -> (x, m);
+       
+       bind   = fun (a b:Type) (f:st mem a) (g:a -> st mem b) (m:mem) ->
+                let (z, m') = f m in
+                g z m';
+
+       (* standard get and put actions for the state monad *)
+       get    = fun () (m:mem) -> (m, m);
+       
+       put    = fun (m:mem) _ -> ((), m)
+}
 ```
 ```
 total reifiable new_effect STATE = STATE_m heap
@@ -91,35 +93,48 @@ total reifiable new_effect STATE = STATE_m heap
 ~
 
 * {.fragment} this monadic definition is the **model** F\*  uses to verify stateful code
-* {.fragment} state can be **primitively implemented** under the hood **or not**
-  - for instance by ML heap or C stack+heap
+* {.fragment} state can be **primitively implemented** under the hood, **or not**, e.g., 
+  - by ML references,
+  - or by C stack+heap
 
 <!------------------------------------------------------------------------------>
 
-## Monadic lifts in F* ##
+## Monadic lifts in F*: State + Exceptions ##
 
-State and exception monad
 ```
 let stexn a = nat -> Tot ((either a string) * nat))
 ```
+~Fragment
 ```
 new_effect {
-  STEXN: a:Type -> Effect with
-    repr    = stexn;
-    return  = fun (a:Type) (x:a) s -> Inl x, s;
-    bind    = fun (a b:Type) (f:stexn a) (g:a -> stexn b) s0 ->
-                 let (r,s1) = f s0 in
-                 match r with
-                 | Inl ret -> Inl (g ret s1), s1
-                 | Inr m -> Inr m, s1
-    raise   = fun (a:Type) (msg:string) s -> Inr msg, s
+  STEXN: a:Type -> Effect
+
+  with (* functional representation of the sum of state and exceptions monads *)
+       repr    = stexn;
+
+       (* standard monadic return and bind *)
+       return  = fun (a:Type) (x:a) s -> (Inl x, s);
+       
+       bind    = fun (a b:Type) (f:stexn a) (g:a -> stexn b) s0 ->
+                    let (r,s1) = f s0 in
+                    match r with
+                    | Inl ret -> (Inl (g ret s1), s1)
+                    | Inr m -> (Inr m, s1)
+
+       (* action of raising excaptions *)
+       raise   = fun (a:Type) (msg:string) s -> (Inr msg, s);
 }
 ```
+~
+~Fragment
 ```
 sub_effect STATE ~> STEXN {
-  lift = fun (a:Type) (e:st nat a) -> (fun s -> let (x,s') = e s in Inl x, s')
+  lift = fun (a:Type) (e:st nat a) ->
+  
+         fun s -> let (x,s') = e s in (Inl x, s')
 }
 ```
+~
 
 <!------------------------------------------------------------------------------>
 
@@ -127,40 +142,42 @@ sub_effect STATE ~> STEXN {
 
 * In F\*, the programmer writes:
   ```
-  let incr () =
-      let x = STATE.get() in
-      STATE.put (x + 1);
-      let y = STATE.get() in
+  let incr () : STATE unit ...
+    = let x = get() in
+      put (x + 1);
+      let y = get() in
       assert (y > x)
   ```
 
-* {.fragment} Made explicitly monadic via type and effect inference
+* {.fragment} Which is then made explicitly monadic via type and effect inference
 
   ```
-  let incr () =
-    STATE.bind (STATE.get ()) (fun x -> 
-    STATE.bind (STATE.put (x + 1)) (fun _ ->
-    STATE.bind (STATE.get ()) (fun y ->
-    STATE.return (assert (y > x)))))
+  let incr () : STATE unit ...
+    = STATE.bind (STATE.get ()) (fun x -> 
+      STATE.bind (STATE.put (x + 1)) (fun _ ->
+      STATE.bind (STATE.get ()) (fun y ->
+      STATE.return (assert (y > x)))))
   ```
 
 <!------------------------------------------------------------------------------>
 
-## Programming with multiple effects
+## Programming with multiple effects, in direct style
 
 * Programmer writes:
   ```
-    ( / ) : int -> x:int{x<>0} -> Tot int
-    let divide_by (x:int) : STEXN unit ...
-      = if x <> 0 then put (get () / x) else raise "Divide by zero"
+  ( / ) : int -> x:int{x<>0} -> Tot int
+    
+  let divide_by (x:int) : STEXN unit ...
+    = if x <> 0 then put (get () / x)
+                else raise "Divide by zero"
   ```
 
 * {.fragment}Elaborated to:
   ```
-    let divide_by x = 
-      if x <> 0 then STATE_STEXN.lift (STATE.bind (STATE.get())
-                                        (fun n -> STATE.put (n / x)))
-      else STEXN.raise "Divide by zero"
+  let divide_by x
+    = if x <> 0 then STATE_STEXN.lift (STATE.bind (STATE.get()) (fun n ->
+                                       STATE.put (n / x)))
+                else STEXN.raise "Divide by zero"
   ```
 
 * {.fragment}F\* infers the least effect of each sub-term
