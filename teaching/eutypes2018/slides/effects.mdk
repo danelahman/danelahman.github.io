@@ -377,21 +377,26 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 
 <!-- <\!-----------------------------------------------------------------------------\-> -->
 
-## Verifying effectful programs ## {#effect2}
+## Verifying effectful programs ##
 ### New way: extrinsically (by exposing pure monadic representation) ###
 
-* {.fragment} Monadic reification (derived from `STATE.repr`, intuitively)
+* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified)
   ```
-  STATE.reify : (St a) -> Ghost (nat -> Tot (a * nat))
+  STATE.reify : (St a) -> (nat -> Tot (a * nat))
   ```
 
-* {.fragment} Allows us to give **weak specification** to an effectful function
+* {.fragment} [**Monadic reflection**]{color:DarkRed} takes us in the other direction
+  ```
+  STATE.reflect : (nat -> Tot (a * nat)) -> (St a)
+  ```
+
+* {.fragment} [**Reification**]{color:DarkBlue} allows us to give **weak specification** to a program
   ```
   let incr (r:ref nat) : St unit
     = r := !r + 1
   ```
 
-* {.fragment} and **prove lemmas about reification** of effectful computation
+* {.fragment} and give an **extrinsic proof** of its correctness
   ```
   let incr_works (r:ref nat) (h:heap)
   
@@ -399,7 +404,38 @@ by selective **continuation-passing style (CPS)** returning `Type0`
     
     = ()
   ```
-* {.fragment} or about **different runs** of the **same program**
+
+## Verifying effectful programs ctd. ##
+### New way: extrinsically (by exposing pure monadic representation) ###
+
+* or about **different runs** of the **same program**
+  - {.fragment} for example, for proofs of non-interference
+    ```
+    let state = int * int                                         (* (high - low) values *)
+
+    let st (a:Type) = state -> M (a * state)
+
+    total reifiable reflectable new_effect {
+      STATE : a:Type -> Effect
+      with repr = st
+         ; ...
+    }
+
+    ```
+
+    ```
+    let incr (n:int) : St unit 
+      = STATE?.put_low (STATE?.get_low() + n)
+
+    let incr2 () : St unit 
+      = if (STATE?.get_high() = 42) then (incr 2)
+                                    else (incr 1; incr 1)
+
+    let non_interference ()
+      : Lemma (forall h0 h1 n. let (_ , (h0' , n' )) = reify (incr2 ()) (h0,n) in 
+                               let (_ , (h1' , n'')) = reify (incr2 ()) (h1,n) in n' = n'')
+      = ()
+    ```
 
 * {.fragment} or even about **different runs** of **different programs**
 
@@ -504,5 +540,18 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 
 * **Efficient low-level parsers and printers** (metaprogramming)
 
+<!------------------------------------------------------------------------------>
 
+## So that's it ##
 
+* Friday: A Gentle Introduction to F\* (Purely Functional Programs)
+
+* Yesterday: Verifying Stateful Programs in F\*
+
+* Today: Monotonic State in F\*
+
+* Today: F\*'s Extensible Effect System and Metaprogramming in F\*
+
+~Center
+[![fstar-logo]](https://www.fstar-lang.org)
+~
