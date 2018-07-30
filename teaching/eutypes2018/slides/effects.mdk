@@ -96,6 +96,29 @@ total reifiable new_effect STATE = STATE_m heap
 
 <!------------------------------------------------------------------------------>
 
+## Programming with effects, in direct style ##
+
+* In F\*, the programmer writes:
+  ```
+  let incr () : STATE unit ...
+    = let x = get() in
+      put (x + 1);
+      let y = get() in
+      assert (y > x)
+  ```
+
+* {.fragment} Which is then made explicitly monadic via type and effect inference
+
+  ```
+  let incr () : STATE unit ...
+    = STATE.bind (STATE.get ()) (fun x -> 
+      STATE.bind (STATE.put (x + 1)) (fun _ ->
+      STATE.bind (STATE.get ()) (fun y ->
+      STATE.return (assert (y > x)))))
+  ```
+
+<!------------------------------------------------------------------------------>
+
 ## Monadic lifts in F*: State + Exceptions ##
 
 ```
@@ -126,35 +149,13 @@ new_effect {
 ~Fragment
 ```
 sub_effect STATE ~> STEXN {
-  lift = fun (a:Type) (e:st nat a) ->
-  
-         fun s -> let (x,s') = e s in (Inl x, s')
+  lift = fun (a:Type)
+             (e:st nat a)                                      (* st computation *)
+         ->
+             fun s -> let (x,s') = e s in (Inl x, s')          (* stexn computation *)
 }
 ```
 ~
-
-<!------------------------------------------------------------------------------>
-
-## Programming with effects, in direct style ##
-
-* In F\*, the programmer writes:
-  ```
-  let incr () : STATE unit ...
-    = let x = get() in
-      put (x + 1);
-      let y = get() in
-      assert (y > x)
-  ```
-
-* {.fragment} Which is then made explicitly monadic via type and effect inference
-
-  ```
-  let incr () : STATE unit ...
-    = STATE.bind (STATE.get ()) (fun x -> 
-      STATE.bind (STATE.put (x + 1)) (fun _ ->
-      STATE.bind (STATE.get ()) (fun y ->
-      STATE.return (assert (y > x)))))
-  ```
 
 <!------------------------------------------------------------------------------>
 
@@ -242,7 +243,7 @@ let incr () = STATE.bind (STATE.get()) (fun x ->
                                  STATE.put_wp (x + 1)))
   ```
   ```
-  = (fun n0 k -> k () (n0 + 1)) 
+                               = fun n0 k -> k () (n0 + 1)
   ```
 * {.fragment} **Generic way of computing weakest-preconditions for all effects**
   - provided we have a monad structure on predicate transformers
@@ -293,9 +294,9 @@ by selective **continuation-passing style (CPS)** returning `Type0`
   - type system (conservatively) restricts where the marker `M` can appear
 
 * {.fragment} **This works well for large class of monadic effects:**\
-state, exceptions, their combinations, continuations, etc.
+  - state, exceptions, their combinations, continuations, etc.
 
-* {.fragment} Summary: From a monadic effect definition we can derive a\
+* {.fragment} [**Summary:**]{color:DarkBlue} From a monadic effect definition we can derive a\
   **correct-by-construction weakest-precondition calculus** for this effect.
 
 <!-- commented this out because of lack of time -->
@@ -379,14 +380,15 @@ state, exceptions, their combinations, continuations, etc.
 ## Verifying effectful programs ## {#effect2}
 ### New way: extrinsically (by exposing pure monadic representation) ###
 
-* {.fragment} Monadic reification (intuitively)
+* {.fragment} Monadic reification (derived from `STATE.repr`, intuitively)
   ```
   STATE.reify : (St a) -> Ghost (nat -> Tot (a * nat))
   ```
 
 * {.fragment} Allows us to give **weak specification** to an effectful function
   ```
-    let incr (r:ref nat) : St unit = (r := (!r + 1))
+  let incr (r:ref nat) : St unit
+    = r := !r + 1
   ```
 
 * {.fragment} and **prove lemmas about reification** of effectful computation
