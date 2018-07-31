@@ -478,7 +478,9 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 
 * can **introspect on F\* terms** (deep embedding, simply typed)
 
-* can be **[interpreted]{color:DarkRed}** by F\*'s normalizer or **[compiled to OCaml]{color:DarkGreen}**
+* can be **[interpreted]{color:DarkRed}** by F\*'s normaliser(s)
+
+* or **[compiled to OCaml]{color:DarkGreen}** and used as **native plugins**
 
 * {.fragment} **user-defined, non-primitive effect**: proof state + exceptions monad
 
@@ -490,9 +492,9 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 
     let __tac (a:Type) = proofstate -> Tot (__result a)
 
-    new_effect {
+    (* reifiable *) new_effect {
       TAC : a:Type -> Effect
-      with repr     = __tac
+      with repr = __tac
            ...
     }
 
@@ -500,31 +502,42 @@ by selective **continuation-passing style (CPS)** returning `Type0`
     ```
 <!------------------------------------------------------------------------------>
 
-## Tactics can discharge verification conditions (replacing SMT) ##
+## Tactics can [discharge]{color:DarkBlue} verification conditions (replacing SMT) ##
 
 ~Center
-![tactics-assert_by_tactic]
+<img src="../../stuff/tactics-assert_by_tactic.png" width="80%">
 ~
-[tactics-assert_by_tactic]: ../../stuff/tactics-assert_by_tactic.png { heigth=50% }
+
+<!-- [tactics-assert_by_tactic]: ../../stuff/tactics-assert_by_tactic.png { heigth=50% } -->
 
 <!------------------------------------------------------------------------------>
 
 
-## Tactics can massage verification conditions (complementing SMT) ##
+## Tactics can [massage]{color:DarkGreen} verification conditions (complementing SMT) ##
 
 ~Center
-![tactics-canon]
+<img src="../../stuff/tactics-canon.png" width="90%">
 ~
-[tactics-canon]: ../../stuff/tactics-canon.png { heigth=50% }
+
+<!-- [tactics-canon]: ../../stuff/tactics-canon.png { heigth=50% } -->
 
 <!------------------------------------------------------------------------------>
 
-## Tactics can synthesize F\* terms (metaprogramming) ##
+## Tactics can [synthesize]{color:DarkRed} F\* terms (metaprogramming) ##
 
 ~Center
-![tactics-synth_by_tactic]
+<img src="../../stuff/tactics-synth_by_tactic.png" width="90%">
 ~
-[tactics-synth_by_tactic]: ../../stuff/tactics-synth_by_tactic.png { heigth=50% }
+
+<!-- [tactics-synth_by_tactic]: ../../stuff/tactics-synth_by_tactic.png { heigth=50% } -->
+
+<!------------------------------------------------------------------------------>
+
+## Tactics have also been used to extend F\* with [typeclasses]{color:DarkOrange} ##
+
+~Center
+<img src="../../stuff/tactics-typeclasses.png" width="100%">
+~
 
 <!------------------------------------------------------------------------------>
 
@@ -542,7 +555,7 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 
 <!------------------------------------------------------------------------------>
 
-## That's it ##
+## Time to conclude! ##
 
 * Friday: A Gentle Introduction to F\* (Purely Functional Programs)
 

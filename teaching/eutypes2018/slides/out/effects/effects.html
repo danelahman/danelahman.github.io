@@ -6466,21 +6466,24 @@
 <p data-line="479"><span data-line="479"></span>can <span data-line="479"></span><strong class="strong-star2">introspect on F* terms</strong><span data-line="479"></span> (deep embedding, simply typed)
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="481">
-<p data-line="481"><span data-line="481"></span>can be <span data-line="481"></span><strong class="strong-star2"><span style="color:DarkRed">interpreted</span></strong><span data-line="481"></span> by F<span data-line="481"></span>*<span data-line="481"></span>&#39;<span data-line="481"></span>s normalizer or <span data-line="481"></span><strong class="strong-star2"><span style="color:DarkGreen">compiled to OCaml</span></strong><span data-line="481"></span>
+<p data-line="481"><span data-line="481"></span>can be <span data-line="481"></span><strong class="strong-star2"><span style="color:DarkRed">interpreted</span></strong><span data-line="481"></span> by F<span data-line="481"></span>*<span data-line="481"></span>&#39;<span data-line="481"></span>s normaliser(s)
 </p></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="483">
-<p data-line="483"><span data-line="483"></span><strong class="strong-star2">user-defined, non-primitive effect</strong><span data-line="483"></span>: proof state<span data-line="483"></span> <span data-line="483"></span>+ exceptions monad
+<li class="li ul-li list-star-li loose-li" data-line="483">
+<p data-line="483"><span data-line="483"></span>or <span data-line="483"></span><strong class="strong-star2"><span style="color:DarkGreen">compiled to OCaml</span></strong><span data-line="483"></span> and used as <span data-line="483"></span><strong class="strong-star2">native plugins</strong><span data-line="483"></span>
+</p></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="485">
+<p data-line="485"><span data-line="485"></span><strong class="strong-star2">user-defined, non-primitive effect</strong><span data-line="485"></span>: proof state<span data-line="485"></span> <span data-line="485"></span>+ exceptions monad
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="485" data-line-first="486" style="display:block"><code data-line="486">  <span style="color:blue">noeq</span> <span style="color:blue">type</span> __result a =
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="487" data-line-first="488" style="display:block"><code data-line="488">  <span style="color:blue">noeq</span> <span style="color:blue">type</span> __result a =
       | Success <span style="color:blue">of</span> a * proofstate
       | Failed  <span style="color:blue">of</span> string *   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> error message </span><span style="color:darkgreen">*)</span>
                    proofstate <span style="color:darkgreen">(*</span><span style="color:darkgreen"> the proofstate at time of failure </span><span style="color:darkgreen">*)</span>
 
   <span style="color:blue">let</span> __tac (a:<span style="color:blue">Type</span>) = proofstate <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> (__result a)
 
-  <span style="color:blue">new_effect</span> {
+  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> reifiable </span><span style="color:darkgreen">*)</span> <span style="color:blue">new_effect</span> {
     TAC : a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> Effect
-    <span style="color:blue">with</span> repr     = __tac
+    <span style="color:blue">with</span> repr = __tac
          ...
   }
 
@@ -6490,63 +6493,78 @@
 
 </li></ul>
 </section>
-<section id="sec-tactics-can-discharge-verification-conditions-replacing-smt" class="section section2" data-section-depth="2" data-line="503"><h3 id="heading-sec-tactics-can-discharge-verification-conditions-replacing-smt" class="h2" data-heading-depth="2" style="display:block">Tactics can discharge verification conditions (replacing SMT)</h3>
-<div class="center align-center" data-line="505" style="text-align:center">
-<p class="p noindent" data-line="506"><span data-line="506"></span><img src="../../stuff/tactics-assert_by_tactic.png" alt="tactics-assert_by_tactic" data-path="../../stuff/tactics-assert_by_tactic.png" data-linkid="tactics-assert_by_tactic" style="heigth:50%"></p></div><!------------------------------------------------------------------------------>
+<section id="sec-tactics-can-dischargecolor-darkblue-verification-conditions-replacing-smt" class="section section2" data-section-depth="2" data-line="505"><h3 id="heading-sec-tactics-can-dischargecolor-darkblue-verification-conditions-replacing-smt" class="h2" data-heading-depth="2" style="display:block">Tactics can <span style="color:DarkBlue">discharge</span> verification conditions (replacing SMT)</h3>
+<div class="center align-center" data-line="507" style="text-align:center">
+<p class="p noindent" data-line="508"><span data-line="508"></span><img src="../../stuff/tactics-assert_by_tactic.png" width="80%"></p></div><!-- [tactics-assert_by_tactic]: ../../stuff/tactics-assert_by_tactic.png { heigth=50% } -->
+
+
+<!------------------------------------------------------------------------------>
 
 
 
 </section>
-<section id="sec-tactics-can-massage-verification-conditions-complementing-smt" class="section section2" data-section-depth="2" data-line="513"><h3 id="heading-sec-tactics-can-massage-verification-conditions-complementing-smt" class="h2" data-heading-depth="2" style="display:block">Tactics can massage verification conditions (complementing SMT)</h3>
-<div class="center align-center" data-line="515" style="text-align:center">
-<p class="p noindent" data-line="516"><span data-line="516"></span><img src="../../stuff/tactics-canon.png" alt="tactics-canon" data-path="../../stuff/tactics-canon.png" data-linkid="tactics-canon" style="heigth:50%"></p></div><!------------------------------------------------------------------------------>
+<section id="sec-tactics-can-massagecolor-darkgreen-verification-conditions-complementing-smt" class="section section2" data-section-depth="2" data-line="516"><h3 id="heading-sec-tactics-can-massagecolor-darkgreen-verification-conditions-complementing-smt" class="h2" data-heading-depth="2" style="display:block">Tactics can <span style="color:DarkGreen">massage</span> verification conditions (complementing SMT)</h3>
+<div class="center align-center" data-line="518" style="text-align:center">
+<p class="p noindent" data-line="519"><span data-line="519"></span><img src="../../stuff/tactics-canon.png" width="90%"></p></div><!-- [tactics-canon]: ../../stuff/tactics-canon.png { heigth=50% } -->
+
+
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-tactics-can-synthesize-f--terms-metaprogramming" class="section section2" data-section-depth="2" data-line="522"><h3 id="heading-sec-tactics-can-synthesize-f--terms-metaprogramming" class="h2" data-heading-depth="2" style="display:block">Tactics can synthesize F* terms (metaprogramming)</h3>
-<div class="center align-center" data-line="524" style="text-align:center">
-<p class="p noindent" data-line="525"><span data-line="525"></span><img src="../../stuff/tactics-synth_by_tactic.png" alt="tactics-synth_by_tactic" data-path="../../stuff/tactics-synth_by_tactic.png" data-linkid="tactics-synth_by_tactic" style="heigth:50%"></p></div><!------------------------------------------------------------------------------>
+<section id="sec-tactics-can-synthesizecolor-darkred-f--terms-metaprogramming" class="section section2" data-section-depth="2" data-line="526"><h3 id="heading-sec-tactics-can-synthesizecolor-darkred-f--terms-metaprogramming" class="h2" data-heading-depth="2" style="display:block">Tactics can <span style="color:DarkRed">synthesize</span> F* terms (metaprogramming)</h3>
+<div class="center align-center" data-line="528" style="text-align:center">
+<p class="p noindent" data-line="529"><span data-line="529"></span><img src="../../stuff/tactics-synth_by_tactic.png" width="90%"></p></div><!-- [tactics-synth_by_tactic]: ../../stuff/tactics-synth_by_tactic.png { heigth=50% } -->
+
+
+<!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-some-uses-of-tactics" class="section section2" data-section-depth="2" data-line="531"><h3 id="heading-sec-some-uses-of-tactics" class="h2" data-heading-depth="2" style="display:block">Some uses of tactics</h3>
-<ul class="ul list-star loose" data-line="533">
-<li class="li ul-li list-star-li loose-li" data-line="533">
-<p data-line="533"><span data-line="533"></span><strong class="strong-star2">Reflective tactics for arithmetic</strong><span data-line="533"></span> (proof automation)
+<section id="sec-tactics-have-also-been-used-to-extend-f--with-typeclassescolor-darkorange" class="section section2" data-section-depth="2" data-line="536"><h3 id="heading-sec-tactics-have-also-been-used-to-extend-f--with-typeclassescolor-darkorange" class="h2" data-heading-depth="2" style="display:block">Tactics have also been used to extend F* with <span style="color:DarkOrange">typeclasses</span></h3>
+<div class="center align-center" data-line="538" style="text-align:center">
+<p class="p noindent" data-line="539"><span data-line="539"></span><img src="../../stuff/tactics-typeclasses.png" width="100%"></p></div><!------------------------------------------------------------------------------>
+
+
+</section>
+<section id="sec-some-uses-of-tactics" class="section section2" data-section-depth="2" data-line="544"><h3 id="heading-sec-some-uses-of-tactics" class="h2" data-heading-depth="2" style="display:block">Some uses of tactics</h3>
+<ul class="ul list-star loose" data-line="546">
+<li class="li ul-li list-star-li loose-li" data-line="546">
+<p data-line="546"><span data-line="546"></span><strong class="strong-star2">Reflective tactics for arithmetic</strong><span data-line="546"></span> (proof automation)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="535">
-<p data-line="535"><span data-line="535"></span><strong class="strong-star2">Bitvectors in Vale</strong><span data-line="535"></span> (proof automation)
+<li class="li ul-li list-star-li loose-li" data-line="548">
+<p data-line="548"><span data-line="548"></span><strong class="strong-star2">Bitvectors in Vale</strong><span data-line="548"></span> (proof automation)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="537">
-<p data-line="537"><span data-line="537"></span><strong class="strong-star2">Separation logic</strong><span data-line="537"></span> (proof automation)
+<li class="li ul-li list-star-li loose-li" data-line="550">
+<p data-line="550"><span data-line="550"></span><strong class="strong-star2">Separation logic</strong><span data-line="550"></span> (proof automation)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="539">
-<p data-line="539"><span data-line="539"></span><strong class="strong-star2">Pattern matcher</strong><span data-line="539"></span> (metaprogramming)
+<li class="li ul-li list-star-li loose-li" data-line="552">
+<p data-line="552"><span data-line="552"></span><strong class="strong-star2">Pattern matcher</strong><span data-line="552"></span> (metaprogramming)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="541">
-<p data-line="541"><span data-line="541"></span><strong class="strong-star2">Efficient low-level parsers and printers</strong><span data-line="541"></span> (metaprogramming)
+<li class="li ul-li list-star-li loose-li" data-line="554">
+<p data-line="554"><span data-line="554"></span><strong class="strong-star2">Efficient low-level parsers and printers</strong><span data-line="554"></span> (metaprogramming)
 </p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-thats-it" class="section section2" data-section-depth="2" data-line="545"><h3 id="heading-sec-thats-it" class="h2" data-heading-depth="2" style="display:block">That&#39;s it</h3>
-<ul class="ul list-star loose" data-line="547">
-<li class="li ul-li list-star-li loose-li" data-line="547">
-<p data-line="547"><span data-line="547"></span>Friday: A Gentle Introduction to F<span data-line="547"></span>*<span data-line="547"></span> (Purely Functional Programs)
+<section id="sec-time-to-conclude" class="section section2" data-section-depth="2" data-line="558"><h3 id="heading-sec-time-to-conclude" class="h2" data-heading-depth="2" style="display:block">Time to conclude!</h3>
+<ul class="ul list-star loose" data-line="560">
+<li class="li ul-li list-star-li loose-li" data-line="560">
+<p data-line="560"><span data-line="560"></span>Friday: A Gentle Introduction to F<span data-line="560"></span>*<span data-line="560"></span> (Purely Functional Programs)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="549">
-<p data-line="549"><span data-line="549"></span>Yesterday: Verifying Stateful Programs in F<span data-line="549"></span>*<span data-line="549"></span>
+<li class="li ul-li list-star-li loose-li" data-line="562">
+<p data-line="562"><span data-line="562"></span>Yesterday: Verifying Stateful Programs in F<span data-line="562"></span>*<span data-line="562"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="551">
-<p data-line="551"><span data-line="551"></span>Today: Monotonic State in F<span data-line="551"></span>*<span data-line="551"></span>
+<li class="li ul-li list-star-li loose-li" data-line="564">
+<p data-line="564"><span data-line="564"></span>Today: Monotonic State in F<span data-line="564"></span>*<span data-line="564"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="553">
-<p data-line="553"><span data-line="553"></span>Today: F<span data-line="553"></span>*<span data-line="553"></span>&#39;<span data-line="553"></span>s Extensible Effect System and Metaprogramming in F<span data-line="553"></span>*<span data-line="553"></span>
+<li class="li ul-li list-star-li loose-li" data-line="566">
+<p data-line="566"><span data-line="566"></span>Today: F<span data-line="566"></span>*<span data-line="566"></span>&#39;<span data-line="566"></span>s Extensible Effect System and Metaprogramming in F<span data-line="566"></span>*<span data-line="566"></span>
 </p></li></ul>
 
-<div class="center align-center" data-line="555" style="text-align:center">
-<p class="p noindent" data-line="556"><span data-line="556"></span><a href="https://www.fstar-lang.org"><img src="../../stuff/fstar-new.png" alt="fstar-logo" data-path="../../stuff/fstar-new.png" data-linkid="fstar-logo" style="width:200px"></a></p></div></section></div></div><span data-line=""></span></div>
+<div class="center align-center" data-line="568" style="text-align:center">
+<p class="p noindent" data-line="569"><span data-line="569"></span><a href="https://www.fstar-lang.org"><img src="../../stuff/fstar-new.png" alt="fstar-logo" data-path="../../stuff/fstar-new.png" data-linkid="fstar-logo" style="width:200px"></a></p></div></section></div></div><span data-line=""></span></div>
 </body>
 <script>
     // initialize printing
