@@ -16,7 +16,7 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 
 <p>Friday, 10 August, 2018:</p>
 <ul>
-<li>10:30--11:30 A Gentle Introduction to F*: Verifying Purely Functional Programs (<a href="slides/out/pure-fun/pure-fun.html" target="_blank">slides</a>)</li>
+<li>10:30--11:30 <b>A Gentle Introduction to F*: Verifying Purely Functional Programs</b> (<a href="slides/out/pure-fun/pure-fun.html" target="_blank">slides</a>)</li>
 <ul>
 <li style="margin-top:5px"><b>Code:</b></li>
 <ul>
@@ -31,7 +31,7 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 
 <p>Saturday, 11 August, 2018:</p>
 <ul>
-<li>16:30--17:30 Verifying Stateful Programs with F* (<a href="slides/out/state/state.html" target="_blank">slides</a>)</li>
+<li>16:30--17:30 <b>Verifying Stateful Programs with F*</b> (<a href="slides/out/state/state.html" target="_blank">slides</a>)</li>
 <ul>
 <li style="margin-top:5px">F*'s ML-style garbage-collected memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Heap.fst" target="_blank">FStar.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a></li>
 <li>F*'s low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.fst" target="_blank">FStar.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>  
@@ -52,7 +52,7 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 
 <p>Sunday, 12 August, 2018:</p>
 <ul>
-<li>09:00--10:00 Monotonic State in F* (<a href="slides/out/monotonic/monotonic.html" target="_blank">slides</a>)</li>
+<li>09:00--10:00 <b>Monotonic State in F*</b> (<a href="slides/out/monotonic/monotonic.html" target="_blank">slides</a>)</li>
 <ul>
 <li style="margin-top:5px">F*'s witnessed modality: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fsti" target="_blank">FStar.Monotonic.Witnessed.fsti</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fst" target="_blank">FStar.Monotonic.Witnessed.fst</a></li>
 <li>F*'s monotonic ML-style memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Heap.fst" target="_blank">FStar.Monotonic.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Ref.fst" target="_blank">FStar.Ref.fst</a></li>
@@ -66,9 +66,9 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 </ul>
 <li><b>Exercise 1:</b> Typing of initializable and freezable references read and freeze actions (<a href="ex/InitFreezeMST.fst" target="_blank">InitFreezeMST.fst</a>)</li>
 <li><b>Exercise 2:</b> Define a notion of initializable and freezable arrays (see the <a href="slides/out/monotonic/monotonic.html#/sec-exercise--initializable-and-freezable-arrays" target="_blank">lecture slides</a> for details)</li>
-<li style="margin-bottom:10px"><b>Exercise 3:</b> Implement a mutable monotonic 2D point whose coordinates are related by some pre-given relation, and then use <a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a> to enable coordinate-wise updates interface</li>
+<li style="margin-bottom:10px; width:600px"><b>Exercise 3:</b> Implement a mutable monotonic 2-dimensional point whose coordinates are related by some pre-given relation, and then use <a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a> to enable a coordinate-wise updates interface</li>
 </ul>
-<li>12:00--13:00 F*'s Extensible Effect System and Metaprogramming in F* (<a href="slides/out/effects/effects.html" target="_blank">slides</a>)</li>
+<li>12:00--13:00 F*'s <b>Extensible Effect System and Metaprogramming in F*</b> (<a href="slides/out/effects/effects.html" target="_blank">slides</a>)</li>
 <ul>
 <li style="margin-top:5px">F*'s extensible effect system; Dijkstra monads (for free) (<a href="https://www.fstar-lang.org/papers/mumon/" target="_blank">paper1</a>, <a href="https://www.fstar-lang.org/papers/dm4free/" target="_blank">paper2</a>, <a href="https://github.com/FStarLang/FStar/tree/master/examples/dm4free" target="_blank">examples</a>)</li>
 <li>F*'s tactics and metaprogramming framework (<a href="https://arxiv.org/abs/1803.06547" target="_blank">paper</a>, <a href="https://github.com/FStarLang/FStar/tree/master/examples/tactics" target="_blank">examples</a>)</li>
@@ -80,7 +80,7 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li><a href="code/effects/Printers.fst" target="_blank">Printers.fst</a> (synthesising F* terms: printer for inductive types)</li>
 <li style="margin-bottom:5px"><a href="code/effects/Typeclasses.fst" target="_blank">Typeclasses.fst</a> (metaprogramming typeclasses)</li>
 </ul>
-<li style="margin-bottom:10px"><b>Exercise:</b> Implement a stateful Fibonacci program (see <a href="slides/out/state/state.html" target="_blank">Lecture 2</a>, but with a weak computation type) using a 2-location global state (for example, as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and prove using monadic reification (see the lecture slides and the code in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) that the stateful Fibonacci program is equivalent to the purely functional code.</li>
+<li style="margin-bottom:10px; width:600px"><b>Exercise:</b> Implement stateful Fibonacci (similarly to <a href="slides/out/state/state.html#/sec-stateful-fibonacci--1-1-2-3-5-8-" target="_blank">Lecture 2</a>, but with a weak type) using a 2-location global state (as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a> and the code in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) to prove that this stateful Fibonacci is equivalent to the purely functional code</li>
 </ul>
 <li style="margin-bottom:20px">15:00--16:00 Exercise Class</li>
 </ul>
