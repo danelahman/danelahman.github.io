@@ -60,16 +60,18 @@ Slides, code, and exercises <br/>@<br/>
 
 <!-- Two, mostly disjoint sides of program verification research -->
 
+\ 
+
 | [Interactive proof assistants]{color:DarkRed;} ||                                 | [Semi-automated verifiers of<br/> imperative programs]{color:DarkBlue;} ||
 |:----------------------:|:-----------------------+:~{background-color:LightBlue}~~:+:--------------------------------:|:---------------------------------|
-| Coq,                   | CompCert,              | \ \ *air* \                     | Dafny,                           | Verve,                           |
-| Isabelle,              | seL4,                  |                                 | FramaC,                          | IronClad,                        |
-| Agda,                  | Bedrock,               | \ \ *gap* \                     | Why3                             | miTLS                            |
-| Lean,                  | 4 colors               |                                 |                                  | Vale                             |
+| **Coq**,                   | CompCert,              | \ \ *air* \                     | **Dafny**,                           | Verve,                           |
+| **Isabelle**,              | seL4,                  |                                 | **FramaC**,                          | IronClad,                        |
+| **Agda**,                  | Bedrock,               | \ \ *gap* \                     | **Why3**                             | miTLS,                             |
+| **Lean**                  | 4 colors               |                                 |                                  | Vale                             |
 
 * **[Left corner]{color:DarkRed;}**:
 Very expressive dependently-typed logics,\
-but only purely functional programming
+but mostly only purely functional programming
 
 * **[Right corner]{color:DarkBlue;}**:
 effectful programming, SMT-based automation,\
@@ -125,7 +127,7 @@ but only first-order logic
 
   |   |  
 --- | --- |
-Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy**]{color:DarkBlue;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
+[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>[Kenji Maillard]{color:DarkBlue} | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
 
 
 
@@ -148,7 +150,9 @@ Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/
 * {.fragment} Recursive functions
   ```
   val factorial : int -> int
-  let rec factorial n = (if n = 0 then 1 else n * (factorial (n - 1)))
+  
+  let rec factorial n
+    = if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
 * {.fragment} (Simple) inductive datatypes and pattern matching
@@ -159,7 +163,7 @@ Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/
 
   val map : ('a -> 'b) -> list 'a -> list 'b
   let rec map f x = match x with
-    | [] -> []
+    | []     -> []
     | h :: t -> f h :: map f t
   ```
 
@@ -314,8 +318,9 @@ type nat = x:int{x >= 0}
 ~
 <!-- Cheating quite badly above since I don't want to tell them about ghost -->
 
-* {.fragment} Sub-effecting: `Tot t <: Dv t`\
-  (e.g. divergent code can include pure code)
+* {.fragment} Sub-effecting: `Tot t <: Dv t`
+
+* {.fragment} So, divergent code can include pure code
   ```
   incr 2 + factorial (-1) : Dv int
   ```
@@ -476,7 +481,7 @@ let rec rev_involutive (#a:Type) l =
   | hd::tl -> rev_involutive tl; rev_snoc (reverse tl) hd
 ```
 
-## Often lemmas are unavoidable (but SMT can help) ##
+## Often lemmas are unavoidable ([but SMT can help]{color:DarkBlue}) ##
 <!-- need lemma for 3 reasons:
 - as before, this property is rather arbitrary
 - this property is "relational" (2 calls to reverse)
@@ -536,7 +541,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 val progress : #e:exp -> #t:typ -> h:typing empty e t ->
                          Pure (cexists (fun e' -> step e e'))
                               (requires (~ (is_value e)))
-                              (ensures (fun _ -> True)) (decreases h)
+                              (ensures  (fun _ -> True)) (decreases h)
 let rec progress #e #t h =
   match h with
   | TyApp #g #e1 #e2 #t11 #t12 h1 h2 ->
