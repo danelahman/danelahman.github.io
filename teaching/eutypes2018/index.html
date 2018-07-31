@@ -74,7 +74,11 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li>F*'s tactics and metaprogramming framework (<a href="https://arxiv.org/abs/1803.06547" target="_blank">paper</a>, <a href="https://github.com/FStarLang/FStar/tree/master/examples/tactics" target="_blank">examples</a>)</li>
 <li><b>Code:</b></li>
 <ul>
-<li style="margin-bottom:5px"><a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a> (proving noninterference using monadic reification)</li>
+<li><a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a> (proving noninterference using monadic reification)</li>
+<li><a href="code/effects/Logic.fst" target="_blank">Logic.fst</a> (discharging verification conditions: simple tautology)</li>
+<li><a href="code/effects/CanonCommSemiring.fst" target="_blank">CanonCommSemiring.fst</a> (massaging verification conditions: canonicaliser for commutative semirings)</li>
+<li><a href="code/effects/Printers.fst" target="_blank">Printers.fst</a> (synthesising F* terms: printer for inductive types)</li>
+<li style="margin-bottom:5px"><a href="code/effects/Typeclasses.fst" target="_blank">Typeclasses.fst</a> (metaprogramming typeclasses)</li>
 </ul>
 <li style="margin-bottom:10px"><b>Exercise:</b> Implement a stateful Fibonacci program (see <a href="slides/out/state/state.html" target="_blank">Lecture 2</a>, but with a weak computation type) using a 2-location global state (for example, as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and prove using monadic reification (see the lecture slides and the code in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) that the stateful Fibonacci program is equivalent to the purely functional code.</li>
 </ul>
