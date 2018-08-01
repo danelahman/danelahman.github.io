@@ -1,8 +1,8 @@
 include ../../Makefile.include
 
 all:
-	$(FSTAR) Ackermann.fst
-        $(FSTAR) Fact.fst
+	$(FSTAR) Ackermann.fst 
+	$(FSTAR) Fact.fst
 	$(FSTAR) Fun.fst
 	$(FSTAR) Types.fst
 	$(FSTAR) Purity.fst
