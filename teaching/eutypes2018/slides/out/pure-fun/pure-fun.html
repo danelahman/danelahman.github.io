@@ -6014,7 +6014,7 @@ effectful programming, SMT-based automation,<span data-line="77"></span><br>
 <li class="li ul-li list-dash-li compact-li" data-line="86"><span data-line="86"></span>like OCaml, F<span data-line="86"></span>#<span data-line="86"></span>, Haskell, <span data-line="86"></span>&#8230;<span data-line="86"></span>
 
 <ul class="ul list-dash compact" data-line="87">
-<li class="li ul-li list-dash-li compact-li" data-line="87"><span data-line="87"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">let</span> incr = <span style="color:blue">fun</span> (r:ref a) <span style="color:blue">-&gt;</span> <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> r := x + <span class="constant" style="color:purple">1</span> <span style="color:blue">in</span> x</code><span data-line="87"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="87"><span data-line="87"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">let</span> incr (r:ref a) = <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> r := x + <span class="constant" style="color:purple">1</span> <span style="color:blue">in</span> x</code><span data-line="87"></span>
 </li></ul></li>
 <li class="li ul-li list-dash-li compact-li" data-line="88"><span data-line="88"></span>F<span data-line="88"></span>*<span data-line="88"></span> extracted to OCaml or F<span data-line="88"></span>#<span data-line="88"></span> by default
 </li>
@@ -6228,14 +6228,14 @@ map (<span style="color:blue">fun</span> x <span style="color:blue">-&gt;</span>
 </li>
 <li class="li ul-li list-star-li compact-li fragment" data-line="266"><span data-line="266"></span>arbitrary total expression as <span data-line="266"></span><strong class="strong-star2">decreases metric</strong><span data-line="266"></span>
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="267" data-line-first="268" style="display:block"><code data-line="268"><span style="color:blue">val</span> ackermann: m:nat <span style="color:blue">-&gt;</span> n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> nat (<span style="color:blue">decreases</span> %[m;n])
-<span style="color:blue">let</span> <span style="color:blue">rec</span> ackermann n m =
-  <span style="color:blue">if</span> m=<span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> n + <span class="constant" style="color:purple">1</span>
-  <span style="color:blue">else</span> <span style="color:blue">if</span> n = <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> ackermann <span class="constant" style="color:purple">1</span> (m - <span class="constant" style="color:purple">1</span>)
-  <span style="color:blue">else</span> ackermann (ackermann (n - <span class="constant" style="color:purple">1</span>) m) (m - <span class="constant" style="color:purple">1</span>)</code></pre></li>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="267" data-line-first="268" style="display:block"><code data-line="268"><span style="color:blue">val</span> swapped_ackermann: n:nat <span style="color:blue">-&gt;</span> m:nat <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> nat (<span style="color:blue">decreases</span> %[m;n])
+<span style="color:blue">let</span> <span style="color:blue">rec</span> swapped_ackermann n m 
+  = <span style="color:blue">if</span> m = <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> n + <span class="constant" style="color:purple">1</span>
+    <span style="color:blue">else</span> <span style="color:blue">if</span> n = <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> swapped_ackermann <span class="constant" style="color:purple">1</span> (m - <span class="constant" style="color:purple">1</span>)
+    <span style="color:blue">else</span> swapped_ackermann (swapped_ackermann (n - <span class="constant" style="color:purple">1</span>) m) (m - <span class="constant" style="color:purple">1</span>)</code></pre></li>
 <li class="li ul-li list-star-li compact-li fragment" data-line="274"><span data-line="274"></span>default metric is lex ordering of all (non-function) args
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="275" data-line-first="276" style="display:block"><code data-line="276"><span style="color:blue">val</span> ackermann: m:nat <span style="color:blue">-&gt;</span> n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> nat</code></pre></li></ul>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="275" data-line-first="276" style="display:block"><code data-line="276"><span style="color:blue">val</span> ackermann: m:nat <span style="color:blue">-&gt;</span> n:nat <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> nat     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> and the definition swapped accordingly </span><span style="color:darkgreen">*)</span></code></pre></li></ul>
 </section>
 <section id="sec-the-divergence-effect-dv" class="section section2" data-section-depth="2" data-line="279"><h3 id="heading-sec-the-divergence-effect-dv" class="h2" data-heading-depth="2" style="display:block">The divergence effect (Dv)</h3>
 <ul class="ul list-star loose" data-line="281">

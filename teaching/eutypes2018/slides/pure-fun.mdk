@@ -84,7 +84,7 @@ but only first-order logic
 <!-- General-purpose -->
 * **[Functional programming language with effects]{color:Black;}**
   - like OCaml, F#, Haskell, ...
-    - `let incr = fun (r:ref a) -> let x = !r in r := x + 1 in x`
+    - `let incr (r:ref a) = let x = !r in r := x + 1 in x`
   - F\* extracted to OCaml or F\# by default
   - [subset of F\* compiled to efficient C code](https://github.com/FStarLang/kremlin){color:Black;}
 
@@ -265,15 +265,15 @@ type nat = x:int{x >= 0}
 * {.fragment} order constraints discharged by the SMT solver
 * {.fragment} arbitrary total expression as **decreases metric**
   ```
-  val ackermann: m:nat -> n:nat -> Tot nat (decreases %[m;n])
-  let rec ackermann n m =
-    if m=0 then n + 1
-    else if n = 0 then ackermann 1 (m - 1)
-    else ackermann (ackermann (n - 1) m) (m - 1)
+  val swapped_ackermann: n:nat -> m:nat -> Tot nat (decreases %[m;n])
+  let rec swapped_ackermann n m 
+    = if m = 0 then n + 1
+      else if n = 0 then swapped_ackermann 1 (m - 1)
+      else swapped_ackermann (swapped_ackermann (n - 1) m) (m - 1)
   ```
 * {.fragment} default metric is lex ordering of all (non-function) args
   ```
-  val ackermann: m:nat -> n:nat -> Tot nat
+  val ackermann: m:nat -> n:nat -> Tot nat     (* and the definition swapped accordingly *)
   ```
 
 ## The divergence effect (Dv) ##
