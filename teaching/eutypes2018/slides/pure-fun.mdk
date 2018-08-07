@@ -162,9 +162,11 @@ but only first-order logic
     | Cons : hd:a -> tl:list a -> list a
 
   val map : ('a -> 'b) -> list 'a -> list 'b
-  let rec map f x = match x with
-    | []     -> []
-    | h :: t -> f h :: map f t
+  
+  let rec map f x
+    = match x with
+      | []     -> []
+      | h :: t -> f h :: map f t
   ```
 
 * {.fragment} Lambdas
@@ -184,7 +186,7 @@ type nat = x:int{x >= 0}
 * {.fragment} Refinements introduced by type annotations (code unchanged)
   ```
   val factorial : nat -> nat
-  let rec factorial n = (if n = 0 then 1 else n * (factorial (n - 1)))
+  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
 * {.fragment} Logical obligations discharged by SMT (for else branch, simplified)
@@ -213,7 +215,7 @@ type nat = x:int{x >= 0}
 
 * {.fragment} Can express pre- and postconditions of pure functions
   ```
-  val incr : x:int -> y:int{y = x + 1}
+  val incr' : x:nat{odd x} -> y:nat{even y}
   ```
 
 * {.fragment} (Parameterised and indexed) inductive datatypes; implicit arguments
@@ -225,7 +227,7 @@ type nat = x:int{x >= 0}
   val map : #n:nat -> #a:Type -> #b:Type -> (a -> b) -> vec a n -> vec b n
   let rec map #n #a #b f as
     = match as with
-      | Nil -> Nil
+      | Nil        -> Nil
       | Cons hd tl -> Cons (f hd) (map f tl)
 
   map (fun x -> x + 42) (Cons 1 (Cons 2 (Cons 3 Nil)))
@@ -233,13 +235,13 @@ type nat = x:int{x >= 0}
 
 ## Total functions in F\* ##
 
-* The F\* functions we saw so far were all [total]{color:DarkBlue}
+* The F\* functions we saw so far were all [**total**]{color:DarkBlue}
 
 * `Tot` effect (default) = no side-effects, terminates on all inputs
 
   ```
   val factorial : nat -> Tot nat
-  let rec factorial n = (if n = 0 then 1 else n * (factorial (n - 1)))
+  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
 * {.fragment} **Quiz:** How about giving this weak type to factorial?
@@ -249,8 +251,8 @@ type nat = x:int{x >= 0}
 
 ~Fragment {.console}
   ```text
-  let rec factorial n = (if n = 0 then 1 else n * (factorial (n - 1)))
-                                                              ^^^^^
+  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
+                                                             ^^^^^
   Subtyping check failed; expected type (x:int{(x << n)}); got type int
   ```
   `factorial (-1)` loops! (`int` type in F\* is unbounded)
@@ -286,14 +288,15 @@ type nat = x:int{x >= 0}
 * {.fragment} Some useful code really is not always terminating
   ```
   val eval : exp -> Dv exp
-  let rec eval e =
-    match e with
-    | App (Lam x e1) e2 -> eval (subst x e2 e1)
-    | App e1 e2 -> eval (App (eval e1) e2)
-    | Lam x e1 -> Lam x (eval e1)
-    | _ -> e
-  let main = eval (App (Lam 0 (App (Var 0) (Var 0)))
-                       (Lam 0 (App (Var 0) (Var 0))))
+  let rec eval e
+    = match e with
+      | App (Lam x e1) e2 -> eval (subst x e2 e1)
+      | App e1 e2         -> eval (App (eval e1) e2)
+      | Lam x e1          -> Lam x (eval e1)
+      | _                 -> e
+    
+  let main () = eval (App (Lam 0 (App (Var 0) (Var 0)))
+                          (Lam 0 (App (Var 0) (Var 0))))
   ```
 ~Fragment {.console}
   ```text
@@ -308,6 +311,8 @@ type nat = x:int{x >= 0}
 * {.fragment} Only pure code can appear in specifications
   ```
   val factorial : int -> Dv int
+
+  type tau = x:int{x = factorial (-1)}
   ```
 ~Block {.console}
   ```text
@@ -334,7 +339,7 @@ type nat = x:int{x >= 0}
 ```
 val factorial : nat -> Tot nat
 ```
-* {.fragment}Can equivalently use pre- and postconditions for this
+* {.fragment}Can equivalently use [pre- and postconditions]{color:DarkGreen} for this
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
                                     (ensures  (fun y -> y >= 0))
@@ -356,7 +361,7 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 ```
 val factorial : nat -> Dv nat
 ```
-* {.fragment}Or the `Div` computation type (pre- and post- conditions)
+* {.fragment}Or the `Div` computation type (pre- and postconditions)
 ```
 val eval_closed : e:exp -> Div exp (requires (closed e))
                                      (ensures  (fun e' -> Lam? e' /\ closed e'))
@@ -458,7 +463,7 @@ val reverse: #a:Type -> list a -> Tot (list a)
 
 let rec reverse (#a:Type) l =
   match l with
-  | [] -> []
+  | []     -> []
   | hd::tl -> snoc (reverse tl) hd
 ```
 ~Fragment
@@ -468,7 +473,7 @@ val rev_snoc: #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reve
 
 let rec rev_snoc (#a:Type) l h =
   match l with
-  | [] -> ()
+  | []     -> ()
   | hd::tl -> rev_snoc tl h
 ```
 ~
@@ -477,7 +482,7 @@ val rev_involutive: #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
 
 let rec rev_involutive (#a:Type) l =
   match l with
-  | [] -> ()
+  | []     -> ()
   | hd::tl -> rev_involutive tl; rev_snoc (reverse tl) hd
 ```
 
@@ -494,7 +499,7 @@ val reverse: #a:Type -> list a -> Tot (list a)
 
 let rec reverse (#a:Type) l =
   match l with
-  | [] -> []
+  | []     -> []
   | hd::tl -> snoc (reverse tl) hd
 ```
 
@@ -504,7 +509,7 @@ val rev_snoc: #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reve
                                             
 let rec rev_snoc (#a:Type) l h =
   match l with
-  | [] -> ()
+  | []     -> ()
   | hd::tl -> rev_snoc tl h
 ```
 
@@ -513,7 +518,7 @@ val rev_involutive: #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
 
 let rec rev_involutive (#a:Type) l =
   match l with
-  | [] -> ()
+  | []     -> ()
   | hd::tl -> rev_involutive tl (*; rev_snoc (reverse tl) hd*)
 ```
 
@@ -625,7 +630,7 @@ got expression "s1" of type "Stack.stack"
 
 * {.fragment} **Goal:** type a variant of `StackClient.fst` (now without `Some?.v`'s)
 ```
-let main =
+let main () =
     ...
     let s3 = pop s2 (* <: stack *) in
     assert (s3 == s1)
