@@ -75,7 +75,7 @@ but mostly only purely functional programming
 
 * **[Right corner]{color:DarkBlue;}**:
 effectful programming, SMT-based automation,\
-but only first-order logic
+but only very weak logics
 
 <!------------------------------------------------------------------------------>
 
