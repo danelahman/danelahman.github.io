@@ -23,3 +23,4 @@ open FStar.ST
             (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ 
                                       sel h1 r == v))
 // END: ops
+

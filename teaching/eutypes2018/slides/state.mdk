@@ -146,6 +146,8 @@ let incr r = r := !r + 1
 [INCLUDE=../../../code/state/Incr2ST.fst:incr2]
 ```
 
+<br/>
+
 ```
   G |- e1 : ST t1 (requires (fun h0 -> pre))
                   (ensures  (fun h0 x1 h1 -> post))
@@ -185,7 +187,7 @@ let incr r = r := !r + 1
 [INCLUDE=../../../code/state/SwapRefsST.fst:swap_proof]
 ```
 ~
-* {.fragment} This variant is correct even when `r1` and `r2` are aliased
+* {.fragment} Note: This variant is correct even when `r1` and `r2` are aliased
 
 <!------------------------------------------------------------------------------>
 
@@ -285,26 +287,32 @@ let incr r = r := !r + 1
 * Mutable non-empty lists (for append-only logs, almost)
 
 ```
-type nlist = xs:list int{Cons? xs}
+module NList
+  abstract type nlist = xs:list int{Cons? xs}
 
-let create (x:int) : St (ref nlist) = alloc #nlist [x]
+  let create (x:int) : St (ref nlist) = alloc #nlist [x]
 
-let add (x:int) (r:ref nlist) : St unit =  r := x :: !r
+  let add (x:int) (r:ref nlist) : St unit =  r := x :: !r
 
-let read (r:ref nlist) : St nlist = !r
-
-let main() : St unit =
-  let r = create 1 in
-  add 2 r;
-  add 3 r;
-  (* r := []  -- fails: expected type nlist; got type list int *)
-  complex_procedure r;
-  let l = read r in 
-  assert ([3,2,1] `is_suffix_of` l)   (* -- fails, even if we would make nlist abstract 
-                                            and move it and its operations to their own 
-                                            module, so as to restrict complex_procedure
-                                            to `add` and `read` operations on ref. r *)  
+  let read (r:ref nlist) : St nlist = !r
 ```
+```
+  let f (r:ref nlist) = r := []    (* -- fails: expected type nlist; got type list int *)
+```
+~Fragment
+```
+module NListClient
+  let complex_procedure (r:ref nlist) : St unit = ...
+
+  let main () : St unit =
+    let r = create 1 in
+    add 2 r;
+    complex_procedure r;
+    let l = read r in 
+    assert ([2,1] `is_suffix_of` l)   (* -- fails, even though we know complex_procedure
+                                            can only use `add`, `read` operations on r *)  
+```
+~
 
 * {.fragment} **Tomorrow:** We'll see how monotonicity helps us prove such assertions
 
@@ -364,8 +372,8 @@ let main() : St unit =
 ## Low*: the low-level memory model ##
 
 * **HyperStack**
-  - hierarchical memory model that divides the heap into a tree of regions
-  - a distinguished set of regions that model the C call stack
+  - [hierarchical]{color:DarkBlue} memory model that divides the heap into a tree of [regions]{color:DarkBlue}
+  - a distinguished set of regions that model the C call [stack]{color:DarkRed}
   - (low-level) programs may use stack allocation, heap allocation, or both
 
 * {.fragment} `Stack` effect for stack-allocating programs (intuitively, `ST` on `HS`'s `mem`)
@@ -407,7 +415,6 @@ let f (): Stack UInt64.t (requires (fun _ -> True)) (ensures  (fun _ _ _ -> True
     assert (r = 43UL);                    
     r
 ```
-\ 
 ```
 uint64_t f()
 {
