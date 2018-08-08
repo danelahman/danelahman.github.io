@@ -510,7 +510,7 @@ let rec reverse (#a:Type) l =
 
 ```
 val rev_snoc : #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reverse l)
-                                            [SMTPat (reverse (snoc l h))]
+                                             [SMTPat (reverse (snoc l h))]
                                             
 let rec rev_snoc (#a:Type) l h =
   match l with
@@ -530,7 +530,7 @@ let rec rev_involutive (#a:Type) l =
 <!------------------------------------------------------------------------------>
 
 ## Verifying pure programs ## {#pure3}
-### Variant #3: [extrinsically]{color:DarkGreen} using proof terms ###
+### Variant #3: using [proof terms]{color:DarkGreen} ###
 
 <br/>
 

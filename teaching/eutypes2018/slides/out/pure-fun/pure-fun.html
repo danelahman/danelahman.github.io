@@ -6515,7 +6515,7 @@ Expected a pure expression; got an expression ... with effect &quot;DIV&quot;</c
   | []     <span style="color:blue">-&gt;</span> []
   | hd::tl <span style="color:blue">-&gt;</span> snoc (reverse tl) hd</code></pre>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="511" data-line-first="512" style="display:block"><code data-line="512"><span style="color:blue">val</span> rev_snoc : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> l:list a <span style="color:blue">-&gt;</span> h:a <span style="color:blue">-&gt;</span> <span style="color:blue">Lemma</span> (reverse (snoc l h) == h::reverse l)
-                                            [<span style="color:blue">SMTPat</span> (reverse (snoc l h))]
+                                             [<span style="color:blue">SMTPat</span> (reverse (snoc l h))]
                                             
 <span style="color:blue">let</span> <span style="color:blue">rec</span> rev_snoc (#a:<span style="color:blue">Type</span>) l h =
   <span style="color:blue">match</span> l <span style="color:blue">with</span>
@@ -6530,7 +6530,7 @@ Expected a pure expression; got an expression ... with effect &quot;DIV&quot;</c
 
 
 </section>
-<section id="pure3" class="section section2" data-section-depth="2" data-line="532"><h3 id="heading-pure3" class="h2" data-heading-depth="2" style="display:block">Verifying pure programs</h3><h4 id="sec-variant-3--extrinsicallycolor-darkgreen-using-proof-terms" class="h3" data-line="533" data-heading-depth="3" style="display:block"><span data-line="533"></span>Variant <span data-line="533"></span>#<span data-line="533"></span>3:<span data-line="533"></span> <span style="color:DarkGreen">extrinsically</span><span data-line="533"></span> using proof terms</h4>
+<section id="pure3" class="section section2" data-section-depth="2" data-line="532"><h3 id="heading-pure3" class="h2" data-heading-depth="2" style="display:block">Verifying pure programs</h3><h4 id="sec-variant-3--using-proof-termscolor-darkgreen" class="h3" data-line="533" data-heading-depth="3" style="display:block"><span data-line="533"></span>Variant <span data-line="533"></span>#<span data-line="533"></span>3: using<span data-line="533"></span> <span style="color:DarkGreen">proof terms</span></h4>
 <p class="p noindent" data-line="535"><span data-line="535"></span><br/><span data-line="535"></span>
 </p><!--
 ```

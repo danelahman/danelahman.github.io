@@ -29,16 +29,3 @@ let rec append_length_lemma (#a:Type) (xs ys : list a)
     | []       -> ()
     | x :: xs' -> append_length_lemma xs' ys
 // END: append_length_lemma
-
-(*
-Base case:
-length (append [] ys) = length [] + length ys
-length ys = 0 + length ys  -- trivial
-
-Inductive case:
-  IH: length (append xs' ys) = length xs' + length ys
-
-  TS: length (append (x::xs') ys) = length (x::xs') + length ys
-      length (x :: (append xs' ys)) = 1 + length xs' + length ys
-      1 + length (append xs' ys) = 1 + length xs' + length ys
-*)
