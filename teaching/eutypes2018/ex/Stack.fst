@@ -5,8 +5,9 @@ let stack = list int
 (* replace these admits with real definitions and proofs to match Stack.fsti *)
 
 let empty = admit () 
-let push = admit ()
 let is_empty = admit ()
+
+let push = admit ()
 let pop = admit ()
 let top = admit ()
 

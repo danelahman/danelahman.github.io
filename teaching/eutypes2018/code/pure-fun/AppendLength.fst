@@ -22,6 +22,7 @@ let rec append_length (#a:Type) (xs ys : list a)
 
 // BEGIN: append_length_lemma
 let rec append_length_lemma (#a:Type) (xs ys : list a) 
+
     : Lemma (length (append xs ys) = length xs + length ys)
     
     = match xs with

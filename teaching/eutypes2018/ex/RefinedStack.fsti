@@ -2,15 +2,15 @@ module RefinedStack
 
 val stack : Type0  (* type of stacks *)
 
-(* modify and implement this interface of refined stacks; the
-   main requirement is that pop and top do not return option type *)
+(* modify and implement this interface of refined stacks; the main
+   requirement is that *pop* and *top* must not return in option type *)
 
 (* hint: compared to Stack.fsti and Stack.fst, you will need to 
-         refine stack types below with the is_empty predicate;
-         see the lemmas in Stack.fsti for inspiration *)
+         refine stack types below with the is_empty predicate *)
 
-val is_empty : stack -> bool
 val empty : stack
+val is_empty : stack -> bool
+
 val push : int -> stack -> stack
-val pop : stack -> stack
-val top : stack -> int
+val pop : stack -> stack                (* before was option stack*)
+val top : stack -> int                  (* before was option int *)

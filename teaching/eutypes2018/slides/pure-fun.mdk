@@ -64,13 +64,13 @@ Slides, code, and exercises <br/>@<br/>
 
 | [Interactive proof assistants]{color:DarkRed;} ||                                 | [Semi-automated verifiers of<br/> imperative programs]{color:DarkBlue;} ||
 |:----------------------:|:-----------------------+:~{background-color:LightBlue}~~:+:--------------------------------:|:---------------------------------|
-| **Coq**,                   | CompCert,              | \ \ *air* \                     | **Dafny**,                           | Verve,                           |
-| **Isabelle**,              | seL4,                  |                                 | **FramaC**,                          | IronClad,                        |
-| **Agda**,                  | Bedrock,               | \ \ *gap* \                     | **Why3**                             | miTLS,                             |
-| **Lean**                  | 4 colors               |                                 |                                  | Vale                             |
+| &nbsp;&nbsp;&nbsp; **Coq**,                   |               | \ \ *air* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Dafny**,                           |                            |
+| &nbsp;&nbsp;&nbsp; **Agda**,              |                   |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **FramaC**,                          |                         |
+| &nbsp;&nbsp;&nbsp; **Lean**,                  |                | \ \ *gap* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Why3**,                              |                              |
+| &nbsp;&nbsp;&nbsp; **Isabelle**                  |               |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Liquid Types**                                 |                              |
 
 * **[Left corner]{color:DarkRed;}**:
-Very expressive dependently-typed logics,\
+Very expressive higher-order (dependently typed) logics,\
 but mostly only purely functional programming
 
 * **[Right corner]{color:DarkBlue;}**:
@@ -88,12 +88,12 @@ but only first-order logic
   - F\* extracted to OCaml or F\# by default
   - [subset of F\* compiled to efficient C code](https://github.com/FStarLang/kremlin){color:Black;}
 
-* **[Semi-automated verification system using SMT]{color:DarkBlue;}**
-  - like Dafny, FramaC, Why3, ...
-
 * **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
   <!-- - full dependency, inductive types, universe polymorphism -->
   - like Coq, Agda, Lean, ...
+
+* **[Semi-automated verification system using SMT]{color:DarkBlue;}**
+  - like Dafny, FramaC, Why3, Liquid Types, ...
 
 <!-- * {.fragment} Other tools in this space: -->
 <!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
@@ -114,7 +114,7 @@ but only first-order logic
       - [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
 
 *  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
-  - Fallback when SMT fails; also for mechanized metatheory:
+  - Fallback when SMT fails; also for mechanized metatheory
     - [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
     - [Wys*](http://research.microsoft.com/en-us/um/people/nswamy/papers/wys.pdf): Verified DSL for secure multi-party computations
     - [ReVer](https://github.com/msr-quarc/ReVerC): Verified compiler to reversible circuits
@@ -122,12 +122,12 @@ but only first-order logic
 # The current F\* team #
 
 ~Center
-[**Microsoft Research, Inria Paris, MIT, Rosario, ...**]{color:DarkGreen;}
+[**Microsoft Research (US, UK, India), Inria Paris, MIT, Rosario, ...**]{color:DarkGreen;}
 ~
 
   |   |  
 --- | --- |
-[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>[Kenji Maillard]{color:DarkBlue} | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
+[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>[Kenji Maillard]{color:DarkBlue} | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
 
 
 
@@ -137,7 +137,7 @@ but only first-order logic
 
 * **The functional core of F\***
 
-* **Verifying purely functional programs**
+* **Verifying purely functional programs** <br/><br/>
 
 * Using very simple examples throughout
 
@@ -149,7 +149,7 @@ but only first-order logic
 
 * {.fragment} Recursive functions
   ```
-  val factorial : int -> int
+  val factorial : nat -> nat
   
   let rec factorial n
     = if n = 0 then 1 else n * (factorial (n - 1))
@@ -267,18 +267,18 @@ type nat = x:int{x >= 0}
 * {.fragment} order constraints discharged by the SMT solver
 * {.fragment} arbitrary total expression as **decreases metric**
   ```
-  val swapped_ackermann: n:nat -> m:nat -> Tot nat (decreases %[m;n])
-  let rec swapped_ackermann n m 
+  val ackermann: m:nat -> n:nat -> Tot nat (decreases %[m;n])
+  let rec ackermann m n 
     = if m = 0 then n + 1
-      else if n = 0 then swapped_ackermann 1 (m - 1)
-      else swapped_ackermann (swapped_ackermann (n - 1) m) (m - 1)
+      else if n = 0 then ackermann (m - 1) 1
+      else ackermann (m - 1) (ackermann m (n - 1))
   ```
 * {.fragment} default metric is lex ordering of all (non-function) args
   ```
-  val ackermann: m:nat -> n:nat -> Tot nat     (* and the definition swapped accordingly *)
+  val ackermann: m:nat -> n:nat -> Tot nat
   ```
 
-## The divergence effect (Dv) ##
+## The divergence effect (`Dv`) ##
 
 * We might not want to prove all code terminating
   ```
@@ -286,23 +286,27 @@ type nat = x:int{x >= 0}
   ```
 
 * {.fragment} Some useful code really is not always terminating
-  ```
-  val eval : exp -> Dv exp
-  let rec eval e
-    = match e with
-      | App (Lam x e1) e2 -> eval (subst x e2 e1)
-      | App e1 e2         -> eval (App (eval e1) e2)
-      | Lam x e1          -> Lam x (eval e1)
-      | _                 -> e
+
+  - {.fragment} evaluator for lambda terms
+    ```
+    val eval : exp -> Dv exp
+    let rec eval e
+      = match e with
+        | App (Lam x e1) e2 -> eval (subst x e2 e1)
+        | App e1 e2         -> eval (App (eval e1) e2)
+        | Lam x e1          -> Lam x (eval e1)
+        | _                 -> e
     
-  let main () = eval (App (Lam 0 (App (Var 0) (Var 0)))
-                          (Lam 0 (App (Var 0) (Var 0))))
-  ```
-~Fragment {.console}
-  ```text
-  ./Divergence.exe
-  ```
-~
+    let main () = eval (App (Lam 0 (App (Var 0) (Var 0)))
+                            (Lam 0 (App (Var 0) (Var 0))))
+    ```
+    ~Fragment {.console}
+    ```text
+    ./Divergence.exe
+    ```
+    ~
+  - {.fragment} web servers
+  - {.fragment} ...
 
 ## F\* effect system encapsulates effectful code ##
 
@@ -314,7 +318,7 @@ type nat = x:int{x >= 0}
 
   type tau = x:int{x = factorial (-1)}
   ```
-~Block {.console}
+~Fragment {.console}
   ```text
   type tau = x:int{x = factorial (-1)}
                    ^^^^^^^^^^^^^^^^^^
@@ -339,15 +343,15 @@ type nat = x:int{x >= 0}
 ```
 val factorial : nat -> Tot nat
 ```
-* {.fragment}Can equivalently use [pre- and postconditions]{color:DarkGreen} for this
+* {.fragment}Can equivalently use [**pre- and postconditions**]{color:DarkGreen} for this
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
                                     (ensures  (fun y -> y >= 0))
 ```
-* {.fragment} Each [computation type]{color:DarkRed} is of the form
+* {.fragment} Each F\* [**computation type**]{color:DarkRed} is of the form
   - *effect* (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *result type* (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     *spec* (e.g. pre and post)
-* {.fragment}`Tot` can be seen as just an abbreviation
+     *spec.* (e.g. pre and post)<br/><br/>
+* {.fragment}`Tot` is essentially just an abbreviation
 ```
 Tot t = Pure t (requires True) (ensures (fun _ -> True))
 ```
@@ -366,14 +370,14 @@ val factorial : nat -> Dv nat
 val eval_closed : e:exp -> Div exp (requires (closed e))
                                      (ensures  (fun e' -> Lam? e' /\ closed e'))
 let rec eval_closed e =
-  match e with
+  match e with                       (* notice there is no case for variables *)
   | App e1 e2 ->
       let Lam e1' = eval_closed e1 in
       below_subst_beta 0 e1' e2;
       eval_closed (subst (sub_beta e2) e1')
   | Lam e1 -> Lam e1
 ```
-* {.fragment}`Dv` just an abbreviation
+* {.fragment}`Dv` is just an abbreviation
 ```
 Dv t = Div t (requires True) (ensures (fun _ -> True))
 ```
@@ -383,8 +387,8 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 ## Another way to look at this ##
 
 * **Two classes of types**
-  - Value types (`t`): `int`, `list int`, ...
-  - Computation types (`C`): ` Tot t` &nbsp;&nbsp;and&nbsp;&nbsp; `Dv t`<br/>
+  - [Value types (`t`):]{color:DarkBlue} `int`, `list int`, ...
+  - [Computation types (`C`):]{color:DarkRed} ` Tot t` &nbsp;&nbsp;and&nbsp;&nbsp; `Dv t`<br/>
 
 
 * {.fragment} **Dependent function types** of the form: ` x:t -> C`
@@ -574,7 +578,7 @@ let rec progress #e #t h =
   - **Refined computation types**: `Pure t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
-* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}**
+* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}** (`<:`)
 
 * {.fragment} **[Extensional equality]{color:DarkRed}** (`=`, `==`, `===`)
 
