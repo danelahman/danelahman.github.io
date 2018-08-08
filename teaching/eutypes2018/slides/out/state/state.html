@@ -5980,7 +5980,7 @@
 </li></ul>
 </li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="48">
-<p data-line="48"><span data-line="48"></span><strong class="strong-star2"><span style="color:DarkRed">Subtyping and sub-effecting</span></strong><span data-line="48"></span>
+<p data-line="48"><span data-line="48"></span><strong class="strong-star2"><span style="color:DarkRed">Subtyping and sub-effecting</span></strong><span data-line="48"></span> (<span data-line="48"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">&lt;:</code><span data-line="48"></span>)
 </p></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="50">
 <p data-line="50"><span data-line="50"></span><strong class="strong-star2"><span style="color:DarkRed">Extensional equality</span></strong><span data-line="50"></span> (<span data-line="50"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">=</code><span data-line="50"></span>, <span data-line="50"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">==</code><span data-line="50"></span>, <span data-line="50"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">===</code><span data-line="50"></span>)
@@ -6016,8 +6016,8 @@
 <p data-line="69"><span data-line="69"></span>The <span data-line="69"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code><span data-line="69"></span> effect<span data-line="69"></span>&#8212;<span data-line="69"></span>programming with<span data-line="69"></span> <span style="color:DarkBlue">mutable references</span><span data-line="69"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="70" data-line-first="71" style="display:block"><code data-line="71"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> <span style="color:blue">St</span> unit
-<span style="color:blue">let</span> incr r =
-  r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
+
+<span style="color:blue">let</span> incr r = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="76">
 <p data-line="76"><span data-line="76"></span>Hoare logic-style <span data-line="76"></span><strong class="strong-star2"><span style="color:DarkGreen">preconditions</span></strong><span data-line="76"></span> and <span data-line="76"></span><strong class="strong-star2"><span style="color:DarkRed">postconditions</span></strong><span data-line="76"></span> with <span data-line="76"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="76"></span>
 </p>
@@ -6041,49 +6041,50 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
 </p></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="92">
 <p data-line="92"><span data-line="92"></span><strong class="strong-star2">Sub-effecting:</strong><span data-line="92"></span> <span data-line="92"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Pure</span> &lt;: <span style="color:blue">ST</span></code><span data-line="92"></span> and in fact also <span data-line="92"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Div</span> &lt;: <span style="color:blue">ST</span></code><span data-line="92"></span>
-</p>
-<ul class="ul list-dash compact" data-line="93">
-<li class="li ul-li list-dash-li compact-li fragment" data-line="93"><span data-line="93"></span>as such, think of <span data-line="93"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="93"></span> as having a<span data-line="93"></span> <span style="color:DarkBlue">partial correctness</span><span data-line="93"></span> reading
-</li></ul>
-</li></ul>
+</p></li>
+<li class="li ul-li list-star-li loose-li fragment" data-line="94">
+<p data-line="94"><span data-line="94"></span>As such, think of <span data-line="94"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="94"></span> as having a<span data-line="94"></span> <span style="color:DarkBlue">partial correctness</span><span data-line="94"></span> reading
+</p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-heap-and-st-interfaces-much-simplified" class="section section2" data-section-depth="2" data-line="97"><h3 id="heading-sec-heap-and-st-interfaces-much-simplified" class="h2" data-heading-depth="2" style="display:block"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Heap</code> and <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> interfaces (much simplified)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="98" data-line-first="99" style="display:block"><code data-line="99"><span style="color:blue">module</span> Heap
+<section id="sec-heap-and-st-interfaces-much-simplified" class="section section2" data-section-depth="2" data-line="98"><h3 id="heading-sec-heap-and-st-interfaces-much-simplified" class="h2" data-heading-depth="2" style="display:block"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Heap</code> and <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> interfaces (much simplified)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="99" data-line-first="100" style="display:block"><code data-line="100"><span style="color:blue">module</span> Heap
+
   <span style="color:blue">val</span> heap : <span style="color:blue">Type</span>
   <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
-  <span style="color:blue">val</span> sel    : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in ghost effect, meaning this  </span><span style="color:darkgreen">*)</span>
-  <span style="color:blue">val</span> addr_of: #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat          <span style="color:darkgreen">(*</span><span style="color:darkgreen"> code can only be used in specs </span><span style="color:darkgreen">*)</span>
+  <span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in ghost effect, meaning this  </span><span style="color:darkgreen">*)</span>
+  <span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> code can only be used in specs </span><span style="color:darkgreen">*)</span>
 
   <span style="color:blue">let</span> modifies (s:set nat) (h0 h1 : heap) =
     <span style="color:blue">forall</span> (a:<span style="color:blue">Type</span>) (r:ref a).{:pattern (sel h1 r)}
         ~(addr_of r `mem` s) ==&gt; sel h1 r == sel h0 r</code></pre>
-<div class="fragment" data-line="103">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="104" data-line-first="105" style="display:block"><code data-line="105"><span style="color:blue">module</span> <span style="color:blue">ST</span>
-  <span style="color:blue">val</span> (!): #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
+<div class="fragment" data-line="105">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="106" data-line-first="107" style="display:block"><code data-line="107"><span style="color:blue">module</span> <span style="color:blue">ST</span>
+
+  <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ 
                                    x == sel h0 r))
 
-  <span style="color:blue">val</span> (:=): #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
+  <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ 
                                       sel h1 r == v))</code></pre></div><!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-verifying-incr-intuition" class="section section2" data-section-depth="2" data-line="112"><h3 id="heading-sec-verifying-incr-intuition" class="h2" data-heading-depth="2" style="display:block">Verifying <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">incr</code> (intuition)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="114" data-line-first="115" style="display:block"><code data-line="115"><span style="color:blue">let</span> incr r = r := !r + <span class="constant" style="color:purple">1</span></code></pre>
-<div class="fragment" data-line="117">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="118" data-line-first="119;out/state/../../../code/state/IncrST.fst:12" style="display:block"><code data-line="119;out/state/../../../code/state/IncrST.fst:12"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+<section id="sec-verifying-incr-intuition" class="section section2" data-section-depth="2" data-line="115"><h3 id="heading-sec-verifying-incr-intuition" class="h2" data-heading-depth="2" style="display:block">Verifying <code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">incr</code> (intuition)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="117" data-line-first="118" style="display:block"><code data-line="118"><span style="color:blue">let</span> incr r = r := !r + <span class="constant" style="color:purple">1</span></code></pre>
+<div class="fragment" data-line="120">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="121" data-line-first="122;out/state/../../../code/state/IncrST.fst:12" style="display:block"><code data-line="122;out/state/../../../code/state/IncrST.fst:12"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ 
                                     sel h2 r == sel h0 r + <span class="constant" style="color:purple">1</span>))</code></pre></div>
-<div class="fragment" data-line="122">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="123" data-line-first="124;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="124;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+<div class="fragment" data-line="125">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="126" data-line-first="127;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="127;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
                        <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">// from (!)</span>
@@ -6091,12 +6092,12 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
 <span style="color:blue">let</span> incr r = 
   <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> 
   r := x + <span class="constant" style="color:purple">1</span></code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="126" data-line-first="127;out/state/../../../code/state/ST.fsti:25" style="display:block"><code data-line="127;out/state/../../../code/state/ST.fsti:25">  <span style="color:blue">val</span> (!): #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="129" data-line-first="130;out/state/../../../code/state/ST.fsti:25" style="display:block"><code data-line="130;out/state/../../../code/state/ST.fsti:25">  <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ 
                                    x == sel h0 r))
 
-  <span style="color:blue">val</span> (:=): #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
+  <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ 
                                       sel h1 r == v))</code></pre></div><!--~Fragment
@@ -6115,8 +6116,8 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-typing-rule-for-let-sequencing-intuition" class="section section2" data-section-depth="2" data-line="140"><h3 id="heading-sec-typing-rule-for-let-sequencing-intuition" class="h2" data-heading-depth="2" style="display:block">Typing rule for let / sequencing (intuition)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="142" data-line-first="143;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="143;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+<section id="sec-typing-rule-for-let-sequencing-intuition" class="section section2" data-section-depth="2" data-line="143"><h3 id="heading-sec-typing-rule-for-let-sequencing-intuition" class="h2" data-heading-depth="2" style="display:block">Typing rule for let / sequencing (intuition)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="145" data-line-first="146;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="146;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
                        <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">// from (!)</span>
@@ -6124,7 +6125,7 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 <span style="color:blue">let</span> incr r = 
   <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> 
   r := x + <span class="constant" style="color:purple">1</span></code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="146" data-line-first="147" style="display:block"><code data-line="147">  G |- e1 : <span style="color:blue">ST</span> t1 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="149" data-line-first="150" style="display:block"><code data-line="150">  G |- e1 : <span style="color:blue">ST</span> t1 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
                   (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x1 h1 <span style="color:blue">-&gt;</span> post))
                   
   G, x1:t1 |- e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h1 <span style="color:blue">-&gt;</span> <span style="color:blue">exists</span> h0. post))
@@ -6160,8 +6161,8 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-reference-swapping-hand-proof-sketch" class="section section2" data-section-depth="2" data-line="175"><h3 id="heading-sec-reference-swapping-hand-proof-sketch" class="h2" data-heading-depth="2" style="display:block">Reference swapping (hand proof sketch)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="176" data-line-first="177;out/state/../../../code/state/SwapRefsST.fst:18" style="display:block"><code data-line="177;out/state/../../../code/state/SwapRefsST.fst:18"><span style="color:blue">val</span> swap : r1:ref int <span style="color:blue">-&gt;</span> r2:ref int <span style="color:blue">-&gt;</span> 
+<section id="sec-reference-swapping-hand-proof-sketch" class="section section2" data-section-depth="2" data-line="178"><h3 id="heading-sec-reference-swapping-hand-proof-sketch" class="h2" data-heading-depth="2" style="display:block">Reference swapping (hand proof sketch)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="179" data-line-first="180;out/state/../../../code/state/SwapRefsST.fst:18" style="display:block"><code data-line="180;out/state/../../../code/state/SwapRefsST.fst:18"><span style="color:blue">val</span> swap : r1:ref int <span style="color:blue">-&gt;</span> r2:ref int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h3 <span style="color:blue">-&gt;</span> modifies !{r1,r2} h0 h3 /\
                                     sel h3 r2 == sel h0 r1 /\ 
@@ -6173,8 +6174,8 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Know </span><span style="color:darkgreen">(</span><span style="color:darkgreen">P2): exists h2. modifies !{r1} h1 h2 /\ sel h2 r1 == sel h1 r2 </span><span style="color:darkgreen">*)</span>
   r2 := t
     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> Know </span><span style="color:darkgreen">(</span><span style="color:darkgreen">P3): modifies !{r2} h2 h3 /\ sel h3 r2 == t </span><span style="color:darkgreen">*)</span></code></pre>
-<div class="fragment" data-line="180">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="181" data-line-first="182;out/state/../../../code/state/SwapRefsST.fst:32" style="display:block"><code data-line="182;out/state/../../../code/state/SwapRefsST.fst:32"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> `modifies !{r1,r2} h0 h3` follows directly from transitivity of modifies </span><span style="color:darkgreen">*)</span>
+<div class="fragment" data-line="183">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="184" data-line-first="185;out/state/../../../code/state/SwapRefsST.fst:32" style="display:block"><code data-line="185;out/state/../../../code/state/SwapRefsST.fst:32"><span style="color:darkgreen">(*</span><span style="color:darkgreen"> `modifies !{r1,r2} h0 h3` follows directly from transitivity of modifies </span><span style="color:darkgreen">*)</span>
 
 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> `sel h3 r2 == sel h0 r1` follows immediately from </span><span style="color:darkgreen">(</span><span style="color:darkgreen">P1) and </span><span style="color:darkgreen">(</span><span style="color:darkgreen">P3) </span><span style="color:darkgreen">*)</span>
 
@@ -6185,15 +6186,15 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 <span style="color:darkgreen">   From </span><span style="color:darkgreen">(</span><span style="color:darkgreen">P3) we know that  modifies !{r2} h2 h3</span>
 <span style="color:darkgreen">     which by definition gives us  sel h2 r1 == sel h3 r1 </span><span style="color:darkgreen">(</span><span style="color:darkgreen">C)</span>
 <span style="color:darkgreen">   We conclude by transitivity from </span><span style="color:darkgreen">(</span><span style="color:darkgreen">A)+</span><span style="color:darkgreen">(</span><span style="color:darkgreen">B)+</span><span style="color:darkgreen">(</span><span style="color:darkgreen">C) </span><span style="color:darkgreen">*)</span></code></pre></div>
-<ul class="ul list-star compact" data-line="185">
-<li class="li ul-li list-star-li compact-li fragment" data-line="185"><span data-line="185"></span>This variant is correct even when <span data-line="185"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r1</code><span data-line="185"></span> and <span data-line="185"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r2</code><span data-line="185"></span> are aliased
+<ul class="ul list-star compact" data-line="188">
+<li class="li ul-li list-star-li compact-li fragment" data-line="188"><span data-line="188"></span>This variant is correct even when <span data-line="188"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r1</code><span data-line="188"></span> and <span data-line="188"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r2</code><span data-line="188"></span> are aliased
 </li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-integer-reference-swapping-the-funny-way" class="section section2" data-section-depth="2" data-line="189"><h3 id="heading-sec-integer-reference-swapping-the-funny-way" class="h2" data-heading-depth="2" style="display:block">Integer reference swapping (the funny way)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="191" data-line-first="192;out/state/../../../code/state/SwapIntRefsST.fst:16" style="display:block"><code data-line="192;out/state/../../../code/state/SwapIntRefsST.fst:16"><span style="color:blue">val</span> swap_add_sub : r1:ref int <span style="color:blue">-&gt;</span> r2:ref int <span style="color:blue">-&gt;</span> 
+<section id="sec-integer-reference-swapping-the-funny-way" class="section section2" data-section-depth="2" data-line="192"><h3 id="heading-sec-integer-reference-swapping-the-funny-way" class="h2" data-heading-depth="2" style="display:block">Integer reference swapping (the funny way)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="194" data-line-first="195;out/state/../../../code/state/SwapIntRefsST.fst:16" style="display:block"><code data-line="195;out/state/../../../code/state/SwapIntRefsST.fst:16"><span style="color:blue">val</span> swap_add_sub : r1:ref int <span style="color:blue">-&gt;</span> r2:ref int <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> addr_of r1 &lt;&gt; addr_of r2 ))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r1,r2} h0 h1 /\
                                     sel h1 r1 == sel h0 r2 /\ 
@@ -6202,15 +6203,15 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
   r1 := !r1 + !r2;
   r2 := !r1 - !r2;
   r1 := !r1 - !r2</code></pre>
-<ul class="ul list-star loose" data-line="195">
-<li class="li ul-li list-star-li loose-li" data-line="195">
-<p data-line="195"><span data-line="195"></span>Correctness of this variant relies on <span data-line="195"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r1</code><span data-line="195"></span> and <span data-line="195"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r2</code><span data-line="195"></span> not being aliased
+<ul class="ul list-star loose" data-line="198">
+<li class="li ul-li list-star-li loose-li" data-line="198">
+<p data-line="198"><span data-line="198"></span>Correctness of this variant relies on <span data-line="198"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r1</code><span data-line="198"></span> and <span data-line="198"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">r2</code><span data-line="198"></span> not being aliased
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="197">
-<p data-line="197"><span data-line="197"></span>&#8230;<span data-line="197"></span> and on <span data-line="197"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">int</code><span data-line="197"></span> being unbounded (mathematical) integers
+<li class="li ul-li list-star-li loose-li" data-line="200">
+<p data-line="200"><span data-line="200"></span>&#8230;<span data-line="200"></span> and on <span data-line="200"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">int</code><span data-line="200"></span> being unbounded (mathematical) integers
 </p></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="199">
-<p data-line="199"><span data-line="199"></span><strong class="strong-star2">Exercise 1:</strong><span data-line="199"></span> Sketch a hand proof that this code is correct
+<li class="li ul-li list-star-li loose-li fragment" data-line="202">
+<p data-line="202"><span data-line="202"></span><strong class="strong-star2">Exercise 1:</strong><span data-line="202"></span> Sketch a hand proof that this code is correct
 </p></li></ul>
 <!-- ~Block {.console} -->
 
@@ -6261,8 +6262,8 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-stateful-count--1-1-1-" class="section section2" data-section-depth="2" data-line="234"><h3 id="heading-sec-stateful-count--1-1-1-" class="h2" data-heading-depth="2" style="display:block">Stateful count: 1 + 1 + 1 + &#8230;</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="235" data-line-first="236;out/state/../../../code/state/CountST.fst:20" style="display:block"><code data-line="236;out/state/../../../code/state/CountST.fst:20"><span style="color:blue">let</span> <span style="color:blue">rec</span> count_st&#39; (r:ref nat) (n:nat) 
+<section id="sec-stateful-count--1-1-1-" class="section section2" data-section-depth="2" data-line="237"><h3 id="heading-sec-stateful-count--1-1-1-" class="h2" data-heading-depth="2" style="display:block">Stateful count: 1 + 1 + 1 + &#8230;</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="238" data-line-first="239;out/state/../../../code/state/CountST.fst:20" style="display:block"><code data-line="239;out/state/../../../code/state/CountST.fst:20"><span style="color:blue">let</span> <span style="color:blue">rec</span> count_st&#39; (r:ref nat) (n:nat) 
   : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> sel h1 r == sel h0 r + n /\ 
                                       modifies !{r} h0 h1)) 
@@ -6276,13 +6277,13 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
   = <span style="color:blue">let</span> r = alloc <span class="constant" style="color:purple">0</span> <span style="color:blue">in</span> 
     count_st&#39; r n; 
     !r</code></pre>
-<ul class="ul list-star compact" data-line="238">
-<li class="li ul-li list-star-li compact-li fragment" data-line="238"><span data-line="238"></span>The truth about modifies and allocation (kind of, still simplified)
+<ul class="ul list-star compact" data-line="241">
+<li class="li ul-li list-star-li compact-li fragment" data-line="241"><span data-line="241"></span>The truth about modifies and allocation (kind of, still simplified)
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="239" data-line-first="240;out/state/../../../code/state/Heap2.fsti:15" style="display:block"><code data-line="240;out/state/../../../code/state/Heap2.fsti:15"><span style="color:blue">let</span> modifies (s:FStar.TSet.set nat) (h0 h1 : heap) =
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="242" data-line-first="243;out/state/../../../code/state/Heap2.fsti:15" style="display:block"><code data-line="243;out/state/../../../code/state/Heap2.fsti:15"><span style="color:blue">let</span> modifies (s:FStar.TSet.set nat) (h0 h1 : heap) =
   <span style="color:blue">forall</span> (a:<span style="color:blue">Type</span>) (r:ref a).{:pattern (sel h1 r)}
       ~(addr_of r `FStar.TSet.mem` s) /\ h0 `contains` r ==&gt; sel h1 r == sel h0 r</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="242" data-line-first="243;out/state/../../../code/state/ST.fsti:13" style="display:block"><code data-line="243;out/state/../../../code/state/ST.fsti:13"><span style="color:blue">val</span> alloc : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> init:a <span style="color:blue">-&gt;</span> 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="245" data-line-first="246;out/state/../../../code/state/ST.fsti:13" style="display:block"><code data-line="246;out/state/../../../code/state/ST.fsti:13"><span style="color:blue">val</span> alloc : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> init:a <span style="color:blue">-&gt;</span> 
   <span style="color:blue">ST</span> (ref a) (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
              (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 r h1 <span style="color:blue">-&gt;</span> modifies !{} h0 h1 /\ sel h1 r == init /\
                                        ~(h0 `contains` r) /\ h1 `contains` r))</code></pre></li></ul>
@@ -6290,10 +6291,10 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-stateful-sum--1-2-3-" class="section section2" data-section-depth="2" data-line="249"><h3 id="heading-sec-stateful-sum--1-2-3-" class="h2" data-heading-depth="2" style="display:block">Stateful sum: 1 + 2 + 3 + &#8230;</h3>
-<div class="fragment" data-line="250">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="251" data-line-first="252;out/state/../../../ex/SumST.fst:8" style="display:block"><code data-line="252;out/state/../../../ex/SumST.fst:8"><span style="color:blue">let</span> sum_tot (n:nat) = ((n+<span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> equal to sum_rec, see 1st lecture exercises </span><span style="color:darkgreen">*)</span></code></pre></div>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="255" data-line-first="256;out/state/../../../ex/SumST.fst:27" style="display:block"><code data-line="256;out/state/../../../ex/SumST.fst:27"><span style="color:blue">let</span> <span style="color:blue">rec</span> sum_st&#39; (r:ref nat) (n:nat) 
+<section id="sec-stateful-sum--1-2-3-" class="section section2" data-section-depth="2" data-line="252"><h3 id="heading-sec-stateful-sum--1-2-3-" class="h2" data-heading-depth="2" style="display:block">Stateful sum: 1 + 2 + 3 + &#8230;</h3>
+<div class="fragment" data-line="253">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="254" data-line-first="255;out/state/../../../ex/SumST.fst:8" style="display:block"><code data-line="255;out/state/../../../ex/SumST.fst:8"><span style="color:blue">let</span> sum_tot (n:nat) = ((n+<span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> equal to sum_rec, see 1st lecture exercises </span><span style="color:darkgreen">*)</span></code></pre></div>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="258" data-line-first="259;out/state/../../../ex/SumST.fst:27" style="display:block"><code data-line="259;out/state/../../../ex/SumST.fst:27"><span style="color:blue">let</span> <span style="color:blue">rec</span> sum_st&#39; (r:ref nat) (n:nat) 
   : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True)) 
   = <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> (r := !r + n; 
@@ -6307,18 +6308,18 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
     sum_st&#39; r n; 
     <span style="color:blue">admit</span> (); 
     !r</code></pre>
-<ul class="ul list-star compact" data-line="259">
-<li class="li ul-li list-star-li compact-li fragment" data-line="259"><span data-line="259"></span><strong class="strong-star2">Exercise 2:</strong><span data-line="259"></span> Strengthen the spec of <span data-line="259"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st&#39;</code><span data-line="259"></span> to remove <span data-line="259"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">admit</span></code><span data-line="259"></span> in <span data-line="259"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st</code><span data-line="259"></span>
+<ul class="ul list-star compact" data-line="262">
+<li class="li ul-li list-star-li compact-li fragment" data-line="262"><span data-line="262"></span><strong class="strong-star2">Exercise 2:</strong><span data-line="262"></span> Strengthen the spec of <span data-line="262"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st&#39;</code><span data-line="262"></span> to remove <span data-line="262"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">admit</span></code><span data-line="262"></span> in <span data-line="262"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">sum_st</code><span data-line="262"></span>
 </li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-stateful-fibonacci--1-1-2-3-5-8-" class="section section2" data-section-depth="2" data-line="265"><h3 id="heading-sec-stateful-fibonacci--1-1-2-3-5-8-" class="h2" data-heading-depth="2" style="display:block">Stateful Fibonacci: 1 + 1 + 2 + 3 + 5 + 8 + &#8230;</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="266" data-line-first="267;out/state/../../../code/state/FibonacciST.fst:8" style="display:block"><code data-line="267;out/state/../../../code/state/FibonacciST.fst:8"><span style="color:blue">let</span> <span style="color:blue">rec</span> fibonacci (n:nat) : <span style="color:blue">Tot</span> nat 
+<section id="sec-stateful-fibonacci--1-1-2-3-5-8-" class="section section2" data-section-depth="2" data-line="268"><h3 id="heading-sec-stateful-fibonacci--1-1-2-3-5-8-" class="h2" data-heading-depth="2" style="display:block">Stateful Fibonacci: 1 + 1 + 2 + 3 + 5 + 8 + &#8230;</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="269" data-line-first="270;out/state/../../../code/state/FibonacciST.fst:8" style="display:block"><code data-line="270;out/state/../../../code/state/FibonacciST.fst:8"><span style="color:blue">let</span> <span style="color:blue">rec</span> fibonacci (n:nat) : <span style="color:blue">Tot</span> nat 
   = <span style="color:blue">if</span> n &lt;= <span class="constant" style="color:purple">1</span> <span style="color:blue">then</span> <span class="constant" style="color:purple">1</span> <span style="color:blue">else</span> fibonacci (n - <span class="constant" style="color:purple">1</span>) + fibonacci (n - <span class="constant" style="color:purple">2</span>)</code></pre>
-<div class="fragment" data-line="269">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="270" data-line-first="271;out/state/../../../code/state/FibonacciST.fst:23" style="display:block"><code data-line="271;out/state/../../../code/state/FibonacciST.fst:23"><span style="color:blue">let</span> <span style="color:blue">rec</span> fibonacci_st&#39; (i:pos) (n:nat{n &gt;= i}) (r1 r2:ref nat) 
+<div class="fragment" data-line="272">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="273" data-line-first="274;out/state/../../../code/state/FibonacciST.fst:23" style="display:block"><code data-line="274;out/state/../../../code/state/FibonacciST.fst:23"><span style="color:blue">let</span> <span style="color:blue">rec</span> fibonacci_st&#39; (i:pos) (n:nat{n &gt;= i}) (r1 r2:ref nat) 
   : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> addr_of r1 &lt;&gt; addr_of r2 /\
                                  sel h0 r1 = fibonacci (i - <span class="constant" style="color:purple">1</span>) /\
                                  sel h0 r2 = fibonacci i ))
@@ -6330,7 +6331,7 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
        r2 := !r1 + !r2;            <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fibonacci </span><span style="color:darkgreen">(</span><span style="color:darkgreen">i+1) = fibonacci i + fibonacci </span><span style="color:darkgreen">(</span><span style="color:darkgreen">i-1) </span><span style="color:darkgreen">*)</span>
        r1 := temp;                                     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fibonacci i we already have </span><span style="color:darkgreen">*)</span>
        fibonacci_st&#39; (i+<span class="constant" style="color:purple">1</span>) n r1 r2)        <span style="color:darkgreen">(*</span><span style="color:darkgreen"> tail-recursive call to compute the rest </span><span style="color:darkgreen">*)</span></code></pre></div>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="274" data-line-first="275;out/state/../../../code/state/FibonacciST.fst:36" style="display:block"><code data-line="275;out/state/../../../code/state/FibonacciST.fst:36"><span style="color:blue">let</span> fibonacci_st (n:nat) 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="277" data-line-first="278;out/state/../../../code/state/FibonacciST.fst:36" style="display:block"><code data-line="278;out/state/../../../code/state/FibonacciST.fst:36"><span style="color:blue">let</span> fibonacci_st (n:nat) 
   : <span style="color:blue">ST</span> nat (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> x = fibonacci n /\ 
                                      modifies !{} h0 h1)) 
@@ -6343,12 +6344,12 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-stateful-invariants" class="section section2" data-section-depth="2" data-line="280"><h3 id="heading-sec-stateful-invariants" class="h2" data-heading-depth="2" style="display:block">Stateful invariants</h3>
-<ul class="ul list-star compact" data-line="282">
-<li class="li ul-li list-star-li compact-li" data-line="282"><span data-line="282"></span>Mutable non-empty lists (for append-only logs, almost)
+<section id="sec-stateful-invariants" class="section section2" data-section-depth="2" data-line="283"><h3 id="heading-sec-stateful-invariants" class="h2" data-heading-depth="2" style="display:block">Stateful invariants</h3>
+<ul class="ul list-star compact" data-line="285">
+<li class="li ul-li list-star-li compact-li" data-line="285"><span data-line="285"></span>Mutable non-empty lists (for append-only logs, almost)
 </li></ul>
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="284" data-line-first="285" style="display:block"><code data-line="285"><span style="color:blue">type</span> nlist = xs:list int{Cons? xs}
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="287" data-line-first="288" style="display:block"><code data-line="288"><span style="color:blue">type</span> nlist = xs:list int{Cons? xs}
 
 <span style="color:blue">let</span> create (x:int) : <span style="color:blue">St</span> (ref nlist) = alloc #nlist [x]
 
@@ -6367,119 +6368,119 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 <span style="color:darkgreen">                                            and move it and its operations to their own </span>
 <span style="color:darkgreen">                                            module, so as to restrict complex_procedure</span>
 <span style="color:darkgreen">                                            to `add` and `read` operations on ref. r </span><span style="color:darkgreen">*)</span>  </code></pre>
-<ul class="ul list-star compact" data-line="306">
-<li class="li ul-li list-star-li compact-li fragment" data-line="306"><span data-line="306"></span><strong class="strong-star2">Tomorrow:</strong><span data-line="306"></span> We<span data-line="306"></span>&#39;<span data-line="306"></span>ll see how monotonicity helps us prove such assertions
+<ul class="ul list-star compact" data-line="309">
+<li class="li ul-li list-star-li compact-li fragment" data-line="309"><span data-line="309"></span><strong class="strong-star2">Tomorrow:</strong><span data-line="309"></span> We<span data-line="309"></span>&#39;<span data-line="309"></span>ll see how monotonicity helps us prove such assertions
 </li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-summary--verifying-stateful-programs" class="section section2" data-section-depth="2" data-line="310"><h3 id="heading-sec-summary--verifying-stateful-programs" class="h2" data-heading-depth="2" style="display:block">Summary: Verifying Stateful Programs</h3>
-<ul class="ul list-star loose" data-line="312">
-<li class="li ul-li list-star-li loose-li" data-line="312">
-<p data-line="312"><span data-line="312"></span><strong class="strong-star2"><span style="color:DarkBlue">ML-style garbage-collected memory model</span></strong><span data-line="312"></span>
+<section id="sec-summary--verifying-stateful-programs" class="section section2" data-section-depth="2" data-line="313"><h3 id="heading-sec-summary--verifying-stateful-programs" class="h2" data-heading-depth="2" style="display:block">Summary: Verifying Stateful Programs</h3>
+<ul class="ul list-star loose" data-line="315">
+<li class="li ul-li list-star-li loose-li" data-line="315">
+<p data-line="315"><span data-line="315"></span><strong class="strong-star2"><span style="color:DarkBlue">ML-style garbage-collected memory model</span></strong><span data-line="315"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="313" data-line-first="314" style="display:block"><code data-line="314"><span style="color:blue">val</span> heap : <span style="color:blue">Type</span>          <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="316" data-line-first="317" style="display:block"><code data-line="317"><span style="color:blue">val</span> heap : <span style="color:blue">Type</span>          <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
 <span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a
 <span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat
 
 <span style="color:blue">val</span> modifies : s:set nat <span style="color:blue">-&gt;</span> h0:heap <span style="color:blue">-&gt;</span> h1:heap <span style="color:blue">-&gt;</span> prop</code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="322">
-<p data-line="322"><span data-line="322"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code> effect for simple ML-style programming</span></strong><span data-line="322"></span>
+<li class="li ul-li list-star-li loose-li" data-line="325">
+<p data-line="325"><span data-line="325"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code> effect for simple ML-style programming</span></strong><span data-line="325"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="323" data-line-first="324" style="display:block"><code data-line="324"><span style="color:blue">let</span> incr (r:ref int) : <span style="color:blue">St</span> unit = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="327">
-<p data-line="327"><span data-line="327"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> effect for pre- and postcondition based (intrinsic) reasoning</span></strong><span data-line="327"></span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="326" data-line-first="327" style="display:block"><code data-line="327"><span style="color:blue">let</span> incr (r:ref int) : <span style="color:blue">St</span> unit = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li" data-line="330">
+<p data-line="330"><span data-line="330"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> effect for pre- and postcondition based (intrinsic) reasoning</span></strong><span data-line="330"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="328" data-line-first="329" style="display:block"><code data-line="329"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="331" data-line-first="332" style="display:block"><code data-line="332"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + <span class="constant" style="color:purple">1</span>))</code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="333">
-<p data-line="333"><span data-line="333"></span><strong class="strong-star2"><span style="color:DarkBlue">Refinement types can enforce (some) stateful invariants</span></strong><span data-line="333"></span>
+<li class="li ul-li list-star-li loose-li" data-line="336">
+<p data-line="336"><span data-line="336"></span><strong class="strong-star2"><span style="color:DarkBlue">Refinement types can enforce (some) stateful invariants</span></strong><span data-line="336"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="335">
-<p data-line="335"><span data-line="335"></span><strong class="strong-star2"><span style="color:DarkRed">But what about verifying low-level (e.g., C) code, I hear you say?</span></strong><span data-line="335"></span>
+<li class="li ul-li list-star-li loose-li fragment" data-line="338">
+<p data-line="338"><span data-line="338"></span><strong class="strong-star2"><span style="color:DarkRed">But what about verifying low-level (e.g., C) code, I hear you say?</span></strong><span data-line="338"></span>
 </p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---programming-and-verifying-low-level-c-code" class="section section2" data-section-depth="2" data-line="339"><h3 id="heading-sec-low---programming-and-verifying-low-level-c-code" class="h2" data-heading-depth="2" style="display:block">Low*: programming and verifying low-level C code</h3>
-<ul class="ul list-star compact" data-line="341">
-<li class="li ul-li list-star-li compact-li" data-line="341"><span data-line="341"></span><strong class="strong-star2">Low*:</strong><span data-line="341"></span> a subset of F<span data-line="341"></span>*<span data-line="341"></span> that
+<section id="sec-low---programming-and-verifying-low-level-c-code" class="section section2" data-section-depth="2" data-line="342"><h3 id="heading-sec-low---programming-and-verifying-low-level-c-code" class="h2" data-heading-depth="2" style="display:block">Low*: programming and verifying low-level C code</h3>
+<ul class="ul list-star compact" data-line="344">
+<li class="li ul-li list-star-li compact-li" data-line="344"><span data-line="344"></span><strong class="strong-star2">Low*:</strong><span data-line="344"></span> a subset of F<span data-line="344"></span>*<span data-line="344"></span> that
 
-<ul class="ul list-dash compact" data-line="342">
-<li class="li ul-li list-dash-li compact-li" data-line="342"><span data-line="342"></span>enjoys compilation to C through its companion compiler KreMLin
+<ul class="ul list-dash compact" data-line="345">
+<li class="li ul-li list-dash-li compact-li" data-line="345"><span data-line="345"></span>enjoys compilation to C through its companion compiler KreMLin
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="343"><span data-line="343"></span>provides F<span data-line="343"></span>*<span data-line="343"></span> libraries that model a curated set of C features:
+<li class="li ul-li list-dash-li compact-li" data-line="346"><span data-line="346"></span>provides F<span data-line="346"></span>*<span data-line="346"></span> libraries that model a curated set of C features:
 
-<ul class="ul list-plus compact" data-line="344">
-<li class="li ul-li list-plus-li compact-li" data-line="344"><span data-line="344"></span>C memory model
+<ul class="ul list-plus compact" data-line="347">
+<li class="li ul-li list-plus-li compact-li" data-line="347"><span data-line="347"></span>C memory model
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="345"><span data-line="345"></span>stack- and heap-allocated arrays
+<li class="li ul-li list-plus-li compact-li" data-line="348"><span data-line="348"></span>stack- and heap-allocated arrays
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="346"><span data-line="346"></span>machine integers
+<li class="li ul-li list-plus-li compact-li" data-line="349"><span data-line="349"></span>machine integers
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="347"><span data-line="347"></span>few system-level functions from the C standard library
+<li class="li ul-li list-plus-li compact-li" data-line="350"><span data-line="350"></span>few system-level functions from the C standard library
 </li></ul></li>
-<li class="li ul-li list-dash-li compact-li" data-line="348"><span data-line="348"></span>see<span data-line="348"></span>&nbsp;<a href="https://fstarlang.github.io/lowstar/html/">https://fstarlang.github.io/lowstar/html/</a><span data-line="348"></span> for Low<span data-line="348"></span>*<span data-line="348"></span>&#39;<span data-line="348"></span>s own tutorial
+<li class="li ul-li list-dash-li compact-li" data-line="351"><span data-line="351"></span>see<span data-line="351"></span>&nbsp;<a href="https://fstarlang.github.io/lowstar/html/">https://fstarlang.github.io/lowstar/html/</a><span data-line="351"></span> for Low<span data-line="351"></span>*<span data-line="351"></span>&#39;<span data-line="351"></span>s own tutorial
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="349"><span data-line="349"></span>get KreMLin from<span data-line="349"></span>&nbsp;<a href="https://github.com/FStarLang/kremlin">https://github.com/FStarLang/kremlin</a><span data-line="349"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="352"><span data-line="352"></span>get KreMLin from<span data-line="352"></span>&nbsp;<a href="https://github.com/FStarLang/kremlin">https://github.com/FStarLang/kremlin</a><span data-line="352"></span>
 </li></ul></li></ul>
 
-<p class="p noindent" data-line="351"><span data-line="351"></span><strong class="strong-star2"><span style="color:DarkRed">The code (Low*) is low-level, but the verification (F*) is not</span></strong><span data-line="351"></span><br/><span data-line="351"></span>
+<p class="p noindent" data-line="354"><span data-line="354"></span><strong class="strong-star2"><span style="color:DarkRed">The code (Low*) is low-level, but the verification (F*) is not</span></strong><span data-line="354"></span><br/><span data-line="354"></span>
 </p>
-<ul class="ul list-star compact" data-line="353">
-<li class="li ul-li list-star-li compact-li fragment" data-line="353"><span data-line="353"></span><strong class="strong-star2">Vale</strong><span data-line="353"></span> (Verified Assembly Language for Everest)
+<ul class="ul list-star compact" data-line="356">
+<li class="li ul-li list-star-li compact-li fragment" data-line="356"><span data-line="356"></span><strong class="strong-star2">Vale</strong><span data-line="356"></span> (Verified Assembly Language for Everest)
 
-<ul class="ul list-dash compact" data-line="354">
-<li class="li ul-li list-dash-li compact-li" data-line="354"><span data-line="354"></span>for even lower level programming and verification within F<span data-line="354"></span>*<span data-line="354"></span>
+<ul class="ul list-dash compact" data-line="357">
+<li class="li ul-li list-dash-li compact-li" data-line="357"><span data-line="357"></span>for even lower level programming and verification within F<span data-line="357"></span>*<span data-line="357"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="355"><span data-line="355"></span>an embedding of x64 assembly language in F<span data-line="355"></span>*<span data-line="355"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="358"><span data-line="358"></span>an embedding of x64 assembly language in F<span data-line="358"></span>*<span data-line="358"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="356"><span data-line="356"></span>supports interop with Low<span data-line="356"></span>*<span data-line="356"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="359"><span data-line="359"></span>supports interop with Low<span data-line="359"></span>*<span data-line="359"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="357"><span data-line="357"></span>see<span data-line="357"></span>&nbsp;<a href="https://github.com/project-everest/vale">https://github.com/project-everest/vale</a><span data-line="357"></span> for more details
+<li class="li ul-li list-dash-li compact-li" data-line="360"><span data-line="360"></span>see<span data-line="360"></span>&nbsp;<a href="https://github.com/project-everest/vale">https://github.com/project-everest/vale</a><span data-line="360"></span> for more details
 </li></ul></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---the-low-level-memory-model" class="section section2" data-section-depth="2" data-line="361"><h3 id="heading-sec-low---the-low-level-memory-model" class="h2" data-heading-depth="2" style="display:block">Low*: the low-level memory model</h3>
-<ul class="ul list-star loose" data-line="363">
-<li class="li ul-li list-star-li loose-li" data-line="363">
-<p data-line="363"><span data-line="363"></span><strong class="strong-star2">HyperStack</strong><span data-line="363"></span>
+<section id="sec-low---the-low-level-memory-model" class="section section2" data-section-depth="2" data-line="364"><h3 id="heading-sec-low---the-low-level-memory-model" class="h2" data-heading-depth="2" style="display:block">Low*: the low-level memory model</h3>
+<ul class="ul list-star loose" data-line="366">
+<li class="li ul-li list-star-li loose-li" data-line="366">
+<p data-line="366"><span data-line="366"></span><strong class="strong-star2">HyperStack</strong><span data-line="366"></span>
 </p>
-<ul class="ul list-dash compact" data-line="364">
-<li class="li ul-li list-dash-li compact-li" data-line="364"><span data-line="364"></span>hierarchical memory model that divides the heap into a tree of regions
+<ul class="ul list-dash compact" data-line="367">
+<li class="li ul-li list-dash-li compact-li" data-line="367"><span data-line="367"></span>hierarchical memory model that divides the heap into a tree of regions
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="365"><span data-line="365"></span>a distinguished set of regions that model the C call stack
+<li class="li ul-li list-dash-li compact-li" data-line="368"><span data-line="368"></span>a distinguished set of regions that model the C call stack
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="366"><span data-line="366"></span>(low-level) programs may use stack allocation, heap allocation, or both
+<li class="li ul-li list-dash-li compact-li" data-line="369"><span data-line="369"></span>(low-level) programs may use stack allocation, heap allocation, or both
 </li></ul>
 </li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="368">
-<p data-line="368"><span data-line="368"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span></code><span data-line="368"></span> effect for stack-allocating programs (intuitively, <span data-line="368"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="368"></span> on <span data-line="368"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">HS</code><span data-line="368"></span>&#39;<span data-line="368"></span>s <span data-line="368"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">mem</code><span data-line="368"></span>)
+<li class="li ul-li list-star-li loose-li fragment" data-line="371">
+<p data-line="371"><span data-line="371"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span></code><span data-line="371"></span> effect for stack-allocating programs (intuitively, <span data-line="371"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="371"></span> on <span data-line="371"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">HS</code><span data-line="371"></span>&#39;<span data-line="371"></span>s <span data-line="371"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">mem</code><span data-line="371"></span>)
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="369" data-line-first="370" style="display:block"><code data-line="370"><span style="color:blue">module</span> HyperStack.<span style="color:blue">ST</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="372" data-line-first="373" style="display:block"><code data-line="373"><span style="color:blue">module</span> HyperStack.<span style="color:blue">ST</span>
 
   <span style="color:blue">effect</span> <span style="color:blue">Stack</span> (a:<span style="color:blue">Type</span>) (<span style="color:blue">requires</span> pre) (<span style="color:blue">ensures</span> post)
     = <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> pre)
            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> m0 x m1 <span style="color:blue">-&gt;</span> post m0 x m1 /\ equal_domains m0 m1))</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="377" data-line-first="378" style="display:block"><code data-line="378"><span style="color:blue">let</span> equal_domains (m0 m1: mem) =
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="380" data-line-first="381" style="display:block"><code data-line="381"><span style="color:blue">let</span> equal_domains (m0 m1: mem) =
   get_tip m0 == get_tip m1 /\                <span style="color:darkgreen">(*</span><span style="color:darkgreen"> leaves the C call stack intact </span><span style="color:darkgreen">*)</span>
   Set.equal (Map.domain (get_hmap m0))
             (Map.domain (get_hmap m1)) /\    <span style="color:darkgreen">(*</span><span style="color:darkgreen"> does not </span><span style="color:darkgreen">(</span><span style="color:darkgreen">de)allocate any heap regions </span><span style="color:darkgreen">*)</span>
   same_refs_in_all_regions m0 m1             <span style="color:darkgreen">(*</span><span style="color:darkgreen"> does not allocate in existing regions </span><span style="color:darkgreen">*)</span></code></pre></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="385">
-<p data-line="385"><span data-line="385"></span>Additional effects for<span data-line="385"></span> <span style="color:DarkBlue">heap-allocating</span><span data-line="385"></span> and<span data-line="385"></span> <span style="color:DarkRed">arbitrary</span><span data-line="385"></span> low-level code
+<li class="li ul-li list-star-li loose-li fragment" data-line="388">
+<p data-line="388"><span data-line="388"></span>Additional effects for<span data-line="388"></span> <span style="color:DarkBlue">heap-allocating</span><span data-line="388"></span> and<span data-line="388"></span> <span style="color:DarkRed">arbitrary</span><span data-line="388"></span> low-level code
 </p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---a-small-example" class="section section2" data-section-depth="2" data-line="389"><h3 id="heading-sec-low---a-small-example" class="h2" data-heading-depth="2" style="display:block">Low*: a small example</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="391" data-line-first="392" style="display:block"><code data-line="392"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True)) (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True))
+<section id="sec-low---a-small-example" class="section section2" data-section-depth="2" data-line="392"><h3 id="heading-sec-low---a-small-example" class="h2" data-heading-depth="2" style="display:block">Low*: a small example</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="394" data-line-first="395" style="display:block"><code data-line="395"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True)) (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True))
                          
   = push_frame ();                        <span style="color:darkgreen">(*</span><span style="color:darkgreen"> pushing a new stack frame </span><span style="color:darkgreen">*)</span>
     
@@ -6493,9 +6494,9 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
                                           <span style="color:darkgreen">(*</span><span style="color:darkgreen"> so as to ensure that equal_domains holds </span><span style="color:darkgreen">*)</span>
     <span style="color:blue">assert</span> (r = <span class="constant" style="color:purple">43</span>UL);                    
     r</code></pre>
-<p class="p noindent para-continued" data-line="407"><span data-line="407"></span>&#160;<span data-line="407"></span>
+<p class="p noindent para-continued" data-line="410"><span data-line="410"></span>&#160;<span data-line="410"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="408" data-line-first="409" style="display:block"><code data-line="409">uint64_t f()
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="411" data-line-first="412" style="display:block"><code data-line="412">uint64_t f()
 {
   uint64_t b[<span class="constant" style="color:purple">64</span>U];
     
@@ -6509,19 +6510,19 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="424"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
-<ul class="ul list-star loose" data-line="426">
-<li class="li ul-li list-star-li loose-li" data-line="426">
-<p data-line="426"><span data-line="426"></span>Yesterday: A Gentle Introduction to F<span data-line="426"></span>*<span data-line="426"></span> (Purely Functional Programs)
+<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="427"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
+<ul class="ul list-star loose" data-line="429">
+<li class="li ul-li list-star-li loose-li" data-line="429">
+<p data-line="429"><span data-line="429"></span>Yesterday: A Gentle Introduction to F<span data-line="429"></span>*<span data-line="429"></span> (Purely Functional Programs)
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="428">
-<p data-line="428"><span data-line="428"></span>Today: Verifying Stateful Programs in F<span data-line="428"></span>*<span data-line="428"></span>
+<li class="li ul-li list-star-li loose-li" data-line="431">
+<p data-line="431"><span data-line="431"></span>Today: Verifying Stateful Programs in F<span data-line="431"></span>*<span data-line="431"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="430">
-<p data-line="430"><span data-line="430"></span><strong class="strong-star2">Tomorrow: Monotonic State in F*</strong><span data-line="430"></span>
+<li class="li ul-li list-star-li loose-li" data-line="433">
+<p data-line="433"><span data-line="433"></span><strong class="strong-star2">Tomorrow: Monotonic State in F*</strong><span data-line="433"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li" data-line="432">
-<p data-line="432"><span data-line="432"></span><strong class="strong-star2">Tomorrow: F*&#39;s Extensible Effect System and Metaprogramming in F*</strong><span data-line="432"></span>
+<li class="li ul-li list-star-li loose-li" data-line="435">
+<p data-line="435"><span data-line="435"></span><strong class="strong-star2">Tomorrow: F*&#39;s Extensible Effect System and Metaprogramming in F*</strong><span data-line="435"></span>
 </p></li></ul></section></div></div><span data-line=""></span></div>
 </body>
 <script>

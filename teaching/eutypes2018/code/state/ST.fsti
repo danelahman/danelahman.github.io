@@ -13,12 +13,12 @@ open FStar.ST
 // END: alloc
 
 // BEGIN: ops
-  val (!): #a:Type -> r:ref a -> 
+  val (!) : #a:Type -> r:ref a -> 
     ST a (requires (fun _ -> True))
          (ensures  (fun h0 x h1 -> h0 == h1 /\ 
                                    x == sel h0 r))
 
-  val (:=): #a:Type -> r:ref a -> v:a -> 
+  val (:=) : #a:Type -> r:ref a -> v:a -> 
     ST unit (requires (fun _ -> True))
             (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ 
                                       sel h1 r == v))

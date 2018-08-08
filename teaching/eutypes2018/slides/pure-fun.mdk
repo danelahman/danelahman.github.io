@@ -151,8 +151,8 @@ but only very weak logics
   ```
   val factorial : nat -> nat
   
-  let rec factorial n
-    = if n = 0 then 1 else n * (factorial (n - 1))
+  let rec factorial n =
+    if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
 * {.fragment} (Simple) inductive datatypes and pattern matching
@@ -163,10 +163,10 @@ but only very weak logics
 
   val map : ('a -> 'b) -> list 'a -> list 'b
   
-  let rec map f x
-    = match x with
-      | []     -> []
-      | h :: t -> f h :: map f t
+  let rec map f x =
+    match x with
+    | []     -> []
+    | h :: t -> f h :: map f t
   ```
 
 * {.fragment} Lambdas
@@ -225,10 +225,10 @@ type nat = x:int{x >= 0}
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
   val map : #n:nat -> #a:Type -> #b:Type -> (a -> b) -> vec a n -> vec b n
-  let rec map #n #a #b f as
-    = match as with
-      | Nil        -> Nil
-      | Cons hd tl -> Cons (f hd) (map f tl)
+  let rec map #n #a #b f as =
+    match as with
+    | Nil        -> Nil
+    | Cons hd tl -> Cons (f hd) (map f tl)
 
   map (fun x -> x + 42) (Cons 1 (Cons 2 (Cons 3 Nil)))
   ```
@@ -241,7 +241,8 @@ type nat = x:int{x >= 0}
 
   ```
   val factorial : nat -> Tot nat
-  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
+  let rec factorial n =
+    if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
 * {.fragment} **Quiz:** How about giving this weak type to factorial?
@@ -268,10 +269,10 @@ type nat = x:int{x >= 0}
 * {.fragment} arbitrary total expression as **decreases metric**
   ```
   val ackermann: m:nat -> n:nat -> Tot nat (decreases %[m;n])
-  let rec ackermann m n 
-    = if m = 0 then n + 1
-      else if n = 0 then ackermann (m - 1) 1
-      else ackermann (m - 1) (ackermann m (n - 1))
+  let rec ackermann m n =
+    if m = 0 then n + 1
+    else if n = 0 then ackermann (m - 1) 1
+    else ackermann (m - 1) (ackermann m (n - 1))
   ```
 * {.fragment} default metric is lex ordering of all (non-function) args
   ```
@@ -290,12 +291,12 @@ type nat = x:int{x >= 0}
   - {.fragment} evaluator for lambda terms
     ```
     val eval : exp -> Dv exp
-    let rec eval e
-      = match e with
-        | App (Lam x e1) e2 -> eval (subst x e2 e1)
-        | App e1 e2         -> eval (App (eval e1) e2)
-        | Lam x e1          -> Lam x (eval e1)
-        | _                 -> e
+    let rec eval e = 
+      match e with
+      | App (Lam x e1) e2 -> eval (subst x e2 e1)
+      | App e1 e2         -> eval (App (eval e1) e2)
+      | Lam x e1          -> Lam x (eval e1)
+      | _                 -> e
     
     let main () = eval (App (Lam 0 (App (Var 0) (Var 0)))
                             (Lam 0 (App (Var 0) (Var 0))))
@@ -366,17 +367,17 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 val factorial : nat -> Dv nat
 ```
 * {.fragment}Or the `Div` computation type (pre- and postconditions)
-```
-val eval_closed : e:exp -> Div exp (requires (closed e))
+  ```
+  val eval_closed : e:exp -> Div exp (requires (closed e))
                                      (ensures  (fun e' -> Lam? e' /\ closed e'))
-let rec eval_closed e =
-  match e with                       (* notice there is no case for variables *)
-  | App e1 e2 ->
-      let Lam e1' = eval_closed e1 in
-      below_subst_beta 0 e1' e2;
-      eval_closed (subst (sub_beta e2) e1')
-  | Lam e1 -> Lam e1
-```
+  let rec eval_closed e =
+    match e with                       (* notice there is no match case for variables *)
+    | App e1 e2 ->
+        let Lam e1' = eval_closed e1 in
+        below_subst_beta 0 e1' e2;
+        eval_closed (subst (sub_beta e2) e1')
+    | Lam e1 -> Lam e1
+  ```
 * {.fragment}`Dv` is just an abbreviation
 ```
 Dv t = Div t (requires True) (ensures (fun _ -> True))
@@ -463,7 +464,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 ```
 let snoc l h = l @ [h]
 
-val reverse: #a:Type -> list a -> Tot (list a)
+val reverse : #a:Type -> list a -> Tot (list a)
 
 let rec reverse (#a:Type) l =
   match l with
@@ -472,7 +473,7 @@ let rec reverse (#a:Type) l =
 ```
 ~Fragment
 ```
-val rev_snoc: #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reverse l)
+val rev_snoc : #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reverse l)
 
 
 let rec rev_snoc (#a:Type) l h =
@@ -482,7 +483,7 @@ let rec rev_snoc (#a:Type) l h =
 ```
 ~
 ```
-val rev_involutive: #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
+val rev_involutive : #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
 
 let rec rev_involutive (#a:Type) l =
   match l with
@@ -499,7 +500,7 @@ let rec rev_involutive (#a:Type) l =
 ```
 let snoc l h = l @ [h]
 
-val reverse: #a:Type -> list a -> Tot (list a)
+val reverse : #a:Type -> list a -> Tot (list a)
 
 let rec reverse (#a:Type) l =
   match l with
@@ -508,7 +509,7 @@ let rec reverse (#a:Type) l =
 ```
 
 ```
-val rev_snoc: #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reverse l)
+val rev_snoc : #a:Type -> l:list a -> h:a -> Lemma (reverse (snoc l h) == h::reverse l)
                                             [SMTPat (reverse (snoc l h))]
                                             
 let rec rev_snoc (#a:Type) l h =
@@ -518,7 +519,7 @@ let rec rev_snoc (#a:Type) l h =
 ```
 
 ```
-val rev_involutive: #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
+val rev_involutive : #a:Type -> l:list a -> Lemma (reverse (reverse l) == l)
 
 let rec rev_involutive (#a:Type) l =
   match l with

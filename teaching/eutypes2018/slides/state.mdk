@@ -45,7 +45,7 @@ Ohrid, Macedonia, 11 August, 2018
   - **Refined computation types**: `Pure t pre post ` , ` Div t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
-* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}**
+* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}** (`<:`)
 
 * {.fragment} **[Extensional equality]{color:DarkRed}** (`=`, `==`, `===`)
 
@@ -69,8 +69,8 @@ Ohrid, Macedonia, 11 August, 2018
 * The `St` effect---programming with [mutable references]{color:DarkBlue}
   ```
   val incr : r:ref int -> St unit
-  let incr r =
-    r := !r + 1
+  
+  let incr r = r := !r + 1
   ```
 
 * {.fragment} Hoare logic-style **[preconditions]{color:DarkGreen}** and **[postconditions]{color:DarkRed}** with `ST`
@@ -90,19 +90,22 @@ Ohrid, Macedonia, 11 August, 2018
 * {.fragment} `St` is again just an abbreviation for `ST` with trivial pre-postconditions
 
 * {.fragment} **Sub-effecting:** `Pure <: ST` and in fact also `Div <: ST`
-  - {.fragment} as such, think of `ST` as having a [partial correctness]{color:DarkBlue} reading
+
+* {.fragment} As such, think of `ST` as having a [partial correctness]{color:DarkBlue} reading
 
 <!------------------------------------------------------------------------------>
 
 ## `Heap` and `ST` interfaces (much simplified) ##
 ```
 module Heap
+
 [INCLUDE=../../../code/state/Heap.fsti:heap_model]
 ```
 
 ~Fragment
 ```
 module ST
+
 [INCLUDE=../../../code/state/ST.fsti:ops]
 ```
 ~
