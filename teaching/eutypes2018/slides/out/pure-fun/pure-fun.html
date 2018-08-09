@@ -6740,7 +6740,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 
 <span style="color:blue">open</span> Stack
 
-[@expect_failure]           <span style="color:darkgreen">(*</span><span style="color:darkgreen"> remove this attribute once you have completed Stack.fst </span><span style="color:darkgreen">*)</span>
+[@fail]                  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> remove this attribute once you have completed Stack.fst </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">let</span> main() =
 
   <span style="color:blue">let</span> s0 = empty <span style="color:darkgreen">(*</span><span style="color:darkgreen"> &lt;: stack </span><span style="color:darkgreen">*)</span> <span style="color:blue">in</span>
