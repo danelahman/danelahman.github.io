@@ -6681,7 +6681,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 
 <span style="color:blue">let</span> <span style="color:blue">rec</span> sum_rec (n:nat) = <span style="color:blue">if</span> n &gt; <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> n + sum_rec (n - <span class="constant" style="color:purple">1</span>) <span style="color:blue">else</span> <span class="constant" style="color:purple">0</span>
 
-<span style="color:blue">let</span> sum_tot (n:nat) : <span style="color:blue">GTot</span> nat = ((n + <span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>
+<span style="color:blue">let</span> sum_tot (n:nat) : nat = ((n + <span class="constant" style="color:purple">1</span>) * n) / <span class="constant" style="color:purple">2</span>
 
 <span style="color:blue">let</span> <span style="color:blue">rec</span> sum_rec_correct (n:nat) : <span style="color:blue">Lemma</span> (sum_rec n = sum_tot n) = 
   

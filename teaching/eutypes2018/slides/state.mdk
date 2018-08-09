@@ -92,7 +92,7 @@ Ohrid, Macedonia, 11 August, 2018
 
 * {.fragment} `St` is again just an abbreviation for `ST` with trivial pre-postconditions
 
-* {.fragment} **Sub-effecting:** `Pure <: ST` and in fact also `Div <: ST`
+* {.fragment} **Sub-effecting:** ` Pure <: ST ` and in fact also ` Div <: ST `
 
 * {.fragment} As such, think of `ST` as having a [partial correctness]{color:DarkBlue} reading
 
@@ -190,7 +190,7 @@ let incr r = r := !r + 1
 [INCLUDE=../../../code/state/SwapRefsST.fst:swap_proof]
 ```
 ~
-* {.fragment} Note: This variant is correct even when `r1` and `r2` are aliased
+* {.fragment} **Note:** This variant is correct even when `r1` and `r2` are aliased
 
 <!------------------------------------------------------------------------------>
 
@@ -202,7 +202,7 @@ let incr r = r := !r + 1
 
 * Correctness of this variant relies on `r1` and `r2` not being aliased
 
-* ... and on `int` being unbounded (mathematical) integers
+* ... and on `int` being unbounded (mathematical) integers<br/><br/>
 
 * {.fragment} **Exercise 1:** Sketch a hand proof that this code is correct
 
