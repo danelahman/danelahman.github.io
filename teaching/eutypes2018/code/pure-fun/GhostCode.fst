@@ -1,4 +1,4 @@
-module GhostExample
+module GhostCode
 
 [@expect_failure]
 let f1 (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()

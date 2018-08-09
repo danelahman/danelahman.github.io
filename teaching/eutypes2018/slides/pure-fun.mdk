@@ -454,7 +454,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 * **Two classes of types**
   - [Value types (`t`):]{color:DarkBlue} `int`, `list int`, ...
-  - [Computation types (`C`):]{color:DarkRed} ` Tot t` &nbsp;&nbsp;and&nbsp;&nbsp; `Dv t`<br/>
+  - [Computation types (`C`):]{color:DarkRed} ` Tot t`, ` Dv t`, ` GTot t`<br/>
 
 
 * {.fragment} **Dependent (effectful) function types** of the form: ` x:t -> C`
@@ -466,6 +466,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
   - [Refined computation types:]{color:DarkRed}
     - `Pure t pre post`
     - `Div t pre post`
+    - `Ghost t pre post`
     - these will get more interesting for more interesting effects
 
 <!------------------------------------------------------------------------------>
