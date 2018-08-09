@@ -6063,7 +6063,7 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
   <span style="color:blue">val</span> heap : <span style="color:blue">Type</span>
   <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
-  <span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in ghost effect, meaning this  </span><span style="color:darkgreen">*)</span>
+  <span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a   <span style="color:darkgreen">(*</span><span style="color:darkgreen"> in Ghost effect---meaning this </span><span style="color:darkgreen">*)</span>
   <span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> code can only be used in specs </span><span style="color:darkgreen">*)</span>
 
   <span style="color:blue">let</span> modifies (s:set nat) (h0 h1 : heap) =
