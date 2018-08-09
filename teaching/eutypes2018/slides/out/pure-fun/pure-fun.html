@@ -6312,17 +6312,17 @@ Expected a pure expression; got an expression ... with effect &quot;DIV&quot;</c
 <p data-line="349"><span data-line="349"></span><strong class="strong-star2">Sub-effecting:</strong><span data-line="349"></span> <span data-line="349"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> <span style="color:blue">Tot</span> t &lt;: <span style="color:blue">GTot</span> t</code><span data-line="349"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="351">
-<p data-line="351"><span data-line="351"></span><strong class="strong-star2"><span style="color:DarkRed">BUT NOT:</span></strong><span data-line="351"></span> <span data-line="351"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> <span style="color:blue">GTot</span> t &lt;: <span style="color:blue">Tot</span> t</code><span data-line="351"></span>
+<p data-line="351"><span data-line="351"></span><strong class="strong-star2"><span style="color:DarkRed">BUT NOT:</span></strong><span data-line="351"></span> <span data-line="351"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> <span style="color:blue">GTot</span> t &lt;: <span style="color:blue">Tot</span> t   </code><span data-line="351"></span> (in fact, does hold in some special cases)
 </p></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="353">
-<p data-line="353"><span data-line="353"></span>So, ghost code cannot be used in total functions
+<p data-line="353"><span data-line="353"></span>So, ghost code cannot be used in total functions (except for exceptions)
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="354" data-line-first="355" style="display:block"><code data-line="355"><span style="color:blue">let</span> f (g:unit <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat) : <span style="color:blue">Tot</span> (n:nat{n = g ()}) = g ()</code></pre>
 <div class="fragment console" data-line="357">
 <pre class="para-block pre-fenced pre-fenced3 language-text lang-text text" data-line="358" data-line-first="359" style="display:block"><code data-line="359">Computed type &quot;n: nat{n = g ()}&quot; and effect &quot;GTot&quot;
 is not compatible with the annotated type &quot;n: nat{n = g ()}&quot; effect &quot;Tot&quot;</code></pre></div></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="364">
-<p data-line="364"><span data-line="364"></span>But total functions can appear in ghost code
+<p data-line="364"><span data-line="364"></span>But total functions can appear in ghost code (regardless of their type)
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="365" data-line-first="366" style="display:block"><code data-line="366"><span style="color:blue">let</span> f (g:unit <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> (n:nat{n = <span class="constant" style="color:purple">4</span>})) : <span style="color:blue">GTot</span> (n:nat{n = g ()}) = g ()</code></pre></li></ul>
 <!------------------------------------------------------------------------------>

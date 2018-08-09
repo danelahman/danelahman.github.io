@@ -348,9 +348,9 @@ type nat = x:int{x >= 0}
 
 * {.fragment} **Sub-effecting:** ` Tot t <: GTot t`
 
-* {.fragment} **[BUT NOT:]{color:DarkRed}** ` GTot t <: Tot t`
+* {.fragment} **[BUT NOT:]{color:DarkRed}** ` GTot t <: Tot t   ` (in fact, does hold in some special cases)
 
-* {.fragment} So, ghost code cannot be used in total functions
+* {.fragment} So, ghost code cannot be used in total functions (except for exceptions)
   ```
   let f (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()
   ```
@@ -361,7 +361,7 @@ type nat = x:int{x >= 0}
   ```
 ~
 
-* {.fragment} But total functions can appear in ghost code
+* {.fragment} But total functions can appear in ghost code (regardless of their type)
   ```
   let f (g:unit -> Tot (n:nat{n = 4})) : GTot (n:nat{n = g ()}) = g ()
   ```
