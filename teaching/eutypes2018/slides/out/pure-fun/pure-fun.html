@@ -6663,7 +6663,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="634" data-line-first="635;out/pure-fun/../../../ex/Stack.fsti:12" style="display:block"><code data-line="635;out/pure-fun/../../../ex/Stack.fsti:12"><span style="color:blue">val</span> stack : <span style="color:blue">Type0</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> type of stacks </span><span style="color:darkgreen">*)</span>
 
 <span style="color:blue">val</span> empty : stack
-<span style="color:blue">val</span> is_empty : stack <span style="color:blue">-&gt;</span> bool
+<span style="color:blue">val</span> is_empty : stack <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> bool
 
 <span style="color:blue">val</span> push : int <span style="color:blue">-&gt;</span> stack <span style="color:blue">-&gt;</span> stack
 <span style="color:blue">val</span> pop : stack <span style="color:blue">-&gt;</span> option stack
@@ -6761,7 +6761,7 @@ got expression &quot;s1&quot; of type &quot;Stack.stack&quot;</code></pre></div>
 <span style="color:darkgreen">         refine stack types below with the is_empty predicate </span><span style="color:darkgreen">*)</span>
 
 <span style="color:blue">val</span> empty : stack
-<span style="color:blue">val</span> is_empty : stack <span style="color:blue">-&gt;</span> bool
+<span style="color:blue">val</span> is_empty : stack <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> bool
 
 <span style="color:blue">val</span> push : int <span style="color:blue">-&gt;</span> stack <span style="color:blue">-&gt;</span> stack
 <span style="color:blue">val</span> pop : stack <span style="color:blue">-&gt;</span> stack                <span style="color:darkgreen">(*</span><span style="color:darkgreen"> before the return type was `option stack`</span><span style="color:darkgreen">*)</span>

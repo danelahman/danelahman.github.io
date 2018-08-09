@@ -3,8 +3,8 @@ module Stack
 // BEGIN: stack_types
 val stack : Type0  (* type of stacks *)
 val empty : stack
+val is_empty : stack -> GTot bool
 val push : int -> stack -> stack
-val is_empty : stack -> bool
 val pop : stack -> option stack
 val top : stack -> option int
 // END: stack_types

@@ -9,7 +9,7 @@ val stack : Type0  (* type of stacks *)
          refine stack types below with the is_empty predicate *)
 
 val empty : stack
-val is_empty : stack -> bool
+val is_empty : stack -> GTot bool
 
 val push : int -> stack -> stack
 val pop : stack -> stack                (* before the return type was `option stack`*)

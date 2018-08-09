@@ -4,7 +4,7 @@ module Stack
 val stack : Type0  (* type of stacks *)
 
 val empty : stack
-val is_empty : stack -> bool
+val is_empty : stack -> GTot bool
 
 val push : int -> stack -> stack
 val pop : stack -> option stack
