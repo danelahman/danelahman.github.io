@@ -174,8 +174,8 @@ Ohrid, Macedonia, 12 August, 2018
 * {.fragment} **Idea:** observe that `(fun j -> j > 0)` is a stable predicate wrt `<=`
 
   ```
-  let stable (#a:Type) (p:predicate a) (rel:preorder a) 
-    = forall (x y:a). p x /\ rel x y ==> p y
+  let stable (#a:Type) (p:predicate a) (rel:preorder a) = 
+    forall (x y:a). p x /\ rel x y ==> p y
   ```
 
 <!------------------------------------------------------------------------------>
@@ -191,19 +191,21 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} Two stateful actions to [witness]{color:DarkBlue} and [recall]{color:DarkBlue} such tokens (intro/elim)
   ```
-  val witness_token : #a:Type0 -> #rel:preorder a -> r:mref a rel -> p:(a -> Type0) -> 
-    ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
-            (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
+  let witness_token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:(a -> Type0)) 
+    : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
+  = ...
 
-  val recall_token : #a:Type0 -> #rel:preorder a -> r:mref a b -> p:(a -> Type0) -> 
-    ST unit (requires (fun _       -> token r p))
-            (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
+  let recall_token (#a:Type0) (#rel:preorder a) (r:mref a b) (p:(a -> Type0)) 
+    : ST unit (requires (fun _       -> token r p))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
+  = ...
   ```
 
 * {.fragment} And as a bonus, recalling the existence of GCd references, "for free"
   ```
-  val recall : #a:Type0 -> #rel:preorder a -> r:mref a rel ->
-    ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
+  let recall (#a:Type0) (#rel:preorder a) (r:mref a rel) 
+    : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r)) = ...
   ```
 
 <!------------------------------------------------------------------------------>
@@ -252,7 +254,7 @@ Ohrid, Macedonia, 12 August, 2018
   let recall (#a:Type0) (r:ref a)
     : ST unit (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
 
-    = MonotonicRefsSlide.recall r
+  = MonotonicReferencesSlide.recall r
   ```
 
 <!------------------------------------------------------------------------------>
@@ -271,8 +273,8 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} An action for adding new elements to the log
   ```
-  let add_to_log (r:lref) (v:int) : ST unit (ensures  (fun _ _ h -> v `mem` (sel h r)))
-    = r := (v :: !r)
+  let add_to_log (r:lref) (v:int) : ST unit (ensures  (fun _ _ h -> v `mem` (sel h r))) =
+    r := (v :: !r)
   ```
 
 * {.fragment} Can then use `witness_token` and `recall_token` similarly
@@ -307,8 +309,8 @@ Ohrid, Macedonia, 12 August, 2018
     | Mutable v1 , Frozen v2 -> v1 == v2
     | _          , _         -> False
   
-  let evolve (a:Type0) : preorder (rstate a)
-    = evolve' a                             (* (Error) *) (* Exercise: Why does it fail? *)
+  let evolve (a:Type0) : preorder (rstate a) = 
+    evolve' a                               (* (Error) *) (* Exercise: Why does it fail? *)
   ```
 
 * {.fragment} 
@@ -330,25 +332,25 @@ Ohrid, Macedonia, 12 August, 2018
 ```
 let eref (a:Type0) : Type = mref (rstate a) (evolve a)
 
-let alloc a : ST (eref a) (ensures  (fun _ r h -> Empty? (sel h r)))
-  = alloc (evolve a) Empty
+let alloc a : ST (eref a) (ensures  (fun _ r h -> Empty? (sel h r))) = 
+  alloc (evolve a) Empty
 
 let read #a (r:eref a) : ST a (requires (fun h      -> ~(Empty? (sel h r))))
                               (ensures  (fun h v h' -> h == h' /\
                                                        (sel h r == Mutable v \/
                                                         sel h r == Frozen v     )))
-  = match (!r) with | Mutable v | Frozen v -> v
+= match (!r) with | Mutable v | Frozen v -> v
   
                        (* Exercise: Can you give read a heap-independent precondition? *)
 
 
 let write #a (r:eref a) (v:a) : ST unit (requires (fun h     -> ~(Frozen? (sel h r))))
                                         (ensures  (fun _ _ h -> sel h r == Mutable v))
-  = r := Mutable v
+= r := Mutable v
 
 
-let freeze #a (r:eref a)                    (* Exercise: What type should freeze have? *)
-  = r := Frozen (Mutable?.v !r)
+let freeze #a (r:eref a) =                  (* Exercise: What type should freeze have? *)
+  r := Frozen (Mutable?.v !r)
 ```
 ~Fragment
 ```
@@ -426,28 +428,82 @@ let main() : St unit =
 
 * Show this works as expected with client code similar to previous slide
 
+<!------------------------------------------------------------------------------>
+
+## How the Sausage is Made (`MST`) ##
+
+* {.fragment} F\* standard library provides a [**global monotonic state**]{color:DarkBlue} effect
+  ```
+  MST #state #rel t (requires pre) (ensures post)            (* pre : state -> GTot prop *)
+  ```
+
+* {.fragment} and a `witnessed` [**modality**]{color:DarkBlue} giving us a [**state-independent proposition**]{color:DarkRed}
+  ```
+  val witnessed : #state:Type -> #rel:(preorder state) -> (state -> prop) -> prop
+  ```
+
+* {.fragment} together with corresponding `get`, `put`, `witness`, and `recall` actions
+  ```
+  val put : #state:Type -> #rel:(preorder state) -> s:state ->
+    MST #state #rel unit (requires (fun s0     -> rel s0 s))    (* note the precondition *)
+                         (ensures  (fun _ _ s1 -> s1 == s))
+  ```
+~Fragment
+  ```
+  val witness : #state:Type -> #rel:(preorder state) -> p:(state -> prop) ->
+    MST #state #rel unit (requires (fun s0      -> p s0 /\ stable p rel))
+                         (ensures  (fun s0 _ s1 -> s0 == s1 /\ witnessed #_ #rel p))
+
+  val recall : #state:Type -> #rel:(preorder state) -> p:(state -> prop) ->
+    MST #state #rel unit (requires (fun _       -> witnessed #_ #rel p))
+                         (ensures  (fun s0 _ s1 -> s0 == s1 /\ p s1))
+  ```
+~
 
 <!------------------------------------------------------------------------------>
 
-## Questions? ##
+## How the Sausage is Made (`ST`, much simplified) ##
 
-<br /><br />
+* {.fragment} `ST` is defined as an instance of `MST`
+  ```
+  ST t (requires pre) (ensures post) = MST #heap #heap_rel (requires pre) (ensures post)
+  ```
 
-For more information:
+* {.fragment} For (monotonic) heaps we use the natural functional representation
+  ```
+  type heap_rec = {
+    next_addr : (x: nat);
+    memory    : (x: nat) -> Tot (option (a:Type0 & rel:(option (preorder a)) & a))
+  }
+  
+  let heap = h:heap_rec{(forall (n:nat). n >= h.next_addr ==> None? (h.memory n))}
+  ```
 
-<br />
+* {.fragment} `heap_rel` is heap-inclusion + relatedness by the individual preorders
 
-D. Ahman, C. Fournet, C. Hritcu, K. Maillard, A. Rastogi, N. Swamy<br />
-**Recalling a Witness: Foundations and Applications of Monotonic State**<br />
-POPL 2018
+* {.fragment} (Monotonic) references are represented by their addresses
+  ```
+  abstract type mref' (a:Type0) (rel:preorder a) = { addr:nat; init:a }
+
+  type mref (a:Type0) (rel:preorder a) = mref' a rel{witnessed (fun h -> h `contains` r)}
+  ```
+
+* {.fragment} `alloc`, `!`, `:=`, and `tokens` are then defined using `witnessed` and `MST` actions
+
 
 <!------------------------------------------------------------------------------>
 
-## Bonus Material: How the Sausage is Made ##
+## Final step in this course ##
 
-<br />
+* Friday: A Gentle Introduction to F\* (Purely Functional Programs)
 
-(see FStar.Monotonic.Heap, FStar.ST, and FStar.MRef)
+* Yesterday: Verifying Stateful Programs in F\*
+
+* Today: Monotonic State in F\*
+
+* **Today: F\*'s Extensible Effect System and Metaprogramming in F\***
+
+
 
 <!------------------------------------------------------------------------------>
 
