@@ -41,8 +41,11 @@ Ohrid, Macedonia, 11 August, 2018
   - potential non-termination is an effect
 
 * {.fragment} **[Refinements]{color:DarkRed}**
-  - **Refined value types**: `x:t{p}`
-  - **Refined computation types**: `Pure t pre post ` , ` Div t pre post`
+  - **Refined value types**:
+    - `x:t{p}`
+  - **Refined computation types**:
+    - `Pure t pre post `
+    - `Div t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
 * {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}** (`<:`)
