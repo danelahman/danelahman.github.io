@@ -6347,8 +6347,8 @@ Expected a pure expression; got an expression ... with effect &quot;DIV&quot;</c
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="386" data-line-first="387" style="display:block"><code data-line="387"><span style="color:blue">let</span> f (g:unit <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat) : <span style="color:blue">Tot</span> (n:nat{n = g ()}) = g ()</code></pre>
 <div class="fragment console" data-line="389">
-<pre class="para-block pre-fenced pre-fenced3 language-text lang-text text" data-line="390" data-line-first="391" style="display:block"><code data-line="391">Computed type &quot;n: nat{n = g ()}&quot; and effect &quot;GTot&quot;
-is not compatible with the annotated type &quot;n: nat{n = g ()}&quot; effect &quot;Tot&quot;</code></pre></div></li>
+<pre class="para-block pre-fenced pre-fenced3 language-text lang-text text" data-line="390" data-line-first="391" style="display:block"><code data-line="391">Computed type &quot;n:nat{n = g ()}&quot; and effect &quot;GTot&quot;
+is not compatible with the annotated type &quot;n:nat{n = g ()}&quot; effect &quot;Tot&quot;</code></pre></div></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="396">
 <p data-line="396"><span data-line="396"></span>But total functions can appear in ghost code (regardless of their type)
 </p>
@@ -6740,7 +6740,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 
 <span style="color:blue">open</span> Stack
 
-[@fail]                  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> remove this attribute once you have completed Stack.fst </span><span style="color:darkgreen">*)</span>
+[@fail]                     <span style="color:darkgreen">(*</span><span style="color:darkgreen"> remove this attribute once you have completed Stack.fst </span><span style="color:darkgreen">*)</span>
 <span style="color:blue">let</span> main() =
 
   <span style="color:blue">let</span> s0 = empty <span style="color:darkgreen">(*</span><span style="color:darkgreen"> &lt;: stack </span><span style="color:darkgreen">*)</span> <span style="color:blue">in</span>
@@ -6759,28 +6759,36 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
     
   <span style="color:blue">let</span> s3 = pop s2 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> &lt;: option stack </span><span style="color:darkgreen">*)</span> <span style="color:blue">in</span>
   <span style="color:blue">assert</span> (Some?.v s3 == s1)
-</code></pre></section>
-<section id="sec-clients-cannot-break-abstraction" class="section section2" data-section-depth="2" data-line="686"><h3 id="heading-sec-clients-cannot-break-abstraction" class="h2" data-heading-depth="2" style="display:block">Clients cannot break abstraction</h3>
-<p class="p noindent" data-line="687"><span data-line="687"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">StackClientBad.fst</code><span data-line="687"></span>
-</p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="688" data-line-first="689;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1" style="display:block"><code data-line="689;out/pure-fun/../../../code/pure-fun/StackClientBad.fst:1"><span style="color:blue">module</span> StackClientBad
+</code></pre><!--
+## Clients cannot break abstraction ##
+`StackClientBad.fst`
+```
+module StackClientBad
 
-<span style="color:blue">open</span> Stack
+open Stack
 
-<span style="color:blue">let</span> main () =
-  <span style="color:blue">let</span> s0 = empty <span style="color:blue">in</span>
-  <span style="color:blue">let</span> s1 = push <span class="constant" style="color:purple">3</span> s0 <span style="color:blue">in</span>
-  <span class="constant" style="color:purple">2</span> :: s1
-</code></pre>
-<div class="fragment console" data-line="691">
-<pre class="para-block pre-fenced pre-fenced3 language-text lang-text text" data-line="692" data-line-first="693" style="display:block"><code data-line="693">fstar.exe StackClientBad.fst
+let main () =
+  let s0 = empty in
+  let s1 = push 3 s0 in
+  2 :: s1
+
+```
+~Fragment{.console}
+```text
+fstar.exe StackClientBad.fst
 ./StackClientBad.fst(6,9-6,11): (Error)
-Expected expression of type &quot;Prims.list ((*?u13*) _ s0 s1)&quot;;
-got expression &quot;s1&quot; of type &quot;Stack.stack&quot;</code></pre></div></section>
-<section id="sec-exercise-3--refinement-typed-stacks" class="section section2" data-section-depth="2" data-line="700"><h3 id="heading-sec-exercise-3--refinement-typed-stacks" class="h2" data-heading-depth="2" style="display:block">Exercise 3: Refinement-typed stacks</h3>
-<p class="p noindent" data-line="701"><span data-line="701"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">RefinedStack.fsti</code><span data-line="701"></span>
+Expected expression of type "Prims.list ((*?u13*) _ s0 s1)";
+got expression "s1" of type "Stack.stack"
+```
+~
+-->
+
+
+</section>
+<section id="sec-exercise-3--refinement-typed-stacks" class="section section2" data-section-depth="2" data-line="702"><h3 id="heading-sec-exercise-3--refinement-typed-stacks" class="h2" data-heading-depth="2" style="display:block">Exercise 3: Refinement-typed stacks</h3>
+<p class="p noindent" data-line="703"><span data-line="703"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">RefinedStack.fsti</code><span data-line="703"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="702" data-line-first="703;out/pure-fun/../../../ex/RefinedStack.fsti:1" style="display:block"><code data-line="703;out/pure-fun/../../../ex/RefinedStack.fsti:1"><span style="color:blue">module</span> RefinedStack
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="704" data-line-first="705;out/pure-fun/../../../ex/RefinedStack.fsti:1" style="display:block"><code data-line="705;out/pure-fun/../../../ex/RefinedStack.fsti:1"><span style="color:blue">module</span> RefinedStack
 
 <span style="color:blue">val</span> stack : <span style="color:blue">Type0</span>  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> type of stacks </span><span style="color:darkgreen">*)</span>
 
@@ -6797,10 +6805,10 @@ got expression &quot;s1&quot; of type &quot;Stack.stack&quot;</code></pre></div>
 <span style="color:blue">val</span> pop : stack <span style="color:blue">-&gt;</span> stack                <span style="color:darkgreen">(*</span><span style="color:darkgreen"> before the return type was `option stack`</span><span style="color:darkgreen">*)</span>
 <span style="color:blue">val</span> top : stack <span style="color:blue">-&gt;</span> int                  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> before the return type was `option int` </span><span style="color:darkgreen">*)</span>
 </code></pre>
-<ul class="ul list-star compact" data-line="706">
-<li class="li ul-li list-star-li compact-li fragment" data-line="706"><span data-line="706"></span><strong class="strong-star2">Goal:</strong><span data-line="706"></span> type a variant of <span data-line="706"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">StackClient.fst</code><span data-line="706"></span> (now without <span data-line="706"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Some?.v</code><span data-line="706"></span>&#39;<span data-line="706"></span>s)
+<ul class="ul list-star compact" data-line="708">
+<li class="li ul-li list-star-li compact-li fragment" data-line="708"><span data-line="708"></span><strong class="strong-star2">Goal:</strong><span data-line="708"></span> type a variant of <span data-line="708"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">StackClient.fst</code><span data-line="708"></span> (now without <span data-line="708"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">Some?.v</code><span data-line="708"></span>&#39;<span data-line="708"></span>s)
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="707" data-line-first="708" style="display:block"><code data-line="708"><span style="color:blue">let</span> main () =
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="709" data-line-first="710" style="display:block"><code data-line="710"><span style="color:blue">let</span> main () =
   ...
   <span style="color:blue">let</span> s3 = pop s2 <span style="color:darkgreen">(*</span><span style="color:darkgreen"> &lt;: stack </span><span style="color:darkgreen">*)</span> <span style="color:blue">in</span>
   <span style="color:blue">assert</span> (s3 == s1)</code></pre></li></ul>
@@ -6808,19 +6816,19 @@ got expression &quot;s1&quot; of type &quot;Stack.stack&quot;</code></pre></div>
 
 
 </section>
-<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="716"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
-<ul class="ul list-star loose" data-line="718">
-<li class="li ul-li list-star-li loose-li" data-line="718">
-<p data-line="718"><span data-line="718"></span>Today: A Gentle Introduction to F<span data-line="718"></span>*<span data-line="718"></span> (Purely Functional Programs)
-</p></li>
+<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="718"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
+<ul class="ul list-star loose" data-line="720">
 <li class="li ul-li list-star-li loose-li" data-line="720">
-<p data-line="720"><span data-line="720"></span><strong class="strong-star2">Tomorrow: Verifying Stateful Programs in F*</strong><span data-line="720"></span>
+<p data-line="720"><span data-line="720"></span>Today: A Gentle Introduction to F<span data-line="720"></span>*<span data-line="720"></span> (Purely Functional Programs)
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="722">
-<p data-line="722"><span data-line="722"></span>Sunday: Monotonic State in F<span data-line="722"></span>*<span data-line="722"></span>
+<p data-line="722"><span data-line="722"></span><strong class="strong-star2">Tomorrow: Verifying Stateful Programs in F*</strong><span data-line="722"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="724">
-<p data-line="724"><span data-line="724"></span>Sunday: F<span data-line="724"></span>*<span data-line="724"></span>&#39;<span data-line="724"></span>s Extensible Effect System and Metaprogramming in F<span data-line="724"></span>*<span data-line="724"></span>
+<p data-line="724"><span data-line="724"></span>Sunday: Monotonic State in F<span data-line="724"></span>*<span data-line="724"></span>
+</p></li>
+<li class="li ul-li list-star-li loose-li" data-line="726">
+<p data-line="726"><span data-line="726"></span>Sunday: F<span data-line="726"></span>*<span data-line="726"></span>&#39;<span data-line="726"></span>s Extensible Effect System and Metaprogramming in F<span data-line="726"></span>*<span data-line="726"></span>
 </p></li></ul></section></div></div><span data-line=""></span></div>
 </body>
 <script>

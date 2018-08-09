@@ -388,8 +388,8 @@ type nat = x:int{x >= 0}
   ```
 ~Fragment {.console}
   ```text
-  Computed type "n: nat{n = g ()}" and effect "GTot"
-  is not compatible with the annotated type "n: nat{n = g ()}" effect "Tot"
+  Computed type "n:nat{n = g ()}" and effect "GTot"
+  is not compatible with the annotated type "n:nat{n = g ()}" effect "Tot"
   ```
 ~
 
@@ -683,6 +683,7 @@ let rec progress #e #t h =
 [INCLUDE=../../../ex/StackClient.fst]
 ```
 
+<!--
 ## Clients cannot break abstraction ##
 `StackClientBad.fst`
 ```
@@ -696,6 +697,7 @@ Expected expression of type "Prims.list ((*?u13*) _ s0 s1)";
 got expression "s1" of type "Stack.stack"
 ```
 ~
+-->
 
 ## Exercise 3: Refinement-typed stacks ##
 `RefinedStack.fsti`
