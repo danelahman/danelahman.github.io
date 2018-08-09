@@ -342,7 +342,7 @@ type nat = x:int{x >= 0}
 
 * Using refinement types (saw this already)
 ```
-val factorial : nat -> Tot nat
+val factorial : nat -> Tot nat                             (* type nat = x:int{x >= 0} *)
 ```
 * {.fragment}Can equivalently use [**pre- and postconditions**]{color:DarkGreen} for this
 ```
@@ -371,14 +371,14 @@ val factorial : nat -> Dv nat
   val eval_closed : e:exp -> Div exp (requires (closed e))
                                      (ensures  (fun e' -> Lam? e' /\ closed e'))
   let rec eval_closed e =
-    match e with                       (* notice there is no match case for variables *)
+    match e with                          (* notice there is no match case for variables *)
     | App e1 e2 ->
         let Lam e1' = eval_closed e1 in
         below_subst_beta 0 e1' e2;
         eval_closed (subst (sub_beta e2) e1')
     | Lam e1 -> Lam e1
   ```
-* {.fragment}`Dv` is just an abbreviation
+* {.fragment}`Dv` is also just an abbreviation
 ```
 Dv t = Div t (requires True) (ensures (fun _ -> True))
 ```
@@ -392,11 +392,12 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
   - [Computation types (`C`):]{color:DarkRed} ` Tot t` &nbsp;&nbsp;and&nbsp;&nbsp; `Dv t`<br/>
 
 
-* {.fragment} **Dependent function types** of the form: ` x:t -> C`
+* {.fragment} **Dependent (effectful) function types** of the form: ` x:t -> C`
   - argument can't have side-effects, so value type<br/><br/>
 
 * {.fragment} **Two forms of refinement types**
-  - [Refined value types:]{color:DarkBlue} ` x:t{p}`
+  - [Refined value types:]{color:DarkBlue}
+    - ` x:t{p}`
   - [Refined computation types:]{color:DarkRed}
     - `Pure t pre post`
     - `Div t pre post`
@@ -575,8 +576,11 @@ let rec progress #e #t h =
   - potential non-termination is an effect
 
 * {.fragment} **[Refinements]{color:DarkRed}**
-  - **Refined value types**: `x:t{p}`
-  - **Refined computation types**: `Pure t pre post`
+  - **Refined value types**:
+    - `x:t{p}`
+  - **Refined computation types**:
+    - `Pure t pre post`
+    - `Div t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
 * {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}** (`<:`)
@@ -627,7 +631,7 @@ got expression "s1" of type "Stack.stack"
 ```
 ~
 
-## Exercise 3: <br/>use dependent/refinement types to modify and implement ##
+## Exercise 3: Refinement-typed stacks ##
 `RefinedStack.fsti`
 ```
 [INCLUDE=../../../ex/RefinedStack.fsti]
