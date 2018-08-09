@@ -309,7 +309,9 @@ type nat = x:int{x >= 0}
   - {.fragment} web servers
   - {.fragment} ...
 
-## F\* effect system encapsulates effectful code ##
+<!------------------------------------------------------------------------------>
+
+## F\* effect system encapsulates effectful code (`Tot` and `Dv`) ##
 
 * Pure code cannot call potentially divergent code
 
@@ -328,12 +330,43 @@ type nat = x:int{x >= 0}
 ~
 <!-- Cheating quite badly above since I don't want to tell them about ghost -->
 
-* {.fragment} Sub-effecting: `Tot t <: Dv t`
+* {.fragment} **Sub-effecting:** `Tot t <: Dv t`
 
 * {.fragment} So, divergent code can include pure code
   ```
   incr 2 + factorial (-1) : Dv int
   ```
+
+<!------------------------------------------------------------------------------>
+
+## F\* effect system encapsulates effectful code (`Tot` and `GTot`) ##
+
+* {.fragment} In fact, only **[ghost]{color:DarkBlue}** code can appear in specifications
+  ```
+  val sel : #a:Type -> heap -> ref a -> GTot a
+  ```
+
+* {.fragment} **Sub-effecting:** ` Tot t <: GTot t`
+
+* {.fragment} **[BUT NOT:]{color:DarkRed}** ` GTot t <: Tot t`
+
+* {.fragment} So, ghost code cannot be used in total functions
+  ```
+  let f (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()
+  ```
+~Fragment {.console}
+  ```text
+  Computed type "n: nat{n = g ()}" and effect "GTot"
+  is not compatible with the annotated type "n: nat{n = g ()}" effect "Tot"
+  ```
+~
+
+* {.fragment} But total functions can appear in ghost code
+  ```
+  let f (g:unit -> Tot (n:nat{n = 4})) : GTot (n:nat{n = g ()}) = g ()
+  ```
+
+
 
 <!------------------------------------------------------------------------------>
 
