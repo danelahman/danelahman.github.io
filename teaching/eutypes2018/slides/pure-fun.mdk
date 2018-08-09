@@ -230,8 +230,40 @@ type nat = x:int{x >= 0}
     | Nil        -> Nil
     | Cons hd tl -> Cons (f hd) (map f tl)
 
-  map (fun x -> x + 42) (Cons 1 (Cons 2 (Cons 3 Nil)))
+  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat -> m `less_than` n -> a
+  let rec lookup #a #n v m p = ...
   ```
+
+## Inductive families + refinement types ##
+
+* As in e.g. Coq, we could define on the last slide
+  ```
+  type vec (a:Type) : nat -> Type =
+    | Nil  : vec a 0
+    | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
+
+  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat -> m `less_than` n -> a
+  let rec lookup #a #n v m p = ...
+  ```
+
+* {.fragment} But can also combine `vec` with refinement types for more convenience
+  ```
+  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat{m `less_than` n} -> a
+  let rec lookup #a #n v m = ...
+  ```
+
+* {.fragment} Or we could even just use lists + refinement types
+  ```
+  type list (a:Type) = | Nil : list a | Cons : hd:a -> tl:list a -> list a
+
+  val length : #a:Type -> list a -> nat
+  let rec length #a l = match l with | Nil -> 0 | Cons _ tl -> 1 + length tl
+    
+  val lookup : #a:Type -> l:list a -> m:nat{m `less_than` (length l)} -> a
+  let rec lookup #a l m = ...
+  ```
+
+
 
 ## Total functions in F\* ##
 
