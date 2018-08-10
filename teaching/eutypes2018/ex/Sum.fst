@@ -8,4 +8,4 @@ let sum_tot (n:nat) : nat = ((n + 1) * n) / 2
 
 let rec sum_rec_correct (n:nat) : Lemma (sum_rec n = sum_tot n) = 
   
-  admit()                                      (* replace this admit with a real proof *)
+  admit()                       (* replace this admit with a real proof *)

@@ -2,7 +2,7 @@ module Stack
 
 let stack = list int
 
-(* replace these admits with real definitions and proofs to match Stack.fsti *)
+(* replace these admits with real code and proofs to match Stack.fsti *)
 
 let empty = admit () 
 let is_empty = admit ()
