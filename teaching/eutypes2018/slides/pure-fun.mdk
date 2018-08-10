@@ -280,7 +280,7 @@ type nat = x:int{x >= 0}
     if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
-* {.fragment} **Quiz:** How about giving this weak type to factorial?
+* {.fragment} **Quiz:** How about giving this weaker type to factorial?
   ```
   val factorial : int -> Tot int
   ```
@@ -462,7 +462,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 
 * {.fragment} **Dependent (effectful) function types** of the form: ` x:t -> C`
-  - argument can't have side-effects, so value type<br/><br/>
+  - argument can't have side-effects, so a value type<br/><br/>
 
 * {.fragment} **Two forms of refinement types**
   - [Refined value types:]{color:DarkBlue}

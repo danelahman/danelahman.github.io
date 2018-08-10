@@ -6235,7 +6235,7 @@ n &gt;= 0, n &lt;&gt; 0, (factorial (n - 1)) &gt;= 0 |= n * (factorial (n - 1)) 
 <span style="color:blue">let</span> <span style="color:blue">rec</span> factorial n =
   <span style="color:blue">if</span> n = <span class="constant" style="color:purple">0</span> <span style="color:blue">then</span> <span class="constant" style="color:purple">1</span> <span style="color:blue">else</span> n * (factorial (n - <span class="constant" style="color:purple">1</span>))</code></pre></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="283">
-<p data-line="283"><span data-line="283"></span><strong class="strong-star2">Quiz:</strong><span data-line="283"></span> How about giving this weak type to factorial?
+<p data-line="283"><span data-line="283"></span><strong class="strong-star2">Quiz:</strong><span data-line="283"></span> How about giving this weaker type to factorial?
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="284" data-line-first="285" style="display:block"><code data-line="285"><span style="color:blue">val</span> factorial : int <span style="color:blue">-&gt;</span> <span style="color:blue">Tot</span> int</code></pre></li></ul>
 
@@ -6421,7 +6421,7 @@ is not compatible with the annotated type &quot;n:nat{n = g ()}&quot; effect &qu
 <p data-line="464"><span data-line="464"></span><strong class="strong-star2">Dependent (effectful) function types</strong><span data-line="464"></span> of the form: <span data-line="464"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> x:t <span style="color:blue">-&gt;</span> C</code><span data-line="464"></span>
 </p>
 <ul class="ul list-dash compact" data-line="465">
-<li class="li ul-li list-dash-li compact-li" data-line="465"><span data-line="465"></span>argument can<span data-line="465"></span>&#39;<span data-line="465"></span>t have side-effects, so value type<span data-line="465"></span><br/><span data-line="465"></span><br/><span data-line="465"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="465"><span data-line="465"></span>argument can<span data-line="465"></span>&#39;<span data-line="465"></span>t have side-effects, so a value type<span data-line="465"></span><br/><span data-line="465"></span><br/><span data-line="465"></span>
 </li></ul>
 </li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="467">
@@ -6458,9 +6458,9 @@ is not compatible with the annotated type &quot;n:nat{n = g ()}&quot; effect &qu
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="485" data-line-first="486;out/pure-fun/../../../code/pure-fun/AppendLength.fst:21" style="display:block"><code data-line="486;out/pure-fun/../../../code/pure-fun/AppendLength.fst:21"><span style="color:blue">let</span> <span style="color:blue">rec</span> append_length (#a:<span style="color:blue">Type</span>) (xs ys : list a) 
   : <span style="color:blue">Pure</span> unit
       (<span style="color:blue">requires</span> True)
-      (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> length (append xs ys) = length xs + length ys)) =
+      (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> length (append xs ys) = length xs + length ys))
       
-  <span style="color:blue">match</span> xs <span style="color:blue">with</span>
+= <span style="color:blue">match</span> xs <span style="color:blue">with</span>
   | []       <span style="color:blue">-&gt;</span> ()
   | x :: xs&#39; <span style="color:blue">-&gt;</span> append_length xs&#39; ys</code></pre></div>
 <ul class="ul list-star loose" data-line="489">
@@ -6469,9 +6469,9 @@ is not compatible with the annotated type &quot;n:nat{n = g ()}&quot; effect &qu
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="490" data-line-first="491;out/pure-fun/../../../code/pure-fun/AppendLength.fst:31" style="display:block"><code data-line="491;out/pure-fun/../../../code/pure-fun/AppendLength.fst:31"><span style="color:blue">let</span> <span style="color:blue">rec</span> append_length_lemma (#a:<span style="color:blue">Type</span>) (xs ys : list a) 
 
-  : <span style="color:blue">Lemma</span> (length (append xs ys) = length xs + length ys) =
+  : <span style="color:blue">Lemma</span> (length (append xs ys) = length xs + length ys)
   
-  <span style="color:blue">match</span> xs <span style="color:blue">with</span>
+= <span style="color:blue">match</span> xs <span style="color:blue">with</span>
   | []       <span style="color:blue">-&gt;</span> ()
   | x :: xs&#39; <span style="color:blue">-&gt;</span> append_length_lemma xs&#39; ys</code></pre></li></ul>
 <!------------------------------------------------------------------------------>
@@ -6702,7 +6702,7 @@ let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
 <span style="color:blue">val</span> push : int <span style="color:blue">-&gt;</span> stack <span style="color:blue">-&gt;</span> stack
 <span style="color:blue">val</span> pop : stack <span style="color:blue">-&gt;</span> option stack
 <span style="color:blue">val</span> top : stack <span style="color:blue">-&gt;</span> option int</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="674" data-line-first="675;out/pure-fun/../../../ex/Stack.fsti:29" style="display:block"><code data-line="675;out/pure-fun/../../../ex/Stack.fsti:29"><span style="color:blue">val</span> lemma_empty_is_empty : u:unit <span style="color:blue">-&gt;</span> <span style="color:blue">Lemma</span> (is_empty (empty))
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="674" data-line-first="675;out/pure-fun/../../../ex/Stack.fsti:29" style="display:block"><code data-line="675;out/pure-fun/../../../ex/Stack.fsti:29"><span style="color:blue">val</span> lemma_empty_is_empty : unit <span style="color:blue">-&gt;</span> <span style="color:blue">Lemma</span> (is_empty (empty))
 
 <span style="color:blue">val</span> lemma_push_is_empty : s:stack <span style="color:blue">-&gt;</span> i:int <span style="color:blue">-&gt;</span> <span style="color:blue">Lemma</span> (~(is_empty (push i s))) 
 

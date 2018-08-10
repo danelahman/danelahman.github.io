@@ -12,7 +12,7 @@ val top : stack -> option int
 // END: stack_types
 
 // BEGIN: stack_lemmas
-val lemma_empty_is_empty : u:unit -> Lemma (is_empty (empty))
+val lemma_empty_is_empty : unit -> Lemma (is_empty (empty))
 
 val lemma_push_is_empty : s:stack -> i:int -> Lemma (~(is_empty (push i s))) 
 
