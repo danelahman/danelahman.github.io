@@ -44,7 +44,7 @@ Ohrid, Macedonia, 10 August, 2018
 * Sunday: F\*'s Extensible Effect System and Metaprogramming in F\*
 
 ~Fragment
-Slides, code, and exercises <br/>@<br/>
+Slides, code, exercises, and setup instructions <br/>@<br/>
 [https://danelahman.github.io/teaching/eutypes2018/](https://danelahman.github.io/teaching/eutypes2018/)
 
 <br/>
@@ -70,8 +70,8 @@ Slides, code, and exercises <br/>@<br/>
 | &nbsp;&nbsp;&nbsp; **Isabelle**                  |               |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Liquid Types**                                 |                              |
 
 * **[Left corner]{color:DarkRed;}**:
-Very expressive higher-order (dependently typed) logics,\
-but mostly only purely functional programming
+very expressive higher-order logics, interactive proving,\
+tactics, but mostly only purely functional programming
 
 * **[Right corner]{color:DarkBlue;}**:
 effectful programming, SMT-based automation,\
@@ -84,16 +84,18 @@ but only very weak logics
 <!-- General-purpose -->
 * **[Functional programming language with effects]{color:Black;}**
   - like OCaml, F#, Haskell, ...
-    - `let incr (r:ref a) = let x = !r in r := x + 1 in x`
+    ```
+    let incr (r:ref a) = r := !r + 1
+    ```
   - F\* extracted to OCaml or F\# by default
-  - [subset of F\* compiled to efficient C code](https://github.com/FStarLang/kremlin){color:Black;}
+  - subset of F\* extracted to efficient C code (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
+
+* **[Semi-automated verification system using SMT]{color:DarkBlue;}**
+  - like Dafny, FramaC, Why3, Liquid Types, ...
 
 * **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
   <!-- - full dependency, inductive types, universe polymorphism -->
   - like Coq, Agda, Lean, ...
-
-* **[Semi-automated verification system using SMT]{color:DarkBlue;}**
-  - like Dafny, FramaC, Why3, Liquid Types, ...
 
 <!-- * {.fragment} Other tools in this space: -->
 <!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
@@ -118,6 +120,7 @@ but only very weak logics
     - [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
     - [Wys*](http://research.microsoft.com/en-us/um/people/nswamy/papers/wys.pdf): Verified DSL for secure multi-party computations
     - [ReVer](https://github.com/msr-quarc/ReVerC): Verified compiler to reversible circuits
+  - F\*'s new metaprogramming framework increasingly used in **[Everest](https://project-everest.github.io/)**
 
 # The current F\* team #
 
