@@ -4,7 +4,7 @@ open FStar.Ref
 open FStar.Mul
 
 // BEGIN: sum_rec
-let sum_tot (n:nat) = ((n+1) * n) / 2  (* equal to sum_rec, see 1st lecture exercises *)
+let sum_tot (n:nat) = ((n+1) * n) / 2  (* equal to sum_rec, see lect. 1 *)
 // END: sum_rec
 
 (* Exercise: strengthen spec of sum_st' below so that sum_st verifies without admit *)
@@ -13,8 +13,10 @@ let sum_tot (n:nat) = ((n+1) * n) / 2  (* equal to sum_rec, see 1st lecture exer
 let rec sum_st' (r:ref nat) (n:nat) 
   : ST unit (requires (fun _ -> True))
             (ensures  (fun _ _ _ -> True)) 
+            
 = if n > 0 then (r := !r + n; 
                  sum_st' r (n - 1))
+
 
 let rec sum_st (n:nat) 
   : ST nat (requires (fun _ -> True))

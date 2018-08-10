@@ -6,8 +6,8 @@ open FStar.Ref
 val incr : r:ref int -> 
   ST unit (requires (fun _ -> True))
           (ensures  (fun h0 _ h2 -> 
-                       exists h1 x. h0 == h1 /\ x == sel h0 r /\             // from (!)
-                                    modifies !{r} h1 h2 /\ sel h2 r == x+1)) // from (:=)
+                      exists h1 x. h0 == h1 /\ x == sel h0 r /\             // from (!)
+                                   modifies !{r} h1 h2 /\ sel h2 r == x+1)) // from (:=)
 let incr r = 
   let x = !r in 
   r := x + 1

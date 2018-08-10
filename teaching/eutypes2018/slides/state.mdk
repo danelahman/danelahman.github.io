@@ -69,7 +69,7 @@ Ohrid, Macedonia, 11 August, 2018
 ## Verifying stateful programs ## {#stateful1}
 <!-- ### Variant #1: intrinsically (at definition time) ### -->
 
-* The `St` effect---programming with [mutable references]{color:DarkBlue}
+* The `St` effect---programming with [**mutable references**]{color:DarkBlue}
   ```
   val incr : r:ref int -> St unit
   
@@ -83,8 +83,8 @@ Ohrid, Macedonia, 11 August, 2018
             (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
                                       sel h2 r == sel h0 r + 1))
   ```
-  - {.fragment} **[precondition]{color:DarkGreen}** (`requires`) is a **[predicate on initial states]{color:DarkGreen}**
-  - {.fragment} **[postcondition]{color:DarkRed}** (`ensures`) **[relates initial states, results, and final states]{color:DarkRed}**
+  - {.fragment} **[precondition]{color:DarkGreen}** (requires) is a **[predicate on initial states]{color:DarkGreen}**
+  - {.fragment} **[postcondition]{color:DarkRed}** (ensures) **[relates initial states, results, and final states]{color:DarkRed}**
 <!--  - {.fragment}
     ```
     e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
@@ -94,7 +94,7 @@ Ohrid, Macedonia, 11 August, 2018
 
 * {.fragment} **Sub-effecting:** ` Pure <: ST ` and in fact also ` Div <: ST `
 
-* {.fragment} As such, think of `ST` as having a [partial correctness]{color:DarkBlue} reading
+* {.fragment} As such, think of `ST` as having a [**partial correctness**]{color:DarkBlue} reading
 
 <!------------------------------------------------------------------------------>
 
@@ -159,7 +159,8 @@ let incr r = r := !r + 1
                          (ensures  (fun h1 x2 h2 -> post'))
   --------------------------------------------------------------------------------------
   G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
-                                 (ensures  (fun h x2 h2 -> exists x1 h1. post /\ post'))
+                                 (ensures  (fun h x2 h2 ->
+                                             exists x1 h1. post /\ post'))
 ```
 
 <!------------------------------------------------------------------------------>
@@ -190,7 +191,7 @@ let incr r = r := !r + 1
 [INCLUDE=../../../code/state/SwapRefsST.fst:swap_proof]
 ```
 ~
-* {.fragment} **Note:** This variant is correct even when `r1` and `r2` are aliased
+<!--* {.fragment} **Note:** This variant is correct even when `r1` and `r2` are aliased-->
 
 <!------------------------------------------------------------------------------>
 
@@ -300,7 +301,7 @@ module NList
   let read (r:ref nlist) : St nlist = !r
 ```
 ```
-  let f (r:ref nlist) = r := []    (* -- fails: expected type nlist; got type list int *)
+let f (r:ref nlist) = r := [] (* fails: expected nlist; got type list int *)
 ```
 ~Fragment
 ```
@@ -312,12 +313,12 @@ module NListClient
     add 2 r;
     complex_procedure r;
     let l = read r in 
-    assert ([2,1] `is_suffix_of` l)   (* -- fails, even though we know complex_procedure
-                                            can only use `add`, `read` operations on r *)  
+    assert ([2,1] `is_suffix_of` l)  (* fails, even though we know c_p can
+                                        only use `add` and `read` on r *)  
 ```
 ~
 
-* {.fragment} **Tomorrow:** We'll see how monotonicity helps us prove such assertions
+* {.fragment} **Tomorrow** we'll see how monotonicity helps us prove such assertions
 
 <!------------------------------------------------------------------------------>
 
@@ -341,7 +342,7 @@ module NListClient
 * **[`ST` effect for pre- and postcondition based (intrinsic) reasoning]{color:DarkBlue}**
   ```
   ST unit (requires (fun h0 -> True))                        
-          (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == sel h0 r + 1))
+          (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == n))
   ```
 
 * **[Refinement types can enforce (some) stateful invariants]{color:DarkBlue}**
@@ -390,10 +391,12 @@ module NListClient
 
   ```
   let equal_domains (m0 m1: mem) =
-    get_tip m0 == get_tip m1 /\                (* leaves the C call stack intact *)
+    get_tip m0 == get_tip m1 /\         (* leaves the C call stack intact *)
     Set.equal (Map.domain (get_hmap m0))
-              (Map.domain (get_hmap m1)) /\    (* does not (de)allocate any heap regions *)
-    same_refs_in_all_regions m0 m1             (* does not allocate in existing regions *)
+              (Map.domain (get_hmap m1)) /\
+                                (* does not (de)allocate any heap regions *)
+    same_refs_in_all_regions m0 m1
+                                 (* does not allocate in existing regions *)
   ```
 
 * {.fragment} Additional effects for [heap-allocating]{color:DarkBlue} and [arbitrary]{color:DarkRed} low-level code
@@ -403,18 +406,19 @@ module NListClient
 ## Low*: a small example ##
 
 ```
-let f (): Stack UInt64.t (requires (fun _ -> True)) (ensures  (fun _ _ _ -> True))
+let f (): Stack UInt64.t (requires (fun _ -> True))
+                         (ensures  (fun _ _ _ -> True))
                          
-  = push_frame ();                        (* pushing a new stack frame *)
+  = push_frame ();                         (* pushing a new stack frame *)
     
     let b = LowStar.Buffer.alloca 1UL 64ul in
-    assert (b.(42ul) = 1UL);              (* high-level reasoning in F*'s logic *)
+    assert (b.(42ul) = 1UL);      (* high-level reasoning in F*'s logic *)
 
     b.(42ul) <- b.(42ul) +^ 42UL;
     let r = b.(42ul) in
       
-    pop_frame ();                         (* popping the stack frame we pushed above, *)
-                                          (* so as to ensure that equal_domains holds *)
+    pop_frame ();           (* popping the stack frame we pushed above, *)
+                            (* so as to ensure that equal_domains holds *)
     assert (r = 43UL);                    
     r
 ```

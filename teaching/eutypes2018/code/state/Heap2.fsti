@@ -1,5 +1,7 @@
 module Heap2
 
+  open FStar.TSet
+
   val heap : Type
   val ref : Type -> Type
 
@@ -9,7 +11,7 @@ module Heap2
   val contains : #a:Type -> heap -> ref a -> Type0
 
 // BEGIN: modifies_contains
-  let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) =
-    forall (a:Type) (r:ref a).{:pattern (sel h1 r)}
-        ~(addr_of r `FStar.TSet.mem` s) /\ h0 `contains` r ==> sel h1 r == sel h0 r
+  let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) 
+  = forall a (r:ref a). (~(addr_of r `mem` s) /\ h0 `contains` r)
+                                                    ==> sel h1 r == sel h0 r
 // END: modifies_contains
