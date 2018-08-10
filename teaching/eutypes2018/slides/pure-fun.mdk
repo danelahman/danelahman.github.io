@@ -205,7 +205,7 @@ type nat = x:int{x >= 0}
   let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Different kinds of equality (`equals`, `h_equals`, `=`, `==`, `===`)
+* {.fragment} Different kinds of extensional equality (`=`, `==`, `===`)
 
 
 ## Dependent types ##
