@@ -44,7 +44,7 @@ effect St (a:Type) = STATE a (fun _ p -> forall x s1 . p (x,s1))
 
 (**********************************************************
  *                                                        *
- * Proof of stateful summing using reification            *
+ * Proof of stateful fibonacci using reification          *
  *                                                        *
  **********************************************************)
 
