@@ -17,15 +17,17 @@ let rec append_length (#a:Type) (xs ys : list a)
       
 = match xs with
   | []       -> ()          
-  (* nil-goal:  len (app [] ys) = len [] + len ys *)
-  (* nil-goal': len ys = 0 + len ys               *)
+  (* nil-VC:  len (app [] ys) = len [] + len ys *)
+  (* nil-VC': len ys = 0 + len ys               *)
   | x :: xs' -> append_length xs' ys
-  (* cons-goal:  len (app (x::xs') ys) = len (x::xs') + len ys *)                
-  (* cons-goal': 1 + len (app xs' ys) = (1 + len xs') + len ys *)
+  (* cons-VC:  len (app (x::xs') ys) = len (x::xs') + len ys *)                
+  (* cons-VC': 1 + len (app xs' ys) = (1 + len xs') + len ys *)
 // END: append_length
 
 // BEGIN: append_length_lemma
 let rec append_length_lemma (#a:Type) (xs ys : list a) 
     : Lemma (length (append xs ys) = length xs + length ys)    
-  = append_length xs ys
+= match xs with
+  | []       -> ()
+  | x :: xs' -> append_length_lemma xs' ys
 // END: append_length_lemma

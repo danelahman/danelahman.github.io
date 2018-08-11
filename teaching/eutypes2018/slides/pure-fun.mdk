@@ -487,10 +487,11 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 [INCLUDE=../../../code/pure-fun/AppendLength.fst:append_length]
 ```
 ~
-* {.fragment} Convenient syntactic sugar: the `Lemma` effect
+* {.fragment} Convenient syntactic sugar: **the `Lemma` effect**
 ```
-[INCLUDE=../../../code/pure-fun/AppendLength.fst:append_length_lemma]
+Lemma (property) = Pure unit (requires True) (ensures (fun _ -> property))
 ```
+* {.fragment} F\* also provides a `requires`-`ensures` variant of the `Lemma` effect
 
 <!------------------------------------------------------------------------------>
 
