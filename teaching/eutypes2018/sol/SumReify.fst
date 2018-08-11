@@ -1,4 +1,4 @@
-module Reification
+module SumReify
 
 (**********************************************************
  *                                                        *
@@ -49,6 +49,6 @@ let rec sum_st (n:nat) : St unit
                    STATE?.put (x + n);
                    sum_st (n - 1))
 
-let lemma_sum_st (n:nat) : Lemma (let (_,s) = reify (sum_st n) 0 in s = sum_tot n)
+let lemma_sum_st (n:nat) (s:state) : Lemma (let (_,s') = reify (sum_st n) s in s' = s + sum_tot n)
   = ()
 
