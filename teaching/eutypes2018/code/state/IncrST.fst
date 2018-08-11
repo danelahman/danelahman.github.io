@@ -24,7 +24,7 @@ let two_refs (r1 r2 : ref int) : ST unit
   (requires (fun h0 -> addr_of r1 <> addr_of r2 /\
                        h0 `contains` r2))
   (ensures (fun h0 _ h1 -> modifies !{r1} h0 h1 /\
-                           sel h1 r2 == sel h0 r2 /\ (* not entailed! *)
+                           sel h1 r2 == sel h0 r2 /\
                            sel h1 r1 == sel h0 r1 + 1))
   = incr r1
 // END: two_refs

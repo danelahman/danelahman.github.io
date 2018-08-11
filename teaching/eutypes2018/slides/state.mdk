@@ -152,14 +152,14 @@ let incr r = r := !r + 1
 <br/>
 
 ```
-  G |- e1 : ST t1 (requires (fun h0 -> pre))
-                  (ensures  (fun h0 x1 h1 -> post))
+G |- e1 : ST t1 (requires (fun h0 -> pre))
+                (ensures  (fun h0 x1 h1 -> post))
                   
-  G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0. post))
-                         (ensures  (fun h1 x2 h2 -> post'))
-  --------------------------------------------------------------------------------------
-  G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
-                                 (ensures  (fun h x2 h2 ->
+G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0. post))
+                       (ensures  (fun h1 x2 h2 -> post'))
+--------------------------------------------------------------------------
+G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
+                               (ensures  (fun h x2 h2 ->
                                              exists x1 h1. post /\ post'))
 ```
 

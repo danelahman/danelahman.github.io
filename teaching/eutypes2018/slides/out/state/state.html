@@ -6074,13 +6074,11 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
 
   <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ 
-                                   x == sel h0 r))
+         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ x == sel h0 r))
 
   <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ 
-                                      sel h1 r == v))</code></pre></div><!------------------------------------------------------------------------------>
+            (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ sel h1 r == v))</code></pre></div><!------------------------------------------------------------------------------>
 
 
 </section>
@@ -6092,23 +6090,22 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ 
                                     sel h2 r == sel h0 r + <span class="constant" style="color:purple">1</span>))</code></pre></div>
 <div class="fragment" data-line="128">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="129" data-line-first="130;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="130;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
-  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
-                      <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">// from (!)</span>
-                                   modifies !{r} h1 h2 /\ sel h2 r == x+<span class="constant" style="color:purple">1</span>)) <span style="color:darkgreen">// from (:=)</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="129" data-line-first="130;out/state/../../../code/state/Incr2ST.fst:15" style="display:block"><code data-line="130;out/state/../../../code/state/Incr2ST.fst:15"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+  <span style="color:blue">ST</span> unit 
+   (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+   (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
+               <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">//(!)</span>
+                            modifies !{r} h1 h2 /\ sel h2 r == x+<span class="constant" style="color:purple">1</span>)) <span style="color:darkgreen">//(:=)</span>
 <span style="color:blue">let</span> incr r = 
   <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> 
   r := x + <span class="constant" style="color:purple">1</span></code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="132" data-line-first="133;out/state/../../../code/state/ST.fsti:26" style="display:block"><code data-line="133;out/state/../../../code/state/ST.fsti:26">  <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="132" data-line-first="133;out/state/../../../code/state/ST.fsti:24" style="display:block"><code data-line="133;out/state/../../../code/state/ST.fsti:24">  <span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ 
-                                   x == sel h0 r))
+         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ x == sel h0 r))
 
   <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
     <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ 
-                                      sel h1 r == v))</code></pre></div><!--~Fragment
+            (<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ sel h1 r == v))</code></pre></div><!--~Fragment
 ```
 let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
   Lemma (requires (modifies s01 h0 h1 /\ modifies s12 h1 h2))
@@ -6125,24 +6122,25 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 </section>
 <section id="sec-typing-rule-for-let-sequencing-intuition" class="section section2" data-section-depth="2" data-line="146"><h3 id="heading-sec-typing-rule-for-let-sequencing-intuition" class="h2" data-heading-depth="2" style="display:block">Typing rule for let / sequencing (intuition)</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="148" data-line-first="149;out/state/../../../code/state/Incr2ST.fst:14" style="display:block"><code data-line="149;out/state/../../../code/state/Incr2ST.fst:14"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
-  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
-          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
-                      <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">// from (!)</span>
-                                   modifies !{r} h1 h2 /\ sel h2 r == x+<span class="constant" style="color:purple">1</span>)) <span style="color:darkgreen">// from (:=)</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="148" data-line-first="149;out/state/../../../code/state/Incr2ST.fst:15" style="display:block"><code data-line="149;out/state/../../../code/state/Incr2ST.fst:15"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
+  <span style="color:blue">ST</span> unit 
+   (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+   (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> 
+               <span style="color:blue">exists</span> h1 x. h0 == h1 /\ x == sel h0 r /\             <span style="color:darkgreen">//(!)</span>
+                            modifies !{r} h1 h2 /\ sel h2 r == x+<span class="constant" style="color:purple">1</span>)) <span style="color:darkgreen">//(:=)</span>
 <span style="color:blue">let</span> incr r = 
   <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> 
   r := x + <span class="constant" style="color:purple">1</span></code></pre>
 <p class="p noindent para-continued" data-line="152"><span data-line="152"></span><br/><span data-line="152"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="154" data-line-first="155" style="display:block"><code data-line="155">  G |- e1 : <span style="color:blue">ST</span> t1 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
-                  (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x1 h1 <span style="color:blue">-&gt;</span> post))
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="154" data-line-first="155" style="display:block"><code data-line="155">G |- e1 : <span style="color:blue">ST</span> t1 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
+                (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x1 h1 <span style="color:blue">-&gt;</span> post))
                   
-  G, x1:t1 |- e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h1 <span style="color:blue">-&gt;</span> <span style="color:blue">exists</span> h0. post))
-                         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h1 x2 h2 <span style="color:blue">-&gt;</span> post&#39;))
-  --------------------------------------------------------------------------------------
-  G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</span> e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
-                                 (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h x2 h2 <span style="color:blue">-&gt;</span>
+G, x1:t1 |- e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h1 <span style="color:blue">-&gt;</span> <span style="color:blue">exists</span> h0. post))
+                       (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h1 x2 h2 <span style="color:blue">-&gt;</span> post&#39;))
+--------------------------------------------------------------------------
+G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</span> e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
+                               (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h x2 h2 <span style="color:blue">-&gt;</span>
                                              <span style="color:blue">exists</span> x1 h1. post /\ post&#39;))</code></pre><!------------------------------------------------------------------------------>
 
 
