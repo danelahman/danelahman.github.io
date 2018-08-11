@@ -54,7 +54,7 @@ Ohrid, Macedonia, 12 August, 2018
 
    ```
 
-* {.fragment} In this lecture, we'll see that [standard refs.]{color:DarkBlue} alone are often [unsatisfactory]{color:DarkRed}
+* {.fragment} But [**standard references**]{color:DarkBlue} alone are often [**unsatisfactory**]{color:DarkRed}
 
 \ 
 
@@ -72,9 +72,12 @@ Ohrid, Macedonia, 12 August, 2018
 
 * A simple interface for monotonic counters
   ```
-  val create: i:int     -> ST counter (ensures (fun h c h' -> fresh c h h' /\ ...))
-  val read  : c:counter -> ST int     (ensures (fun h i h' -> sel h' c = i /\ h == h'))
-  val incr  : c:counter -> ST unit    (ensures (fun h _ h' -> sel h' c = sel h c + 1 /\ ...))
+  val create: i:int ->
+                ST counter (ensures (fun h c h' -> fresh c h h' /\ ...))
+  val read: c:counter ->
+              ST int (ensures (fun h i h' -> sel h' c = i /\ h == h'))
+  val incr: c:counter ->
+              ST unit (ensures (fun h _ h' -> sel h' c = sel h c + 1 /\ ...))
   ```
 
 * {.fragment} An example program using monotonic counters
@@ -84,16 +87,16 @@ Ohrid, Macedonia, 12 August, 2018
 
     let i = read c in assert (i > 0);
 
-    complex_procedure c;                   (* complex_procedure : counter -> St unit *)
+    complex_procedure c;         (* complex_procedure : counter -> St unit *)
   
-    let j = read c in assert (j > 0)       (* (Error) assertion failed *)
+    let j = read c in assert (j > 0) (* (Error) assertion failed *)
     ```
 
-* {.fragment} A sound but naive and unsatisfactory fix for this particular example
+<!--* {.fragment} A sound but naive and unsatisfactory fix for this particular example
   ```
   complex_procedure : c:counter -> ST unit (requires (fun h      -> sel h c > 0))
                                            (ensures  (fun _ _ h' -> sel h' c > 0))
-  ```
+  ```-->
 
 
 <!------------------------------------------------------------------------------>
@@ -123,7 +126,7 @@ Ohrid, Macedonia, 12 August, 2018
 
 * The main user-facing interface is [monotonic references]{color:DarkBlue}
   ```
-  type mref (a:Type0) (rel:preorder a) = ... (* defined using something more general *)
+  type mref (a:Type0) (rel:preorder a) = ... (* defined using monotonicity *)
 
   (* where *)
 
@@ -134,16 +137,17 @@ Ohrid, Macedonia, 12 August, 2018
     (forall (x y z:a). rel x y /\ rel y z ==> rel x z)}
   ```
 
-* {.fragment} Accompanied by stateful actions [(defined using smth. more general)]{color:Gray}
+* {.fragment} Accompanied by stateful actions [(again defined using monotonicity)]{color:Gray}
   ```
   val alloc : #a:Type0 -> #rel:preorder a -> init:a ->
-    ST (mref a rel) (ensures (fun h0 r h1 -> fresh r h0 h1 /\ sel h1 r == init /\ ...))
+    ST (mref a rel) (ensures (fun h0 r h1 -> fresh r h0 h1 /\
+                                             sel h1 r == init /\ ...))
 
   val (!) : #a:Type0 -> #rel:preorder a -> r:mref a rel ->
     ST a (ensures (fun h0 x h1 -> h0 == h1 /\ sel h1 r == x))
 
   val (:=) : #a:Type0 -> #rel:preorder a -> r:mref a rel -> v:a ->
-    ST unit (requires (fun h0      -> rel (sel h0 r) v))       (* note the precondition *)
+    ST unit (requires (fun h0      -> rel (sel h0 r) v))      (* note this *)
             (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
   ```
 
@@ -156,9 +160,9 @@ Ohrid, Macedonia, 12 August, 2018
   ```
   let counter = mref int (fun n m -> n <= m)
 
-  let create i = alloc i                                        (* fresh c h h' *)
-  let read   c = !c                                             (* sel h' c = i *)
-  let incr   c = c := (!c + 1)                                  (* sel h' c = sel h c + 1 *)
+  let create i = alloc i                                   (* fresh c h h' *)
+  let read   c = !c                                        (* sel h' c = i *)
+  let incr   c = c := (!c + 1)                   (* sel h' c = sel h c + 1 *)
   ```
 
 * {.fragment} By themselves these definitions are [not enough]{color:DarkRed} to verify the example
@@ -167,11 +171,11 @@ Ohrid, Macedonia, 12 August, 2018
     let c = create 0 in incr c;
 
     let i = read c in assert (i > 0);
-    complex_procedure c;                   (* complex_procedure : counter -> St unit *)
-    let j = read c in assert (j > 0)       (* (Error) assertion failed *)
+    complex_procedure c;                       (* c_p : counter -> St unit *)
+    let j = read c in assert (j > 0)           (* (Error) assertion failed *)
   ```
 
-* {.fragment} **Idea:** observe that `(fun j -> j > 0)` is a stable predicate wrt `<=`
+* {.fragment} **Idea:** observe that `(fun j -> j > 0)` is a stable predicate wrt. `<=`
 
   ```
   let stable (#a:Type) (p:predicate a) (rel:preorder a) = 
@@ -184,12 +188,12 @@ Ohrid, Macedonia, 12 August, 2018
 
 * To make use of monotonicity in verification, F\* defines the following:
 
-* {.fragment} A new pure proposition witnessing the validity of a stable predicate
+* {.fragment} A new **pure proposition** witnessing the validity of a stable predicate
   ```
-  type token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:a -> Type0)    (* a modality *)
+  type token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:a -> Type0)
   ```
 
-* {.fragment} Two stateful actions to [witness]{color:DarkBlue} and [recall]{color:DarkBlue} such tokens (intro/elim)
+* {.fragment} Two stateful actions to [**witness**]{color:DarkBlue} and [**recall**]{color:DarkBlue} such tokens (intro/elim)
   ```
   let witness_token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:(a -> Type0)) 
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
@@ -202,7 +206,7 @@ Ohrid, Macedonia, 12 August, 2018
   = ...
   ```
 
-* {.fragment} And as a bonus, recalling the existence of GCd references, "for free"
+* {.fragment} And as a bonus, recalling the existence of GCd references, ["for free"]{color:DarkRed}
   ```
   let recall (#a:Type0) (#rel:preorder a) (r:mref a rel) 
     : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r)) = ...
@@ -229,7 +233,7 @@ Ohrid, Macedonia, 12 August, 2018
     let i = read c in assert (i > 0);
     witness_token c (fun i -> i > 0);
 
-    complex_procedure c;                   (* complex_procedure : counter -> St unit *)
+    complex_procedure c;                   (* c_p : counter -> St unit *)
     
     recall_token c (fun i -> i > 0);
     let j = read c in assert (j > 0)       (* success *)
@@ -238,7 +242,7 @@ Ohrid, Macedonia, 12 August, 2018
 
 <!------------------------------------------------------------------------------>
 
-## Typed References ##
+## ML-style Typed References ##
 
 * Typed references from yesterday's lecture are just an instance of mrefs
   ```
@@ -273,8 +277,9 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} An action for adding new elements to the log
   ```
-  let add_to_log (r:lref) (v:int) : ST unit (ensures  (fun _ _ h -> v `mem` (sel h r))) =
-    r := (v :: !r)
+  let add_to_log (r:lref) (v:int)
+    : ST unit (ensures  (fun _ _ h -> v `mem` (sel h r)))
+  = r := (v :: !r)
   ```
 
 * {.fragment} Can then use `witness_token` and `recall_token` similarly
@@ -283,7 +288,7 @@ Ohrid, Macedonia, 12 August, 2018
     let r = alloc subset [] in add_to_log r 42;
     witness_token r (fun xs -> 42 `mem` xs);
     
-    complex_procedure r;                         (* complex_procedure : lref -> St unit *)
+    complex_procedure r;                         (* c_p : lref -> St unit *)
     
     recall_token r (fun xs -> 42 `mem` xs);
     let xs = !r in assert (42 `mem` xs)          (* success *)
@@ -310,7 +315,7 @@ Ohrid, Macedonia, 12 August, 2018
     | _          , _         -> False
   
   let evolve (a:Type0) : preorder (rstate a) = 
-    evolve' a                               (* (Error) *) (* Exercise: Why does it fail? *)
+    evolve' a                 (* (Error) *) (* Exercise: Why does it fail? *)
   ```
 
 * {.fragment} 
@@ -335,32 +340,32 @@ let eref (a:Type0) : Type = mref (rstate a) (evolve a)
 let alloc a : ST (eref a) (ensures  (fun _ r h -> Empty? (sel h r))) = 
   alloc (evolve a) Empty
 
-let read #a (r:eref a) : ST a (requires (fun h      -> ~(Empty? (sel h r))))
-                              (ensures  (fun h v h' -> h == h' /\
-                                                       (sel h r == Mutable v \/
-                                                        sel h r == Frozen v     )))
+let read #a (r:eref a)
+  : ST a (requires (fun h      -> ~(Empty? (sel h r))))
+         (ensures  (fun h v h' -> h == h' /\
+                                  (sel h r == Mutable v \/
+                                   sel h r == Frozen v     )))
 = match (!r) with | Mutable v | Frozen v -> v
   
-                       (* Exercise: Can you give read a heap-independent precondition? *)
+         (* Exercise: Can you give read a heap-independent precondition? *)
 
-
-let write #a (r:eref a) (v:a) : ST unit (requires (fun h     -> ~(Frozen? (sel h r))))
-                                        (ensures  (fun _ _ h -> sel h r == Mutable v))
+let write #a (r:eref a) (v:a)
+  : ST unit (requires (fun h     -> ~(Frozen? (sel h r))))
+            (ensures  (fun _ _ h -> sel h r == Mutable v))
 = r := Mutable v
 
-
-let freeze #a (r:eref a) =                  (* Exercise: What type should freeze have? *)
+let freeze #a (r:eref a) =    (* Exercise: What type should freeze have? *)
   r := Frozen (Mutable?.v !r)
 ```
 ~Fragment
 ```
-ST unit (requires (fun h0      -> Mutable? (sel h0 r)))
+ST unit (requires (fun h0 -> Mutable? (sel h0 r)))
 ```
 ~
 ~Fragment
 ```
-        (ensures  (fun h0 _ h1 -> Frozen? (sel h1 r) /\
-                                  Mutable?.v (sel h0 r) == Frozen?.v (sel h1 r)))
+  (ensures  (fun h0 _ h1 -> Frozen? (sel h1 r) /\
+                            Mutable?.v (sel h0 r) == Frozen?.v (sel h1 r)))
 ```
 ~
 
@@ -434,7 +439,7 @@ let main() : St unit =
 
 * {.fragment} F\* standard library provides a [**global monotonic state**]{color:DarkBlue} effect
   ```
-  MST #state #rel t (requires pre) (ensures post)            (* pre : state -> GTot prop *)
+  MST #state #rel t (requires pre) (ensures post)     (* pre-post on state *)
   ```
 
 * {.fragment} and a `witnessed` [**modality**]{color:DarkBlue} giving us a [**state-independent proposition**]{color:DarkRed}
