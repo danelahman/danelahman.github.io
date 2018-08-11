@@ -190,26 +190,27 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} A new **pure proposition** witnessing the validity of a stable predicate
   ```
-  type token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:a -> Type0)
+  let token #a #rel (r:mref a rel) (p:a -> prop) : prop = ...  (* modality *)
   ```
 
 * {.fragment} Two stateful actions to [**witness**]{color:DarkBlue} and [**recall**]{color:DarkBlue} such tokens (intro/elim)
   ```
-  let witness_token (#a:Type0) (#rel:preorder a) (r:mref a rel) (p:(a -> Type0)) 
+  let witness_token #a #rel (r:mref a rel) (p:(a -> prop)) 
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
   = ...
 
-  let recall_token (#a:Type0) (#rel:preorder a) (r:mref a b) (p:(a -> Type0)) 
+  let recall_token #a #rel (r:mref a rel) (p:(a -> prop)) 
     : ST unit (requires (fun _       -> token r p))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
   = ...
   ```
 
-* {.fragment} And as a bonus, recalling the existence of GCd references, ["for free"]{color:DarkRed}
+* {.fragment} And as a bonus, recalling the containment of GCd references, [**"for free"**]{color:DarkRed}
   ```
-  let recall (#a:Type0) (#rel:preorder a) (r:mref a rel) 
-    : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r)) = ...
+  let recall #a (#rel:preorder a) (r:mref a rel) 
+    : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
+  = ...
   ```
 
 <!------------------------------------------------------------------------------>
@@ -225,7 +226,7 @@ Ohrid, Macedonia, 12 August, 2018
   let incr   c = c := (!c + 1)
   ```
 
-* {.fragment} Using `witness_token` and `recall_token`, we can now verify our example
+* {.fragment} Using `witness_token` and `recall_token`, we can verify our example
   ```
   let main() : St unit =                   
     let c = create 0 in incr c;
@@ -255,7 +256,7 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} But we [can still get heap-containment]{color:DarkBlue} "for free" for GCd refs
   ```
-  let recall (#a:Type0) (r:ref a)
+  let recall #a (r:ref a)
     : ST unit (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
 
   = MonotonicReferencesSlide.recall r
@@ -267,12 +268,9 @@ Ohrid, Macedonia, 12 August, 2018
 
 * We model monotonic logs using monotonic references to lists of ints
   ```
-  let lref = mref (list int) subset
-
-  (* where *)
-
   let subset (l1 l2:list int) = forall x . x `mem` l1 ==> x `mem` l2
-
+  
+  let lref = mref (list int) subset
   ```
 
 * {.fragment} An action for adding new elements to the log
@@ -314,8 +312,8 @@ Ohrid, Macedonia, 12 August, 2018
     | Mutable v1 , Frozen v2 -> v1 == v2
     | _          , _         -> False
   
-  let evolve (a:Type0) : preorder (rstate a) = 
-    evolve' a                 (* (Error) *) (* Exercise: Why does it fail? *)
+  let evolve (a:Type0) : preorder (rstate a)   (* (Error) Subtyping failed *)
+  = evolve' a                                  (* Quiz: Why does it fail?  *)
   ```
 
 * {.fragment} 
@@ -337,8 +335,10 @@ Ohrid, Macedonia, 12 August, 2018
 ```
 let eref (a:Type0) : Type = mref (rstate a) (evolve a)
 
-let alloc a : ST (eref a) (ensures  (fun _ r h -> Empty? (sel h r))) = 
-  alloc (evolve a) Empty
+
+let alloc a : ST (eref a) (ensures  (fun _ r h -> Empty? (sel h r))) 
+=  alloc (evolve a) Empty
+
 
 let read #a (r:eref a)
   : ST a (requires (fun h      -> ~(Empty? (sel h r))))
@@ -347,16 +347,18 @@ let read #a (r:eref a)
                                    sel h r == Frozen v     )))
 = match (!r) with | Mutable v | Frozen v -> v
   
-         (* Exercise: Can you give read a heap-independent precondition? *)
+             (* Quiz: Can you give read a heap-independent precondition? *)
+
 
 let write #a (r:eref a) (v:a)
   : ST unit (requires (fun h     -> ~(Frozen? (sel h r))))
             (ensures  (fun _ _ h -> sel h r == Mutable v))
 = r := Mutable v
 
-let freeze #a (r:eref a) =    (* Exercise: What type should freeze have? *)
-  r := Frozen (Mutable?.v !r)
+let freeze #a (r:eref a)        (* Exercise: Give precise type to freeze *)
+= r := Frozen (Mutable?.v !r)
 ```
+<!--
 ~Fragment
 ```
 ST unit (requires (fun h0 -> Mutable? (sel h0 r)))
@@ -368,7 +370,7 @@ ST unit (requires (fun h0 -> Mutable? (sel h0 r)))
                             Mutable?.v (sel h0 r) == Frozen?.v (sel h1 r)))
 ```
 ~
-
+-->
 
 <!------------------------------------------------------------------------------>
 
@@ -390,24 +392,24 @@ let main() : St unit =
   write r 42;
   ignore (read r);
   write r 0;
-  witness r (fun rs -> ~(Empty? rs));
+  witness_token r (fun rs -> ~(Empty? rs));
   freeze r;
   
   (* write r 7; -- fails like it should *)
 
   ignore (read r);
-  witness r (fun rs -> rs == Frozen 0);
+  witness_token r (fun rs -> rs == Frozen 0);
   
   complex_procedure r;
 
   (* ignore (read r); -- fails like it should *)
 
-  recall r (fun rs -> ~(Empty? rs));
+  recall_token r (fun rs -> ~(Empty? rs));
   let x = read r in
   
   (* assert (x == 0); -- fails like it should *)
   
-  recall r (fun rs -> rs == Frozen 0);
+  recall_token r (fun rs -> rs == Frozen 0);
   assert (x == 0)
 ```
 
@@ -437,27 +439,28 @@ let main() : St unit =
 
 ## How the Sausage is Made (`MST`) ##
 
-* {.fragment} F\* standard library provides a [**global monotonic state**]{color:DarkBlue} effect
+* {.fragment} F\* standard library provides a [**global monotonic state**]{color:DarkBlue} effect (almost)
   ```
   MST #state #rel t (requires pre) (ensures post)     (* pre-post on state *)
   ```
 
 * {.fragment} and a `witnessed` [**modality**]{color:DarkBlue} giving us a [**state-independent proposition**]{color:DarkRed}
   ```
-  val witnessed : #state:Type -> #rel:(preorder state) -> (state -> prop) -> prop
+  val witnessed : #st:Type -> #rel:(preorder st) -> (st -> prop) -> prop
   ```
 
 * {.fragment} together with corresponding `get`, `put`, `witness`, and `recall` actions
   ```
   val put : #state:Type -> #rel:(preorder state) -> s:state ->
-    MST #state #rel unit (requires (fun s0     -> rel s0 s))    (* note the precondition *)
+    MST #state #rel unit (requires (fun s0     -> rel s0 s))  (* note this *)
                          (ensures  (fun _ _ s1 -> s1 == s))
   ```
 ~Fragment
   ```
   val witness : #state:Type -> #rel:(preorder state) -> p:(state -> prop) ->
     MST #state #rel unit (requires (fun s0      -> p s0 /\ stable p rel))
-                         (ensures  (fun s0 _ s1 -> s0 == s1 /\ witnessed #_ #rel p))
+                         (ensures  (fun s0 _ s1 -> s0 == s1 /\
+                                                   witnessed #_ #rel p))
 
   val recall : #state:Type -> #rel:(preorder state) -> p:(state -> prop) ->
     MST #state #rel unit (requires (fun _       -> witnessed #_ #rel p))
@@ -469,31 +472,32 @@ let main() : St unit =
 
 ## How the Sausage is Made (`ST`, much simplified) ##
 
-* {.fragment} `ST` is defined as an instance of `MST`
   ```
-  ST t (requires pre) (ensures post) = MST #heap #heap_rel (requires pre) (ensures post)
+  ST t (requires pre) (ensures post) = MST #heap #heap_rel (requires pre)
+                                                           (ensures post)
   ```
 
 * {.fragment} For (monotonic) heaps we use the natural functional representation
   ```
   type heap_rec = {
-    next_addr : (x: nat);
-    memory    : (x: nat) -> Tot (option (a:Type0 & rel:(option (preorder a)) & a))
+   next_addr: nat;
+   memory   : x:nat -> Tot (option (a:Type0 & rel:(option (preorder a)) & a))
   }
   
-  let heap = h:heap_rec{(forall (n:nat). n >= h.next_addr ==> None? (h.memory n))}
+  let heap = h:heap_rec{(forall n. n >= h.next_addr ==> None? (h.memory n))}
   ```
 
-* {.fragment} `heap_rel` is heap-inclusion + relatedness by the individual preorders
+* {.fragment} `heap_rel` is [**heap-inclusion**]{color:DarkBlue} + [**relatedness by the individual preorders**]{color:DarkRed}
 
 * {.fragment} (Monotonic) references are represented by their addresses
   ```
   abstract type mref' (a:Type0) (rel:preorder a) = { addr:nat; init:a }
 
-  type mref (a:Type0) (rel:preorder a) = mref' a rel{witnessed (fun h -> h `contains` r)}
+  type mref (a:Type0) (rel:preorder a) 
+  = mref' a rel{witnessed (fun h -> h `contains` r)}
   ```
 
-* {.fragment} `alloc`, `!`, `:=`, and `tokens` are then defined using `witnessed` and `MST` actions
+* {.fragment} `alloc`, `!`, `:=`, `tokens` are derived from `MST` actions and `witnessed`
 
 
 <!------------------------------------------------------------------------------>
