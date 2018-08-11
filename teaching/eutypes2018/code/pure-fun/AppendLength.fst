@@ -3,8 +3,7 @@ module AppendLength
 open FStar.List.Tot.Base
 
 // BEGIN: append
-let rec append (#a:Type) (xs ys : list a) : Tot (list a) = 
-  match xs with
+let rec append (#a:Type) (xs ys : list a) : Tot (list a) = match xs with
   | []       -> ys
   | x :: xs' -> x :: append xs' ys
 // END: append
@@ -18,10 +17,12 @@ let rec append_length (#a:Type) (xs ys : list a)
 = match xs with
   | []       -> ()          
   (* nil-VC:  len (app [] ys) = len [] + len ys *)
-  (* nil-VC': len ys = 0 + len ys               *)
+  (* nil-VC': len ys = 0 + len ys               *) (* discharged by SMT *)
   | x :: xs' -> append_length xs' ys
+  (* recursion adds assumption: len (app xs' ys) = len xs' + len ys *)
+
   (* cons-VC:  len (app (x::xs') ys) = len (x::xs') + len ys *)                
-  (* cons-VC': 1 + len (app xs' ys) = (1 + len xs') + len ys *)
+  (* cons-VC': 1 + len (app xs' ys) = (1 + len xs') + len ys *)  (* SMT *)
 // END: append_length
 
 // BEGIN: append_length_lemma
