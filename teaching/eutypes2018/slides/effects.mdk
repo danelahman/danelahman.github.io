@@ -48,11 +48,11 @@ Ohrid, Macedonia, 12 August, 2018
 
 * **Monadic effects** in F\*
 
-* **Verifying effectful programs extrinsically** (monadic reification)
+* [**Verifying effectful programs extrinsically**]{color:DarkBlue} (monadic reification)
 
-* **Under the hood:** Weakest preconditions (and Dijkstra monads)
+* [**Under the hood:**]{color:DarkRed} Weakest preconditions (and Dijkstra monads)
 
-* **Tactics** and **Metaprogramming** as a user-defined, non-primitive effect
+* [**Tactics**]{color:DarkGreen} and [**Metaprogramming**]{color:DarkGreen} as a user-defined, non-primitive effect
 
 <!------------------------------------------------------------------------------>
 
@@ -89,10 +89,8 @@ total reifiable new_effect STATE = STATE_m heap
 ```
 ~
 
-* {.fragment} this monadic definition is the **model** F\*  uses to verify stateful code
-* {.fragment} state can be **primitively implemented** under the hood, **or not**, e.g., 
-  - by ML references,
-  - or by C stack+heap
+<!--* {.fragment} this monadic definition is the **model** F\*  uses to verify stateful code
+* {.fragment} state can be **primitively implemented** under the hood, **or not**-->
 
 <!------------------------------------------------------------------------------>
 
@@ -101,20 +99,20 @@ total reifiable new_effect STATE = STATE_m heap
 * In F\*, the programmer writes:
   ```
   let incr () : STATE unit ...
-    = let x = get() in
-      put (x + 1);
-      let y = get() in
-      assert (y > x)
+  = let x = get() in
+    put (x + 1);
+    let y = get() in
+    assert (y > x)
   ```
 
 * {.fragment} Which is then made explicitly monadic via type and effect inference
 
   ```
   let incr () : STATE unit ...
-    = STATE.bind (STATE.get ()) (fun x -> 
-      STATE.bind (STATE.put (x + 1)) (fun _ ->
-      STATE.bind (STATE.get ()) (fun y ->
-      STATE.return (assert (y > x)))))
+  = STATE.bind (STATE.get ()) (fun x -> 
+    STATE.bind (STATE.put (x + 1)) (fun _ ->
+    STATE.bind (STATE.get ()) (fun y ->
+    STATE.return (assert (y > x)))))
   ```
 
 <!------------------------------------------------------------------------------>
@@ -128,7 +126,6 @@ let stexn a = nat -> Tot ((either a string) * nat))
 ```
 new_effect {
   STEXN: a:Type -> Effect
-
   with (* functional representation of the sum of state and exceptions monads *)
        repr    = stexn;
 
@@ -141,7 +138,7 @@ new_effect {
                     | Inl ret -> (Inl (g ret s1), s1)
                     | Inr m -> (Inr m, s1)
 
-       (* action of raising excaptions *)
+       (* action of raising exceptions *)
        raise   = fun (a:Type) (msg:string) s -> (Inr msg, s);
 }
 ```
@@ -150,9 +147,9 @@ new_effect {
 ```
 sub_effect STATE ~> STEXN {
   lift = fun (a:Type)
-             (e:st nat a)                                      (* st computation *)
+             (e:st nat a)                             (* st computation *)
          ->
-             fun s -> let (x,s') = e s in (Inl x, s')          (* stexn computation *)
+             fun s -> let (x,s') = e s in (Inl x, s') (* stexn computation *)
 }
 ```
 ~
@@ -170,7 +167,7 @@ sub_effect STATE ~> STEXN {
                 else raise "Divide by zero"
   ```
 
-* {.fragment}Elaborated to:
+* {.fragment}Which is then elaborated to:
   ```
   let divide_by x
     = if x <> 0 then STATE_STEXN.lift (STATE.bind (STATE.get()) (fun n ->
@@ -178,9 +175,9 @@ sub_effect STATE ~> STEXN {
                 else STEXN.raise "Divide by zero"
   ```
 
-* {.fragment}F\* infers the least effect of each sub-term
+<!--* {.fragment}F\* infers the least effect of each sub-term
     - automatically lifts computations to use the suitable effect
-    - ensures that reasoning isn't needlessly polluted by unused effects
+    - ensures that reasoning isn't needlessly polluted by unused effects-->
 
 <!------------------------------------------------------------------------------>
 
@@ -196,16 +193,16 @@ sub_effect STATE ~> STEXN {
 
 Pre- and postconditions are just syntactic sugar:
 ```
-Pure t (pre : Type0) (post : t->Type0)
-  = PURE t (fun k -> pre /\ forall y. post y ==> k y)       (* where k is the         *)
-                                                            (* "logical" continuation *)
+Pure t (pre : Type0) (post : t -> Type0)
+  = PURE t (fun k -> pre /\ (forall y. post y ==> k y))
+                                (* where k is the "logical continuation" *)
 ```
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
                                   (ensures  (fun y -> y >= 0))
 ```
 ```
-val factorial : x:int -> Pure (fun k -> x >= 0 /\ forall y. y >= 0 ==> k y)
+val factorial : x:int -> Pure (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
 ```
 ~Fragment
 Same for user-defined effects, like `STATE`:
@@ -224,8 +221,7 @@ val incr : unit -> STATE unit (fun n0 k -> k () (n0 + 1))
 
 ## Computing weakest preconditions, by example ##
 ```
-let incr () = STATE.bind (STATE.get()) (fun x ->
-              STATE.put (x + 1))
+let incr () = STATE.bind (STATE.get()) (fun x -> STATE.put (x + 1))
 ```
 * {.fragment} By inferring type for `incr` against following interface:
   ```
@@ -243,11 +239,11 @@ let incr () = STATE.bind (STATE.get()) (fun x ->
                                  STATE.put_wp (x + 1)))
   ```
   ```
-                               = fun n0 k -> k () (n0 + 1)
+                                 fun n0 k -> k () (n0 + 1)
   ```
 * {.fragment} **Generic way of computing weakest-preconditions for all effects**
   - provided we have a monad structure on predicate transformers
-  - instance of a more general notion of monad-indexed monad structures
+  - instance of a more general structure of monad-graded monads
 
 ## Predicate transformers monad for state ## 
 
@@ -258,9 +254,8 @@ let STATE.wp t = (t -> nat -> Type0) -> (nat -> Type0)
 
 val STATE.return_wp : 'a -> Tot (STATE.wp 'a)
 
-val STATE.bind_wp : (STATE.wp 'a) ->
-                    ('a -> Tot (STATE.wp 'b)) ->
-                    Tot (STATE.wp 'b)
+val STATE.bind_wp : (STATE.wp 'a) -> ('a -> Tot (STATE.wp 'b)) ->
+                                                          Tot (STATE.wp 'b)
                       
 val STATE.get_wp : unit -> Tot (STATE.wp nat)
 val STATE.put_wp : nat -> Tot (STATE.wp unit)
@@ -293,8 +288,9 @@ by selective **continuation-passing style (CPS)** returning `Type0`
   - it marks where the CPS-translation happens
   - type system (conservatively) restricts where the marker `M` can appear
 
-* {.fragment} **This works well for large class of monadic effects:**\
+* {.fragment} This works well for **many natural examples** of monadic effects:\
   - state, exceptions, their combinations, continuations, etc.
+  - {.fragment} ongoing work to try to extend it to a wider class of effects
 
 * {.fragment} [**Summary:**]{color:DarkBlue} From a monadic effect definition we can derive a\
   **correct-by-construction weakest-precondition calculus** for this effect.
@@ -380,7 +376,7 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 ## Verifying effectful programs ##
 ### New way: extrinsically (by exposing pure monadic representation) ###
 
-* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified)
+* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified, without comp. refinements)
   ```
   STATE.reify : (St a) -> (nat -> Tot (a * nat))
   ```
@@ -406,20 +402,17 @@ by selective **continuation-passing style (CPS)** returning `Type0`
   ```
 
 ## Verifying effectful programs ctd. ##
-### New way: extrinsically (by exposing pure monadic representation) ###
 
 * or about **different runs** of the **same program**
-  - {.fragment} for example, for proofs of non-interference
-    ```
-    let state = int * int                                         (* (high - low) values *)
+  ```
+  let state = int * int                             (* (high - low) values *)
 
-    let st (a:Type) = state -> M (a * state)
+  let st (a:Type) = state -> M (a * state)
 
-    total reifiable reflectable new_effect {
-      STATE : a:Type -> Effect
-      with repr = st
-         ; ...
-    }
+  total reifiable reflectable new_effect {
+    STATE : a:Type -> Effect
+    with repr = st; ...
+  }
 
     ```
 
@@ -428,13 +421,13 @@ by selective **continuation-passing style (CPS)** returning `Type0`
       = STATE?.put_low (STATE?.get_low() + n)
 
     let incr2 () : St unit 
-      = if (STATE?.get_high() = 42) then (incr 2)
-                                    else (incr 1; incr 1)
+      = if (STATE?.get_high() = 42) then (incr 2) else (incr 1; incr 1)
 
     let non_interference ()
-      : Lemma (forall h0 h1 n. let (_ , (h0' , n' )) = reify (incr2 ()) (h0,n) in 
-                               let (_ , (h1' , n'')) = reify (incr2 ()) (h1,n) in n' = n'')
-      = ()
+      : Lemma (forall h0 h1 n. let (_,(h0',n' )) = reify (incr2 ()) (h0,n) in 
+                               let (_,(h1',n'')) = reify (incr2 ()) (h1,n) in
+                               n' = n'')
+    = ()
     ```
 
 * {.fragment} or even about **different runs** of **different programs**
@@ -460,7 +453,7 @@ by selective **continuation-passing style (CPS)** returning `Type0`
   - simple game-based cryptographic proofs
 
 * {.fragment} **Downside**: reification doesn't play well with monotonic state
-  - meaning that one cannot safely reify the _real_ `STATE` and `Stack` effects
+  - cannot naively safely reify the _real_ `STATE` and `Stack` effects (for now)
 
 
 
@@ -487,15 +480,13 @@ by selective **continuation-passing style (CPS)** returning `Type0`
     ```
     noeq type __result a =
         | Success of a * proofstate
-        | Failed  of string *   (* error message *)
-                     proofstate (* the proofstate at time of failure *)
+        | Failed  of string * proofstate
 
     let __tac (a:Type) = proofstate -> Tot (__result a)
 
     (* reifiable *) new_effect {
       TAC : a:Type -> Effect
-      with repr = __tac
-           ...
+      with repr = __tac; ...
     }
 
     let tactic (a:Type) = unit -> Tac a
