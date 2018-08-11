@@ -287,6 +287,7 @@ let incr r = r := !r + 1
 <!------------------------------------------------------------------------------>
 
 ## Exercise: Stateful Factorial ##
+`FactorialST.fst`
 ```
 [INCLUDE=../../../ex/FactorialST.fst:factorial_ex]
 ```
@@ -326,7 +327,7 @@ module NListClient
 ```
 ~
 
-* {.fragment} **Tomorrow** we'll see how monotonicity helps us prove such assertions
+* {.fragment} Tomorrow we'll see how [**monotonicity**]{color:DarkBlue} helps us prove such assertions
 
 <!------------------------------------------------------------------------------>
 
