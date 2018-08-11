@@ -295,9 +295,7 @@ let incr r = r := !r + 1
 
 <!------------------------------------------------------------------------------>
 
-## Stateful invariants ##
-
-* Mutable non-empty lists (for append-only logs, almost)
+## Stateful invariants (mutable non-empty lists) ##
 
 ```
 module NList

@@ -16,13 +16,13 @@ let rec append_length (#a:Type) (xs ys : list a)
       
 = match xs with
   | []       -> ()          
-  (* nil-VC:  len (app [] ys) = len [] + len ys *)
-  (* nil-VC': len ys = 0 + len ys               *) (* discharged by SMT *)
+ (* nil-VC:  postcondition of () ==> len (app [] ys) = len [] + len ys   *)
+ (* nil-VC': True ==> len ys = 0 + len ys                                *)
+ 
   | x :: xs' -> append_length xs' ys
-  (* recursion adds assumption: len (app xs' ys) = len xs' + len ys *)
-
-  (* cons-VC:  len (app (x::xs') ys) = len (x::xs') + len ys *)                
-  (* cons-VC': 1 + len (app xs' ys) = (1 + len xs') + len ys *)  (* SMT *)
+ (* recursive call's postcondition: len (app xs' ys) = len xs' + len ys  *)
+ (* cons-VC:  rec_post ==> len (app (x::xs') ys) = len (x::xs') + len ys *)                
+ (* cons-VC': rec_post ==> 1 + len (app xs' ys) = (1 + len xs') + len ys *)
 // END: append_length
 
 // BEGIN: append_length_lemma

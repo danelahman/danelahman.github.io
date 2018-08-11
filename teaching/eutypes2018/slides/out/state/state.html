@@ -6384,12 +6384,8 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-stateful-invariants" class="section section2" data-section-depth="2" data-line="298"><h3 id="heading-sec-stateful-invariants" class="h2" data-heading-depth="2" style="display:block">Stateful invariants</h3>
-<ul class="ul list-star compact" data-line="300">
-<li class="li ul-li list-star-li compact-li" data-line="300"><span data-line="300"></span>Mutable non-empty lists (for append-only logs, almost)
-</li></ul>
-
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="302" data-line-first="303" style="display:block"><code data-line="303"><span style="color:blue">module</span> NList
+<section id="sec-stateful-invariants-mutable-non-empty-lists" class="section section2" data-section-depth="2" data-line="298"><h3 id="heading-sec-stateful-invariants-mutable-non-empty-lists" class="h2" data-heading-depth="2" style="display:block">Stateful invariants (mutable non-empty lists)</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="300" data-line-first="301" style="display:block"><code data-line="301"><span style="color:blue">module</span> NList
   <span style="color:blue">abstract</span> <span style="color:blue">type</span> nlist = xs:list int{Cons? xs}
 
   <span style="color:blue">let</span> create (x:int) : <span style="color:blue">St</span> (ref nlist) = alloc #nlist [x]
@@ -6397,9 +6393,9 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
   <span style="color:blue">let</span> add (x:int) (r:ref nlist) : <span style="color:blue">St</span> unit =  r := x :: !r
 
   <span style="color:blue">let</span> read (r:ref nlist) : <span style="color:blue">St</span> nlist = !r</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="312" data-line-first="313" style="display:block"><code data-line="313"><span style="color:blue">let</span> f (r:ref nlist) = r := [] <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fails: expected nlist; got type list int </span><span style="color:darkgreen">*)</span></code></pre>
-<div class="fragment" data-line="315">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="316" data-line-first="317" style="display:block"><code data-line="317"><span style="color:blue">module</span> NListClient
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="310" data-line-first="311" style="display:block"><code data-line="311"><span style="color:blue">let</span> f (r:ref nlist) = r := [] <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fails: expected nlist; got type list int </span><span style="color:darkgreen">*)</span></code></pre>
+<div class="fragment" data-line="313">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="314" data-line-first="315" style="display:block"><code data-line="315"><span style="color:blue">module</span> NListClient
   <span style="color:blue">let</span> complex_procedure (r:ref nlist) : <span style="color:blue">St</span> unit = ...
 
   <span style="color:blue">let</span> main () : <span style="color:blue">St</span> unit =
@@ -6409,122 +6405,122 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
     <span style="color:blue">let</span> l = read r <span style="color:blue">in</span> 
     <span style="color:blue">assert</span> ([<span class="constant" style="color:purple">2</span>,<span class="constant" style="color:purple">1</span>] `is_suffix_of` l)  <span style="color:darkgreen">(*</span><span style="color:darkgreen"> fails, even though we know c_p can</span>
 <span style="color:darkgreen">                                        only use `add` and `read` on r </span><span style="color:darkgreen">*)</span>  </code></pre></div>
-<ul class="ul list-star compact" data-line="330">
-<li class="li ul-li list-star-li compact-li fragment" data-line="330"><span data-line="330"></span>Tomorrow we<span data-line="330"></span>&#39;<span data-line="330"></span>ll see how<span data-line="330"></span> <span style="color:DarkBlue"><strong class="strong-star2">monotonicity</strong></span><span data-line="330"></span> helps us prove such assertions
+<ul class="ul list-star compact" data-line="328">
+<li class="li ul-li list-star-li compact-li fragment" data-line="328"><span data-line="328"></span>Tomorrow we<span data-line="328"></span>&#39;<span data-line="328"></span>ll see how<span data-line="328"></span> <span style="color:DarkBlue"><strong class="strong-star2">monotonicity</strong></span><span data-line="328"></span> helps us prove such assertions
 </li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-summary--verifying-stateful-programs" class="section section2" data-section-depth="2" data-line="334"><h3 id="heading-sec-summary--verifying-stateful-programs" class="h2" data-heading-depth="2" style="display:block">Summary: Verifying Stateful Programs</h3>
-<ul class="ul list-star loose" data-line="336">
-<li class="li ul-li list-star-li loose-li" data-line="336">
-<p data-line="336"><span data-line="336"></span><strong class="strong-star2"><span style="color:DarkBlue">ML-style garbage-collected memory model</span></strong><span data-line="336"></span>
+<section id="sec-summary--verifying-stateful-programs" class="section section2" data-section-depth="2" data-line="332"><h3 id="heading-sec-summary--verifying-stateful-programs" class="h2" data-heading-depth="2" style="display:block">Summary: Verifying Stateful Programs</h3>
+<ul class="ul list-star loose" data-line="334">
+<li class="li ul-li list-star-li loose-li" data-line="334">
+<p data-line="334"><span data-line="334"></span><strong class="strong-star2"><span style="color:DarkBlue">ML-style garbage-collected memory model</span></strong><span data-line="334"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="337" data-line-first="338" style="display:block"><code data-line="338"><span style="color:blue">val</span> heap : <span style="color:blue">Type</span>          <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="335" data-line-first="336" style="display:block"><code data-line="336"><span style="color:blue">val</span> heap : <span style="color:blue">Type</span>          <span style="color:blue">val</span> ref  : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
 <span style="color:blue">val</span> sel     : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a
 <span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat
 
 <span style="color:blue">val</span> modifies : s:set nat <span style="color:blue">-&gt;</span> h0:heap <span style="color:blue">-&gt;</span> h1:heap <span style="color:blue">-&gt;</span> prop</code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="346">
-<p data-line="346"><span data-line="346"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code> effect for simple ML-style programming</span></strong><span data-line="346"></span>
+<li class="li ul-li list-star-li loose-li" data-line="344">
+<p data-line="344"><span data-line="344"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">St</span></code> effect for simple ML-style programming</span></strong><span data-line="344"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="347" data-line-first="348" style="display:block"><code data-line="348"><span style="color:blue">let</span> incr (r:ref int) : <span style="color:blue">St</span> unit = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="351">
-<p data-line="351"><span data-line="351"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> effect for pre- and postcondition based (intrinsic) reasoning</span></strong><span data-line="351"></span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="345" data-line-first="346" style="display:block"><code data-line="346"><span style="color:blue">let</span> incr (r:ref int) : <span style="color:blue">St</span> unit = r := !r + <span class="constant" style="color:purple">1</span></code></pre></li>
+<li class="li ul-li list-star-li loose-li" data-line="349">
+<p data-line="349"><span data-line="349"></span><strong class="strong-star2"><span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code> effect for pre- and postcondition based (intrinsic) reasoning</span></strong><span data-line="349"></span>
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="352" data-line-first="353" style="display:block"><code data-line="353"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="350" data-line-first="351" style="display:block"><code data-line="351"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ sel h2 r == n))</code></pre></li>
-<li class="li ul-li list-star-li loose-li" data-line="357">
-<p data-line="357"><span data-line="357"></span><strong class="strong-star2"><span style="color:DarkBlue">Refinement types can enforce (some) stateful invariants</span></strong><span data-line="357"></span>
+<li class="li ul-li list-star-li loose-li" data-line="355">
+<p data-line="355"><span data-line="355"></span><strong class="strong-star2"><span style="color:DarkBlue">Refinement types can enforce (some) stateful invariants</span></strong><span data-line="355"></span>
 </p></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="359">
-<p data-line="359"><span data-line="359"></span><strong class="strong-star2"><span style="color:DarkRed">But what about verifying low-level (e.g., C) code, I hear you say?</span></strong><span data-line="359"></span>
+<li class="li ul-li list-star-li loose-li fragment" data-line="357">
+<p data-line="357"><span data-line="357"></span><strong class="strong-star2"><span style="color:DarkRed">But what about verifying low-level (e.g., C) code, I hear you say?</span></strong><span data-line="357"></span>
 </p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---programming-and-verifying-low-level-c-code" class="section section2" data-section-depth="2" data-line="363"><h3 id="heading-sec-low---programming-and-verifying-low-level-c-code" class="h2" data-heading-depth="2" style="display:block">Low*: programming and verifying low-level C code</h3>
-<ul class="ul list-star compact" data-line="365">
-<li class="li ul-li list-star-li compact-li" data-line="365"><span data-line="365"></span><strong class="strong-star2">Low*:</strong><span data-line="365"></span> a subset of F<span data-line="365"></span>*<span data-line="365"></span> that
+<section id="sec-low---programming-and-verifying-low-level-c-code" class="section section2" data-section-depth="2" data-line="361"><h3 id="heading-sec-low---programming-and-verifying-low-level-c-code" class="h2" data-heading-depth="2" style="display:block">Low*: programming and verifying low-level C code</h3>
+<ul class="ul list-star compact" data-line="363">
+<li class="li ul-li list-star-li compact-li" data-line="363"><span data-line="363"></span><strong class="strong-star2">Low*:</strong><span data-line="363"></span> a subset of F<span data-line="363"></span>*<span data-line="363"></span> that
 
-<ul class="ul list-dash compact" data-line="366">
-<li class="li ul-li list-dash-li compact-li" data-line="366"><span data-line="366"></span>enjoys compilation to C through its companion compiler KreMLin
+<ul class="ul list-dash compact" data-line="364">
+<li class="li ul-li list-dash-li compact-li" data-line="364"><span data-line="364"></span>enjoys compilation to C through its companion compiler KreMLin
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="367"><span data-line="367"></span>provides F<span data-line="367"></span>*<span data-line="367"></span> libraries that model a curated set of C features:
+<li class="li ul-li list-dash-li compact-li" data-line="365"><span data-line="365"></span>provides F<span data-line="365"></span>*<span data-line="365"></span> libraries that model a curated set of C features:
 
-<ul class="ul list-plus compact" data-line="368">
-<li class="li ul-li list-plus-li compact-li" data-line="368"><span data-line="368"></span>C memory model
+<ul class="ul list-plus compact" data-line="366">
+<li class="li ul-li list-plus-li compact-li" data-line="366"><span data-line="366"></span>C memory model
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="369"><span data-line="369"></span>stack- and heap-allocated arrays
+<li class="li ul-li list-plus-li compact-li" data-line="367"><span data-line="367"></span>stack- and heap-allocated arrays
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="370"><span data-line="370"></span>machine integers
+<li class="li ul-li list-plus-li compact-li" data-line="368"><span data-line="368"></span>machine integers
 </li>
-<li class="li ul-li list-plus-li compact-li" data-line="371"><span data-line="371"></span>few system-level functions from the C standard library
+<li class="li ul-li list-plus-li compact-li" data-line="369"><span data-line="369"></span>few system-level functions from the C standard library
 </li></ul></li>
-<li class="li ul-li list-dash-li compact-li" data-line="372"><span data-line="372"></span>see<span data-line="372"></span>&nbsp;<a href="https://fstarlang.github.io/lowstar/html/">https://fstarlang.github.io/lowstar/html/</a><span data-line="372"></span> for Low<span data-line="372"></span>*<span data-line="372"></span>&#39;<span data-line="372"></span>s own tutorial
+<li class="li ul-li list-dash-li compact-li" data-line="370"><span data-line="370"></span>see<span data-line="370"></span>&nbsp;<a href="https://fstarlang.github.io/lowstar/html/">https://fstarlang.github.io/lowstar/html/</a><span data-line="370"></span> for Low<span data-line="370"></span>*<span data-line="370"></span>&#39;<span data-line="370"></span>s own tutorial
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="373"><span data-line="373"></span>get KreMLin from<span data-line="373"></span>&nbsp;<a href="https://github.com/FStarLang/kremlin">https://github.com/FStarLang/kremlin</a><span data-line="373"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="371"><span data-line="371"></span>get KreMLin from<span data-line="371"></span>&nbsp;<a href="https://github.com/FStarLang/kremlin">https://github.com/FStarLang/kremlin</a><span data-line="371"></span>
 </li></ul></li></ul>
 
-<p class="p noindent" data-line="375"><span data-line="375"></span><strong class="strong-star2"><span style="color:DarkRed">The code (Low*) is low-level, but the verification (F*) is not</span></strong><span data-line="375"></span><br/><span data-line="375"></span>
+<p class="p noindent" data-line="373"><span data-line="373"></span><strong class="strong-star2"><span style="color:DarkRed">The code (Low*) is low-level, but the verification (F*) is not</span></strong><span data-line="373"></span><br/><span data-line="373"></span>
 </p>
-<ul class="ul list-star compact" data-line="377">
-<li class="li ul-li list-star-li compact-li fragment" data-line="377"><span data-line="377"></span><strong class="strong-star2">Vale</strong><span data-line="377"></span> (Verified Assembly Language for Everest)
+<ul class="ul list-star compact" data-line="375">
+<li class="li ul-li list-star-li compact-li fragment" data-line="375"><span data-line="375"></span><strong class="strong-star2">Vale</strong><span data-line="375"></span> (Verified Assembly Language for Everest)
 
-<ul class="ul list-dash compact" data-line="378">
-<li class="li ul-li list-dash-li compact-li" data-line="378"><span data-line="378"></span>for even lower level programming and verification within F<span data-line="378"></span>*<span data-line="378"></span>
+<ul class="ul list-dash compact" data-line="376">
+<li class="li ul-li list-dash-li compact-li" data-line="376"><span data-line="376"></span>for even lower level programming and verification within F<span data-line="376"></span>*<span data-line="376"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="379"><span data-line="379"></span>an embedding of x64 assembly language in F<span data-line="379"></span>*<span data-line="379"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="377"><span data-line="377"></span>an embedding of x64 assembly language in F<span data-line="377"></span>*<span data-line="377"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="380"><span data-line="380"></span>supports interop with Low<span data-line="380"></span>*<span data-line="380"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="378"><span data-line="378"></span>supports interop with Low<span data-line="378"></span>*<span data-line="378"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="381"><span data-line="381"></span>see<span data-line="381"></span>&nbsp;<a href="https://github.com/project-everest/vale">https://github.com/project-everest/vale</a><span data-line="381"></span> for more details
+<li class="li ul-li list-dash-li compact-li" data-line="379"><span data-line="379"></span>see<span data-line="379"></span>&nbsp;<a href="https://github.com/project-everest/vale">https://github.com/project-everest/vale</a><span data-line="379"></span> for more details
 </li></ul></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---the-low-level-memory-model" class="section section2" data-section-depth="2" data-line="385"><h3 id="heading-sec-low---the-low-level-memory-model" class="h2" data-heading-depth="2" style="display:block">Low*: the low-level memory model</h3>
-<ul class="ul list-star loose" data-line="387">
-<li class="li ul-li list-star-li loose-li" data-line="387">
-<p data-line="387"><span data-line="387"></span><strong class="strong-star2">HyperStack</strong><span data-line="387"></span>
+<section id="sec-low---the-low-level-memory-model" class="section section2" data-section-depth="2" data-line="383"><h3 id="heading-sec-low---the-low-level-memory-model" class="h2" data-heading-depth="2" style="display:block">Low*: the low-level memory model</h3>
+<ul class="ul list-star loose" data-line="385">
+<li class="li ul-li list-star-li loose-li" data-line="385">
+<p data-line="385"><span data-line="385"></span><strong class="strong-star2">HyperStack</strong><span data-line="385"></span>
 </p>
-<ul class="ul list-dash compact" data-line="388">
-<li class="li ul-li list-dash-li compact-li" data-line="388"><span data-line="388"></span><span style="color:DarkBlue"><strong class="strong-star2">hierarchical</strong></span><span data-line="388"></span> memory model that divides the heap into a tree of<span data-line="388"></span> <span style="color:DarkBlue"><strong class="strong-star2">regions</strong></span><span data-line="388"></span>
+<ul class="ul list-dash compact" data-line="386">
+<li class="li ul-li list-dash-li compact-li" data-line="386"><span data-line="386"></span><span style="color:DarkBlue"><strong class="strong-star2">hierarchical</strong></span><span data-line="386"></span> memory model that divides the heap into a tree of<span data-line="386"></span> <span style="color:DarkBlue"><strong class="strong-star2">regions</strong></span><span data-line="386"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="389"><span data-line="389"></span>a distinguished set of regions that model the C call<span data-line="389"></span> <span style="color:DarkRed"><strong class="strong-star2">stack</strong></span><span data-line="389"></span>
+<li class="li ul-li list-dash-li compact-li" data-line="387"><span data-line="387"></span>a distinguished set of regions that model the C call<span data-line="387"></span> <span style="color:DarkRed"><strong class="strong-star2">stack</strong></span><span data-line="387"></span>
 </li>
-<li class="li ul-li list-dash-li compact-li" data-line="390"><span data-line="390"></span>(low-level) programs may use stack allocation, heap allocation, or both
+<li class="li ul-li list-dash-li compact-li" data-line="388"><span data-line="388"></span>(low-level) programs may use stack allocation, heap allocation, or both
 </li></ul>
 </li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="392">
-<p data-line="392"><span data-line="392"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span></code><span data-line="392"></span> effect for stack-allocating programs (intuitively, <span data-line="392"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="392"></span> on <span data-line="392"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">HS</code><span data-line="392"></span>&#39;<span data-line="392"></span>s <span data-line="392"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">mem</code><span data-line="392"></span>)
+<li class="li ul-li list-star-li loose-li fragment" data-line="390">
+<p data-line="390"><span data-line="390"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">Stack</span></code><span data-line="390"></span> effect for stack-allocating programs (intuitively, <span data-line="390"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="390"></span> on <span data-line="390"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">HS</code><span data-line="390"></span>&#39;<span data-line="390"></span>s <span data-line="390"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">mem</code><span data-line="390"></span>)
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="393" data-line-first="394" style="display:block"><code data-line="394"><span style="color:blue">module</span> HyperStack.<span style="color:blue">ST</span>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="391" data-line-first="392" style="display:block"><code data-line="392"><span style="color:blue">module</span> HyperStack.<span style="color:blue">ST</span>
 
   <span style="color:blue">effect</span> <span style="color:blue">Stack</span> (a:<span style="color:blue">Type</span>) (<span style="color:blue">requires</span> pre) (<span style="color:blue">ensures</span> post)
     = <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> pre)
            (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> m0 x m1 <span style="color:blue">-&gt;</span> post m0 x m1 /\ equal_domains m0 m1))</code></pre>
-<div class="fragment" data-line="400">
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="401" data-line-first="402" style="display:block"><code data-line="402"><span style="color:blue">let</span> equal_domains (m0 m1: mem) =
+<div class="fragment" data-line="398">
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="399" data-line-first="400" style="display:block"><code data-line="400"><span style="color:blue">let</span> equal_domains (m0 m1: mem) =
   get_tip m0 == get_tip m1 /\         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> leaves the C call stack intact </span><span style="color:darkgreen">*)</span>
   Set.equal (Map.domain (get_hmap m0))
             (Map.domain (get_hmap m1)) /\
                               <span style="color:darkgreen">(*</span><span style="color:darkgreen"> does not </span><span style="color:darkgreen">(</span><span style="color:darkgreen">de)allocate any heap regions </span><span style="color:darkgreen">*)</span>
   same_refs_in_all_regions m0 m1
                                <span style="color:darkgreen">(*</span><span style="color:darkgreen"> does not allocate in existing regions </span><span style="color:darkgreen">*)</span></code></pre></div></li>
-<li class="li ul-li list-star-li loose-li fragment" data-line="412">
-<p data-line="412"><span data-line="412"></span>Additional effects for<span data-line="412"></span> <span style="color:DarkBlue"><strong class="strong-star2">heap-allocating</strong></span><span data-line="412"></span> and<span data-line="412"></span> <span style="color:DarkRed"><strong class="strong-star2">arbitrary</strong></span><span data-line="412"></span> low-level code
+<li class="li ul-li list-star-li loose-li fragment" data-line="410">
+<p data-line="410"><span data-line="410"></span>Additional effects for<span data-line="410"></span> <span style="color:DarkBlue"><strong class="strong-star2">heap-allocating</strong></span><span data-line="410"></span> and<span data-line="410"></span> <span style="color:DarkRed"><strong class="strong-star2">arbitrary</strong></span><span data-line="410"></span> low-level code
 </p></li></ul>
 <!------------------------------------------------------------------------------>
 
 
 </section>
-<section id="sec-low---a-small-example" class="section section2" data-section-depth="2" data-line="416"><h3 id="heading-sec-low---a-small-example" class="h2" data-heading-depth="2" style="display:block">Low*: a small example</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="418" data-line-first="419" style="display:block"><code data-line="419"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+<section id="sec-low---a-small-example" class="section section2" data-section-depth="2" data-line="414"><h3 id="heading-sec-low---a-small-example" class="h2" data-heading-depth="2" style="display:block">Low*: a small example</h3>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="416" data-line-first="417" style="display:block"><code data-line="417"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
                          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True))
                          
   = push_frame ();                         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> pushing a new stack frame </span><span style="color:darkgreen">*)</span>
@@ -6539,7 +6535,7 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
                             <span style="color:darkgreen">(*</span><span style="color:darkgreen"> so as to ensure that equal_domains holds </span><span style="color:darkgreen">*)</span>
     <span style="color:blue">assert</span> (r = <span class="constant" style="color:purple">43</span>UL);                    
     r</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="435" data-line-first="436" style="display:block"><code data-line="436">uint64_t f()
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="433" data-line-first="434" style="display:block"><code data-line="434">uint64_t f()
 {
   uint64_t b[<span class="constant" style="color:purple">64</span>U];
     
@@ -6553,19 +6549,19 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 
 
 </section>
-<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="451"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
-<ul class="ul list-star loose" data-line="453">
+<section id="sec-next-steps-in-this-course" class="section section2" data-section-depth="2" data-line="449"><h3 id="heading-sec-next-steps-in-this-course" class="h2" data-heading-depth="2" style="display:block">Next steps in this course</h3>
+<ul class="ul list-star loose" data-line="451">
+<li class="li ul-li list-star-li loose-li" data-line="451">
+<p data-line="451"><span data-line="451"></span>Yesterday: A Gentle Introduction to F<span data-line="451"></span>*<span data-line="451"></span> (Purely Functional Programs)
+</p></li>
 <li class="li ul-li list-star-li loose-li" data-line="453">
-<p data-line="453"><span data-line="453"></span>Yesterday: A Gentle Introduction to F<span data-line="453"></span>*<span data-line="453"></span> (Purely Functional Programs)
+<p data-line="453"><span data-line="453"></span>Today: Verifying Stateful Programs in F<span data-line="453"></span>*<span data-line="453"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="455">
-<p data-line="455"><span data-line="455"></span>Today: Verifying Stateful Programs in F<span data-line="455"></span>*<span data-line="455"></span>
+<p data-line="455"><span data-line="455"></span><strong class="strong-star2">Tomorrow: Monotonic State in F*</strong><span data-line="455"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="457">
-<p data-line="457"><span data-line="457"></span><strong class="strong-star2">Tomorrow: Monotonic State in F*</strong><span data-line="457"></span>
-</p></li>
-<li class="li ul-li list-star-li loose-li" data-line="459">
-<p data-line="459"><span data-line="459"></span><strong class="strong-star2">Tomorrow: F*&#39;s Extensible Effect System and Metaprogramming in F*</strong><span data-line="459"></span>
+<p data-line="457"><span data-line="457"></span><strong class="strong-star2">Tomorrow: F*&#39;s Extensible Effect System and Metaprogramming in F*</strong><span data-line="457"></span>
 </p></li></ul></section></div></div><span data-line=""></span></div>
 </body>
 <script>
