@@ -69,7 +69,7 @@ Ohrid, Macedonia, 11 August, 2018
 ## Verifying stateful programs ## {#stateful1}
 <!-- ### Variant #1: intrinsically (at definition time) ### -->
 
-* The `St` effect---programming with [**mutable references**]{color:DarkBlue}
+* The `St` effect---programming with [**garbage-collected references**]{color:DarkBlue}
   ```
   val incr : r:ref int -> St unit
   
@@ -205,7 +205,7 @@ let incr r = r := !r + 1
 
 * ... and on `int` being unbounded (mathematical) integers<br/><br/>
 
-* {.fragment} **Exercise 1:** Sketch a hand proof that this code is correct
+* {.fragment} **Exercise:** Sketch a hand proof that this code is correct
 
 <!-- ~Block {.console} -->
 <!-- ```text -->
@@ -265,7 +265,7 @@ let incr r = r := !r + 1
 [INCLUDE=../../../ex/SumST.fst:sum_st]
 ```
 
-* {.fragment} **Exercise 2:** Strengthen the spec of `sum_st'` to remove `admit` in `sum_st`
+* {.fragment} **Exercise:** Strengthen the spec of `sum_st'` to remove `admit` in `sum_st`
 
 
 
@@ -283,6 +283,14 @@ let incr r = r := !r + 1
 ```
 [INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_st]
 ```
+
+<!------------------------------------------------------------------------------>
+
+## Exercise: Stateful Factorial ##
+```
+[INCLUDE=../../../ex/FactorialST.fst:factorial_ex]
+```
+
 
 <!------------------------------------------------------------------------------>
 
@@ -376,8 +384,8 @@ module NListClient
 ## Low*: the low-level memory model ##
 
 * **HyperStack**
-  - [hierarchical]{color:DarkBlue} memory model that divides the heap into a tree of [regions]{color:DarkBlue}
-  - a distinguished set of regions that model the C call [stack]{color:DarkRed}
+  - [**hierarchical**]{color:DarkBlue} memory model that divides the heap into a tree of [**regions**]{color:DarkBlue}
+  - a distinguished set of regions that model the C call [**stack**]{color:DarkRed}
   - (low-level) programs may use stack allocation, heap allocation, or both
 
 * {.fragment} `Stack` effect for stack-allocating programs (intuitively, `ST` on `HS`'s `mem`)
@@ -388,7 +396,7 @@ module NListClient
       = ST a (requires pre)
              (ensures  (fun m0 x m1 -> post m0 x m1 /\ equal_domains m0 m1))
   ```
-
+~Fragment
   ```
   let equal_domains (m0 m1: mem) =
     get_tip m0 == get_tip m1 /\         (* leaves the C call stack intact *)
@@ -398,8 +406,9 @@ module NListClient
     same_refs_in_all_regions m0 m1
                                  (* does not allocate in existing regions *)
   ```
+~
 
-* {.fragment} Additional effects for [heap-allocating]{color:DarkBlue} and [arbitrary]{color:DarkRed} low-level code
+* {.fragment} Additional effects for [**heap-allocating**]{color:DarkBlue} and [**arbitrary**]{color:DarkRed} low-level code
 
 <!------------------------------------------------------------------------------>
 
