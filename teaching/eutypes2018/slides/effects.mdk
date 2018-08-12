@@ -196,7 +196,7 @@ sub_effect STATE ~> STEXN {
 
 <!------------------------------------------------------------------------------>
 
-## Computation types indexed by predicate transformers ##
+## Computation types indexed by [predicate transformers]{color:DarkBlue} ##
 
 Pre- and postconditions are just syntactic sugar:
 ```
@@ -205,19 +205,23 @@ Pure t (pre : Type0) (post : t -> Type0)
                         (* where k is the "true" postcondition,  
                            for which we compute the weakest precondition *)
 ```
+~Fragment
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
                                   (ensures  (fun y -> y >= 0))
 ```
 ```
-val factorial : x:int -> Pure (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
+val factorial : x:int -> Pure int (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
 ```
+~
 ~Fragment
 Same for user-defined effects, like `STATE`:
 ```
 ST t (pre : nat -> Type0) (post : nat -> t -> nat -> Type0) 
   = STATE t (fun n0 k -> pre n0 /\ (forall x n1. post n0 x n1 ==> k x n1))
 ```
+~
+~Fragment
 ```
 val incr : unit -> St unit (requires (fun n0 -> True))
                            (ensures  (fun n0 _ n1 -> n1 = n0 + 1))
@@ -250,7 +254,7 @@ let incr () = STATE.bind (STATE.get()) (fun x -> STATE.put (x + 1))
   ```
 * {.fragment} **Generic way of computing weakest-preconditions for all effects**
   - provided we have a monad structure on predicate transformers
-  - instance of a more general structure of monad-graded monads
+  - [instance of a more general structure of monad-graded monads]{color:DarkGray}
 
 ## Predicate transformers monad for state ## 
 
@@ -274,7 +278,7 @@ let STATE.bind_wp wp f = fun p -> wp (fun v -> f v p)
 let STATE.get_wp () = fun p n0 -> p n0 n0
 let STATE.put_wp n = fun p _ -> p () n
 ```
-* {.fragment} and for a while we wrote such things by hand;\
+* {.fragment} and for a while we wrote such things by hand for each new effect;\
 
 * {.fragment} but this is **quite tricky** and comes with **strong proof obligations**\
   (correctness with respect to effect definition, monad laws, ...)
@@ -286,7 +290,7 @@ STATE.wp t  = (t -> nat -> Type0) -> (nat -> Type0)
 
            ~= nat -> (t * nat -> Type0) -> Type0
 ```
-* {.fragment} This can be **automatically derived** from the state monad transformer
+* {.fragment} This can be **automatically derived** from the [**state monad transformer**]{color:DarkBlue}
 ```
 STATE.repr t = nat -> M (t * nat)
 ```
@@ -297,7 +301,7 @@ by selective **continuation-passing style (CPS)** translation
 
 * {.fragment} This works well for **many natural examples** of monadic effects:\
   - `STATE`, `EXN`, `STEXN`, `CONT`, etc. (explicitly definable monad transformers)
-  - {.fragment} ongoing work to try to extend it to a wider class of effects
+  - {.fragment} [ongoing work to try to extend this idea to a wider class of effects]{color:DarkGray}
 
 * {.fragment} **Summary:** From a monadic effect definition we can derive a\
   [**correct-by-construction weakest-precondition calculus**]{color:DarkBlue} for this effect.
@@ -384,7 +388,7 @@ by selective **continuation-passing style (CPS)** translation
 ## Verifying effectful programs ##
 ### New way: [**extrinsically**]{color:DarkRed} (by exposing pure monadic representation) ###
 
-* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified, omitting comp. refinements)
+* {.fragment} [**Monadic reification**]{color:DarkBlue}
   ```
   STATE.reify : (St a) -> (nat -> Tot (a * nat))
   ```
@@ -394,33 +398,46 @@ by selective **continuation-passing style (CPS)** translation
   STATE.reflect : (nat -> Tot (a * nat)) -> (St a)
   ```
 
+\ 
+
+* {.fragment} The above types are very much simplified, in their full generality:
+  - `reify` sends a `STATE` comp. with a **WP** to a `PURE` comp. with a **WP**
+  - `reflect` sends a `PURE` comp. with a **WP** to a `STATE` comp. with a **WP**
+
 <!------------------------------------------------------------------------------>
 
-## Extrinsic reasoning using reification and reflection ##
+## [Extrinsic reasoning]{color:DarkGreen} using reification and reflection ##
 
 * [**Reification**]{color:DarkBlue} allows us to give **weak specification** to a program
   ```
   let incr () : St unit = STATE?.put (STATE?.get() + 1)
   ```
-~Fragment
-  ```
-  let incr' (): St unit = STATE?.put (STATE?.reflect (fun s0 -> (s0,s0)) + 1)
-  ```
-~
 
 * {.fragment} and give an **extrinsic proof** of their correctness
   ```
   let lemma_incrs (s0:state)
-    : Lemma (let (_,s1 ) = reify (incr  ()) s0 in 
-             let (_,s1') = reify (incr' ()) s0 in 
-             s1  = s0 + 1 /\
-             s1' = s0 + 1)
+    : Lemma (let (_,s1) = reify (incr ()) s0 in 
+             s1 = s0 + 1)
   = ()
   ```
 
-## Verifying effectful programs ctd. ##
+* {.fragment} [**Reflection**]{color:DarkRed} allows us to write some code as pure 
+  ```
+  let incr' (): St unit = STATE?.put (STATE?.reflect (fun s0 -> (s0,s0)) + 1)
+  ```
 
-* or about **different runs** of the **same program**
+* {.fragment} and it **cancels out** reification in verification
+  ```
+  let lemma_incrs' (s0:state)
+    : Lemma (let (_,s1) = reify (incr' ()) s0 in 
+             s1 = s0 + 1)
+  = ()
+  ```
+
+
+## [Extrinsic reasoning]{color:DarkGreen} using reification and reflection ctd. ##
+
+* It also allows us to reason about **different runs** of the **same program**
   ```
   let state = int * int                             (* (high - low) values *)
 
@@ -471,7 +488,10 @@ by selective **continuation-passing style (CPS)** translation
   - simple game-based cryptographic proofs
 
 * {.fragment} **Downside**: reification doesn't play well with monotonic state
-  - cannot naively safely reify the _real_ `STATE` and `Stack` (ongoing work)
+  - cannot naively safely reify the _real_ `STATE` and `Stack` effects
+  - doing it naively allows you to replay old states with `recall`
+  - [ongoing work to solve it based on hybrid modal logics]{color:DarkGray}
+  - [unfortunately reification also starts to act on the context]{color:DarkGray}
 
 
 
