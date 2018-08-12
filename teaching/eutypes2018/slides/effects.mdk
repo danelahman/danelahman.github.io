@@ -97,8 +97,8 @@ total reifiable new_effect STATE = STATE_m heap
 
 * In F\* the programmer writes:
   ```
-  let incr_and_assert () : STATE unit user_spec
-  = let x = get() in
+  let incr_and_assert () : STATE unit user_spec = 
+    let x = get() in
     put (x + 1);
     assert (get() > x)
   ```
@@ -106,8 +106,8 @@ total reifiable new_effect STATE = STATE_m heap
 * {.fragment} Which is then made explicitly monadic via type and effect inference:
 
   ```
-  let incr_and_assert () : STATE unit inferred_spec
-  = STATE.bind (STATE.get ()) (fun x -> 
+  let incr_and_assert () : STATE unit inferred_spec = 
+    STATE.bind (STATE.get ()) (fun x -> 
     STATE.bind (STATE.put (x + 1)) (fun _ ->
     STATE.bind (STATE.get ()) (fun y ->
     STATE.return (assert (y > x)))))
@@ -411,9 +411,9 @@ by selective **continuation-passing style (CPS)** translation
 * {.fragment} and give an **extrinsic proof** of their correctness
   ```
   let lemma_incrs (s0:state)
-    : Lemma (let (_,s1)  = reify (incr  ()) s0 in 
+    : Lemma (let (_,s1 ) = reify (incr  ()) s0 in 
              let (_,s1') = reify (incr' ()) s0 in 
-             s1 = s0 + 1 /\
+             s1  = s0 + 1 /\
              s1' = s0 + 1)
   = ()
   ```
@@ -432,13 +432,13 @@ by selective **continuation-passing style (CPS)** translation
   }
 
     ```
-
+~Fragment
     ```
-    let incr (n:int) : St unit 
-      = STATE?.put_low (STATE?.get_low() + n)
+    let incr (n:int) : St unit = 
+      STATE?.put_low (STATE?.get_low() + n)
 
-    let incr2 () : St unit 
-      = if (STATE?.get_high() = 42) then (incr 2) else (incr 1; incr 1)
+    let incr2 () : St unit = 
+      if (STATE?.get_high() = 42) then (incr 2) else (incr 1; incr 1)
 
     let non_interference ()
       : Lemma (forall h0 h1 n. let (_,(h0',n' )) = reify (incr2 ()) (h0,n) in 
@@ -446,6 +446,7 @@ by selective **continuation-passing style (CPS)** translation
                                n' = n'')
     = ()
     ```
+~
 
 * {.fragment} or even about **different runs** of **different programs**
 
@@ -470,13 +471,14 @@ by selective **continuation-passing style (CPS)** translation
   - simple game-based cryptographic proofs
 
 * {.fragment} **Downside**: reification doesn't play well with monotonic state
-  - cannot naively safely reify the _real_ `STATE` and `Stack` effects (for now)
+  - cannot naively safely reify the _real_ `STATE` and `Stack` (ongoing work)
 
 
 
 <!------------------------------------------------------------------------------>
 
-## Tactics as a user-defined, non-primitive effect ##
+## Metaprogramming in F* ##
+### Tactics as a [**user-defined**]{color:DarkBlue}, [**non-primitive**]{color:DarkRed} effect ###
 
 <!------------------------------------------------------------------------------>
 

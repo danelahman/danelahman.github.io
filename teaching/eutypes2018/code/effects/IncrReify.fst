@@ -45,8 +45,8 @@ let incr () : St unit = STATE?.put (STATE?.get() + 1)
 let incr' () : St unit = STATE?.put (STATE?.reflect (fun s0 -> (s0,s0)) + 1)
   
 let lemma_incrs (s0:state)
-  : Lemma (let (_,s1)  = reify (incr  ()) s0 in 
+  : Lemma (let (_,s1 ) = reify (incr  ()) s0 in 
            let (_,s1') = reify (incr' ()) s0 in 
-           s1 = s0 + 1 /\
+           s1  = s0 + 1 /\
            s1' = s0 + 1)
 = ()

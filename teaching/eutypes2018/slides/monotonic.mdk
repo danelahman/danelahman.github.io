@@ -54,7 +54,7 @@ Ohrid, Macedonia, 12 August, 2018
 
    ```
 
-* {.fragment} But [**standard references**]{color:DarkBlue} alone are often [**unsatisfactory**]{color:DarkRed}
+* {.fragment} But recall that [**standard references**]{color:DarkBlue} alone are often [**unsatisfactory**]{color:DarkRed}
 
 \ 
 
@@ -83,7 +83,8 @@ Ohrid, Macedonia, 12 August, 2018
 * {.fragment} An example program using monotonic counters
   ```
   let main() : St unit =                   
-    let c = create 0 in incr c;
+    let c = create 0 in
+    incr c;
 
     let i = read c in assert (i > 0);
 
@@ -168,7 +169,8 @@ Ohrid, Macedonia, 12 August, 2018
 * {.fragment} By themselves these definitions are [not enough]{color:DarkRed} to verify the example
   ```
   let main() : St unit =                   
-    let c = create 0 in incr c;
+    let c = create 0 in
+    incr c;
 
     let i = read c in assert (i > 0);
     complex_procedure c;                       (* c_p : counter -> St unit *)
@@ -208,7 +210,7 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} And as a bonus, recalling the containment of GCd references, [**"for free"**]{color:DarkRed}
   ```
-  let recall #a (#rel:preorder a) (r:mref a rel) 
+  let recall_contains #a (#rel:preorder a) (r:mref a rel) 
     : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
   = ...
   ```
@@ -256,10 +258,10 @@ Ohrid, Macedonia, 12 August, 2018
 
 * {.fragment} But we [can still get heap-containment]{color:DarkBlue} "for free" for GCd refs
   ```
-  let recall #a (r:ref a)
+  let recall_contains #a (r:ref a)
     : ST unit (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
 
-  = MonotonicReferencesSlide.recall r
+  = MonotonicReferencesSlide.recall_contains r
   ```
 
 <!------------------------------------------------------------------------------>
@@ -280,7 +282,7 @@ Ohrid, Macedonia, 12 August, 2018
   = r := (v :: !r)
   ```
 
-* {.fragment} Can then use `witness_token` and `recall_token` similarly
+* {.fragment} Can then use `witness_token` and `recall_token` again
   ```
   let main() : St unit =
     let r = alloc subset [] in add_to_log r 42;
@@ -355,8 +357,8 @@ let write #a (r:eref a) (v:a)
             (ensures  (fun _ _ h -> sel h r == Mutable v))
 = r := Mutable v
 
-let freeze #a (r:eref a)        (* Exercise: Give precise type to freeze *)
-= r := Frozen (Mutable?.v !r)
+let freeze #a (r:eref a) : St unit (* Exercise: Give precise type to freeze *)
+= r := Frozen (Mutable?.v !r)      (*           so that main() typechecks   *)
 ```
 <!--
 ~Fragment
@@ -502,7 +504,7 @@ let main() : St unit =
 
 <!------------------------------------------------------------------------------>
 
-## Final step in this course ##
+## One lecture to go in this course ##
 
 * Friday: A Gentle Introduction to F\* (Purely Functional Programs)
 
