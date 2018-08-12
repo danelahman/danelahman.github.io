@@ -32,6 +32,8 @@ total reifiable reflectable new_effect {
      ; put      = put
 }
 
+#reset-options
+
 effect St (a:Type) = STATE a (fun _ p -> forall x s1 . p (x,s1))
 
 (**********************************************************
@@ -49,6 +51,7 @@ let rec sum_st (n:nat) : St unit
                    STATE?.put (x + n);
                    sum_st (n - 1))
 
-let lemma_sum_st (n:nat) (s:state) : Lemma (let (_,s') = reify (sum_st n) s in s' = s + sum_tot n)
-  = ()
+let rec lemma_sum_st (n:nat) (s:state) : Lemma (let (_,s') = reify (sum_st n) s in s' = s + sum_tot n)
+  = if n > 0 then lemma_sum_st (n-1) (s+n)
+             else ()
 

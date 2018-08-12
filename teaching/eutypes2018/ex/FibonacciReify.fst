@@ -40,6 +40,8 @@ total reifiable reflectable new_effect {
      ; put_right = put_right
 }
 
+#reset-options
+
 effect St (a:Type) = STATE a (fun _ p -> forall x s1 . p (x,s1))
 
 (**********************************************************
