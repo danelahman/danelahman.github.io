@@ -52,7 +52,7 @@ let read (#a:Type) (#n:nat) (r:aref a n) (i:nat{i < n})
     | Mutable l 
     | Frozen  l -> Some?.v (lkp l i)
 
-let write (#a:Type) (#n:nat) (r:aref a n) (v:a) (i:nat{i < n}) 
+let write (#a:Type) (#n:nat) (r:aref a n) (i:nat{i < n}) (v:a) 
   : ST unit (requires (fun h0 -> ~(Frozen? (sel h0 r))))
             (ensures  (fun h0 x h1 -> modifies !{r} h0 h1 /\
                                       (match (sel h0 r) with 
@@ -72,25 +72,46 @@ let freeze (#a:Type) (#n:nat) (r:aref a n)
 = match (!r) with
   | Mutable l -> r := Frozen l
 
-(*
-assume val complex_procedure (r:eref int) : St unit
+assume val complex_procedure (#a:Type) (#n:nat) (r:aref a n) : St unit
 
-let main() : St unit =
-  let r = alloc int in
-  (* ignore (read r) -- fails like it should *)
-  write r 42;
-  ignore (read r);                                    (* needs --use_two_phase_tc true *)
-  write r 0;
-  witness_token r (fun rs -> ~(Empty? rs));
+let main () : St unit = 
+  let r = alloc string 3 in 
+
+  (* ignore (read r 1); *)
+
+  write r 0 "a";
+
+  (* ignore (read r 1); *)
+
+  write r 1 "b";
+  write r 2 "c";
+
+  ignore (read r 1);
+
   freeze r;
-  (* write r 7; -- fails like it should *)
-  ignore (read r);
-  witness_token r (fun rs -> rs == Frozen 0);
+
+  (* write r 2 "d"; *)
+
+  ignore (read r 2);
+
+  witness_token r (fun as -> Frozen? as);
+
+  witness_token r (fun as -> Frozen? as /\ Some?.v (lkp (Frozen?.l as) 1) = "b");
+
   complex_procedure r;
-  (* ignore (read r); -- fails like it should *)
-  recall_token r (fun rs -> ~(Empty? rs));
-  let x = read r in
-  (* assert (x == 0) -- fails like it should *)
-  recall_token r (fun rs -> rs == Frozen 0);
-  assert (x == 0)
-*)
+
+  (* ignore (read r 2); *)
+
+  recall_token r (fun as -> Frozen? as);
+
+  ignore (read r 2);
+
+  recall_token r (fun as -> Frozen? as /\ Some?.v (lkp (Frozen?.l as) 1) = "b");
+
+  let l = Frozen?.l !r in 
+
+  let x = lkp l 1 in 
+
+  assert (Some? x);
+
+  assert (Some?.v x = "b")
