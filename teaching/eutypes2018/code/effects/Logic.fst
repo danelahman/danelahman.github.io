@@ -19,14 +19,16 @@ let tau () : Tac unit
     
     let hyp_phi = implies_intro () in
     let hyp_xi = implies_intro () in 
-    
-    dump "proofstate 3";
+
+    smt()
+
+    (*dump "proofstate 3";
     
     apply (`FStar.Squash.return_squash);
     
     dump "proofstate 4";
     
-    exact (binder_to_term hyp_phi)
+    exact (binder_to_term hyp_phi)*)
     
 
 let _ = 

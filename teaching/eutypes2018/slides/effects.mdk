@@ -115,7 +115,7 @@ total reifiable new_effect STATE = STATE_m heap
 
 * {.fragment} And the SMT-solver is asked to discharge the VC to typecheck it
   ```
-  forall k. inferred_spec k ==> user_spec k
+  forall s0 k. user_spec s0 k ==> inferred_spec s0 k
   ```
 
 <!------------------------------------------------------------------------------>
@@ -179,7 +179,7 @@ sub_effect STATE ~> STEXN {
 
 * {.fragment} And the SMT-solver is asked to discharge the VC to typecheck it
   ```
-  forall s0 k. inferred_spec s0 k ==> user_spec s0 k
+  forall s0 k. user_spec s0 k ==> inferred_spec s0 k
   ```
 
 <!--* {.fragment}F\* infers the least effect of each sub-term
@@ -211,7 +211,7 @@ val factorial : x:int -> Pure int (requires (x >= 0))
                                   (ensures  (fun y -> y >= 0))
 ```
 ```
-val factorial : x:int -> Pure int (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
+val factorial : x:int -> PURE int (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
 ```
 ~
 ~Fragment

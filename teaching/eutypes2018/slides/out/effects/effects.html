@@ -6040,7 +6040,7 @@
 <li class="li ul-li list-star-li loose-li fragment" data-line="116">
 <p data-line="116"><span data-line="116"></span>And the SMT-solver is asked to discharge the VC to typecheck it
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="117" data-line-first="118" style="display:block"><code data-line="118"><span style="color:blue">forall</span> k. inferred_spec k ==&gt; user_spec k</code></pre></li></ul>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="117" data-line-first="118" style="display:block"><code data-line="118"><span style="color:blue">forall</span> s0 k. user_spec s0 k ==&gt; inferred_spec s0 k</code></pre></li></ul>
 <!------------------------------------------------------------------------------>
 
 
@@ -6094,7 +6094,7 @@
 <li class="li ul-li list-star-li loose-li fragment" data-line="180">
 <p data-line="180"><span data-line="180"></span>And the SMT-solver is asked to discharge the VC to typecheck it
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="181" data-line-first="182" style="display:block"><code data-line="182"><span style="color:blue">forall</span> s0 k. inferred_spec s0 k ==&gt; user_spec s0 k</code></pre></li></ul>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="181" data-line-first="182" style="display:block"><code data-line="182"><span style="color:blue">forall</span> s0 k. user_spec s0 k ==&gt; inferred_spec s0 k</code></pre></li></ul>
 <!--* {.fragment}F\* infers the least effect of each sub-term
     - automatically lifts computations to use the suitable effect
     - ensures that reasoning isn't needlessly polluted by unused effects-->
@@ -6121,7 +6121,7 @@
 <div class="fragment" data-line="208">
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="209" data-line-first="210" style="display:block"><code data-line="210"><span style="color:blue">val</span> factorial : x:int <span style="color:blue">-&gt;</span> <span style="color:blue">Pure</span> int (<span style="color:blue">requires</span> (x &gt;= <span class="constant" style="color:purple">0</span>))
                                   (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> y <span style="color:blue">-&gt;</span> y &gt;= <span class="constant" style="color:purple">0</span>))</code></pre>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="213" data-line-first="214" style="display:block"><code data-line="214"><span style="color:blue">val</span> factorial : x:int <span style="color:blue">-&gt;</span> <span style="color:blue">Pure</span> int (<span style="color:blue">fun</span> k <span style="color:blue">-&gt;</span> x&gt;=<span class="constant" style="color:purple">0</span> /\ (<span style="color:blue">forall</span> y. y&gt;=<span class="constant" style="color:purple">0</span> ==&gt; k y))</code></pre></div>
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="213" data-line-first="214" style="display:block"><code data-line="214"><span style="color:blue">val</span> factorial : x:int <span style="color:blue">-&gt;</span> <span style="color:blue">PURE</span> int (<span style="color:blue">fun</span> k <span style="color:blue">-&gt;</span> x&gt;=<span class="constant" style="color:purple">0</span> /\ (<span style="color:blue">forall</span> y. y&gt;=<span class="constant" style="color:purple">0</span> ==&gt; k y))</code></pre></div>
 <div class="fragment" data-line="217">
 <p class="p noindent" data-line="218"><span data-line="218"></span>Same for user-defined effects, like <span data-line="218"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">STATE</span></code><span data-line="218"></span>:
 </p>
