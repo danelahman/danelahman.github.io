@@ -57,10 +57,12 @@ let rec fibonacci (i:pos) (n:nat{n >= i}) : St unit (decreases (n - i)) =
   if i < n then (let temp = STATE?.get_right () in
                  STATE?.put_right (STATE?.get_left () + STATE?.get_right ()); 
                  STATE?.put_left temp;
-                 assert (i < n);
                  fibonacci (i+1) n)
 
-let rec lemma_fibonacci (n:nat{n >= 1})
-  : Lemma (let (_,(s,s')) = reify (fibonacci 1 n) (1,1) in 
-           s' = fibonacci_tot n)
-= admit ()
+let rec lemma_fibonacci (i:pos) (n:nat{n >= i})
+  : Lemma (requires True)
+          (ensures (let (_,(s,s')) = reify (fibonacci i n) (1,1) in 
+                    s' = fibonacci_tot (n - i)))
+          (decreases (n - i))
+= if i = n then ()
+           else admit ()//; lemma_fibonacci (i+1) n
