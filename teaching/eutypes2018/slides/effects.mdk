@@ -80,7 +80,6 @@ total reifiable new_effect {
 
        (* standard get and put actions for the state monad *)
        get    = fun () (m:mem) -> (m, m);
-       
        put    = fun (m:mem) _ -> ((), m)
 }
 ```
@@ -89,30 +88,34 @@ total reifiable new_effect STATE = STATE_m heap
 ```
 ~
 
-<!--* {.fragment} this monadic definition is the **model** F\*  uses to verify stateful code
-* {.fragment} state can be **primitively implemented** under the hood, **or not**-->
+* {.fragment} this monadic definition is the **model** F\*  uses to verify stateful code
+* {.fragment} state can be **primitively implemented** under the hood, **or not**
 
 <!------------------------------------------------------------------------------>
 
 ## Programming with effects, in direct style ##
 
-* In F\*, the programmer writes:
+* In F\* the programmer writes:
   ```
-  let incr () : STATE unit ...
+  let incr_and_assert () : STATE unit user_spec
   = let x = get() in
     put (x + 1);
-    let y = get() in
-    assert (y > x)
+    assert (get() > x)
   ```
 
-* {.fragment} Which is then made explicitly monadic via type and effect inference
+* {.fragment} Which is then made explicitly monadic via type and effect inference:
 
   ```
-  let incr () : STATE unit ...
+  let incr_and_assert () : STATE unit inferred_spec
   = STATE.bind (STATE.get ()) (fun x -> 
     STATE.bind (STATE.put (x + 1)) (fun _ ->
     STATE.bind (STATE.get ()) (fun y ->
     STATE.return (assert (y > x)))))
+  ```
+
+* {.fragment} And the SMT-solver is asked to discharge the VC to typecheck it
+  ```
+  forall k. inferred_spec k ==> user_spec k
   ```
 
 <!------------------------------------------------------------------------------>
@@ -130,16 +133,16 @@ new_effect {
        repr    = stexn;
 
        (* standard monadic return and bind *)
-       return  = fun (a:Type) (x:a) s -> (Inl x, s);
+       return  = fun (a:Type) (x:a) s0 -> (Inl x, s0);
        
        bind    = fun (a b:Type) (f:stexn a) (g:a -> stexn b) s0 ->
                     let (r,s1) = f s0 in
                     match r with
-                    | Inl ret -> (Inl (g ret s1), s1)
+                    | Inl ret -> g ret s1
                     | Inr m -> (Inr m, s1)
 
        (* action of raising exceptions *)
-       raise   = fun (a:Type) (msg:string) s -> (Inr msg, s);
+       raise   = fun (a:Type) (msg:string) s0 -> (Inr msg, s0);
 }
 ```
 ~
@@ -147,10 +150,9 @@ new_effect {
 ```
 sub_effect STATE ~> STEXN {
   lift = fun (a:Type)
-             (e:st nat a)                             (* st computation *)
+             (e:st nat a)                               (* st comp. *)
          ->
-             fun s -> let (x,s') = e s in (Inl x, s') (* stexn computation *)
-}
+             fun s -> let (x,s1) = e s0 in (Inl x, s1)  (* stexn comp. *) }
 ```
 ~
 
@@ -158,21 +160,26 @@ sub_effect STATE ~> STEXN {
 
 ## Programming with multiple effects, in direct style
 
-* Programmer writes:
+* In F\* the programmer writes:
   ```
   ( / ) : int -> x:int{x<>0} -> Tot int
     
-  let divide_by (x:int) : STEXN unit ...
+  let divide_by (x:int) : STEXN unit user_spec
     = if x <> 0 then put (get () / x)
                 else raise "Divide by zero"
   ```
 
-* {.fragment}Which is then elaborated to:
+* {.fragment} Which is then elaborated to:
   ```
-  let divide_by x
+  let divide_by (x:int) : STEXN unit inferred_spec
     = if x <> 0 then STATE_STEXN.lift (STATE.bind (STATE.get()) (fun n ->
                                        STATE.put (n / x)))
                 else STEXN.raise "Divide by zero"
+  ```
+
+* {.fragment} And the SMT-solver is asked to discharge the VC to typecheck it
+  ```
+  forall s0 k. inferred_spec s0 k ==> user_spec s0 k
   ```
 
 <!--* {.fragment}F\* infers the least effect of each sub-term
@@ -183,7 +190,7 @@ sub_effect STATE ~> STEXN {
 
 ## Under the hood ##
 
-### Weakest preconditions (Dijkstra monads for free) ###
+### Weakest preconditions (Dijkstra monads (for free)) ###
 
 <!-- ### SMT encoding ### -->
 
@@ -195,7 +202,8 @@ Pre- and postconditions are just syntactic sugar:
 ```
 Pure t (pre : Type0) (post : t -> Type0)
   = PURE t (fun k -> pre /\ (forall y. post y ==> k y))
-                                (* where k is the "logical continuation" *)
+                        (* where k is the "true" postcondition,  
+                           for which we compute the weakest precondition *)
 ```
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
@@ -208,7 +216,7 @@ val factorial : x:int -> Pure (fun k -> x>=0 /\ (forall y. y>=0 ==> k y))
 Same for user-defined effects, like `STATE`:
 ```
 ST t (pre : nat -> Type0) (post : nat -> t -> nat -> Type0) 
-  = STATE t (fun n0 k -> pre n0 /\ forall x n1. post n0 x n1 ==> k x n1)
+  = STATE t (fun n0 k -> pre n0 /\ (forall x n1. post n0 x n1 ==> k x n1))
 ```
 ```
 val incr : unit -> St unit (requires (fun n0 -> True))
@@ -229,17 +237,16 @@ let incr () = STATE.bind (STATE.get()) (fun x -> STATE.put (x + 1))
   
   STATE.put : n:nat -> STATE unit (STATE.put_wp n)
   
-  STATE.bind : STATE 'a 'wa ->
-               (x:'a -> STATE 'b ('wb x)) ->
-               STATE 'b (STATE.bind_wp 'wa 'wb)
+  STATE.bind : STATE 'a 'wa -> (x:'a -> STATE 'b ('wb x)) ->
+                                             STATE 'b (STATE.bind_wp 'wa 'wb)
   ```
-... we compute the weakest precondition for `incr`
+... F\* computes the weakest precondition for `incr`
   ```
-  val incr : unit -> STATE unit (STATE.bind_wp (STATE.get_wp()) (fun x ->
-                                 STATE.put_wp (x + 1)))
+  val incr : unit -> STATE unit inferred_wp
   ```
   ```
-                                 fun n0 k -> k () (n0 + 1)
+  inferred_wp = STATE.bind_wp (STATE.get_wp()) (fun x -> STATE.put_wp (x+1))
+              = fun n0 k -> k () (n0 + 1)
   ```
 * {.fragment} **Generic way of computing weakest-preconditions for all effects**
   - provided we have a monad structure on predicate transformers
@@ -267,9 +274,9 @@ let STATE.bind_wp wp f = fun p -> wp (fun v -> f v p)
 let STATE.get_wp () = fun p n0 -> p n0 n0
 let STATE.put_wp n = fun p _ -> p () n
 ```
-* and for a while we wrote such things by hand;\
+* {.fragment} and for a while we wrote such things by hand;\
 
-* but this is **quite tricky** and comes with **strong proof obligations**\
+* {.fragment} but this is **quite tricky** and comes with **strong proof obligations**\
   (correctness with respect to effect definition, monad laws, ...)
 
 ## Dijkstra monads for free ## {#dm4f}
@@ -279,21 +286,21 @@ STATE.wp t  = (t -> nat -> Type0) -> (nat -> Type0)
 
            ~= nat -> (t * nat -> Type0) -> Type0
 ```
-* {.fragment} **This can be *automatically derived* from the state monad transformer**
+* {.fragment} This can be **automatically derived** from the state monad transformer
 ```
 STATE.repr t = nat -> M (t * nat)
 ```
-by selective **continuation-passing style (CPS)** returning `Type0`
+by selective **continuation-passing style (CPS)** translation
   - `M` is the monad-argument of the monad transformer
   - it marks where the CPS-translation happens
   - type system (conservatively) restricts where the marker `M` can appear
 
 * {.fragment} This works well for **many natural examples** of monadic effects:\
-  - state, exceptions, their combinations, continuations, etc.
+  - `STATE`, `EXN`, `STEXN`, `CONT`, etc. (explicitly definable monad transformers)
   - {.fragment} ongoing work to try to extend it to a wider class of effects
 
-* {.fragment} [**Summary:**]{color:DarkBlue} From a monadic effect definition we can derive a\
-  **correct-by-construction weakest-precondition calculus** for this effect.
+* {.fragment} **Summary:** From a monadic effect definition we can derive a\
+  [**correct-by-construction weakest-precondition calculus**]{color:DarkBlue} for this effect.
 
 <!-- commented this out because of lack of time -->
 <!-- TODO: take slides 8--12 and 14 from Guido's POPL talk -->
@@ -370,13 +377,14 @@ by selective **continuation-passing style (CPS)** returning `Type0`
 <!------------------------------------------------------------------------------>
 
 ## Verifying effectful programs extrinsically ##
+### [**Monadic reification**]{color:DarkBlue} and [**monadic reflection**]{color:DarkRed} ###
 
 <!-- <\!-----------------------------------------------------------------------------\-> -->
 
 ## Verifying effectful programs ##
-### New way: extrinsically (by exposing pure monadic representation) ###
+### New way: [**extrinsically**]{color:DarkRed} (by exposing pure monadic representation) ###
 
-* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified, without comp. refinements)
+* {.fragment} [**Monadic reification**]{color:DarkBlue} (very much simplified, omitting comp. refinements)
   ```
   STATE.reify : (St a) -> (nat -> Tot (a * nat))
   ```
@@ -386,19 +394,28 @@ by selective **continuation-passing style (CPS)** returning `Type0`
   STATE.reflect : (nat -> Tot (a * nat)) -> (St a)
   ```
 
-* {.fragment} [**Reification**]{color:DarkBlue} allows us to give **weak specification** to a program
-  ```
-  let incr (r:ref nat) : St unit
-    = r := !r + 1
-  ```
+<!------------------------------------------------------------------------------>
 
-* {.fragment} and give an **extrinsic proof** of its correctness
+## Extrinsic reasoning using reification and reflection ##
+
+* [**Reification**]{color:DarkBlue} allows us to give **weak specification** to a program
   ```
-  let incr_works (r:ref nat) (h:heap)
-  
-    : Lemma (sel (snd (STATE.reify (incr r) h)) r = sel h r + 1)
-    
-    = ()
+  let incr () : St unit = STATE?.put (STATE?.get() + 1)
+  ```
+~Fragment
+  ```
+  let incr' (): St unit = STATE?.put (STATE?.reflect (fun s0 -> (s0,s0)) + 1)
+  ```
+~
+
+* {.fragment} and give an **extrinsic proof** of their correctness
+  ```
+  let lemma_incrs (s0:state)
+    : Lemma (let (_,s1)  = reify (incr  ()) s0 in 
+             let (_,s1') = reify (incr' ()) s0 in 
+             s1 = s0 + 1 /\
+             s1' = s0 + 1)
+  = ()
   ```
 
 ## Verifying effectful programs ctd. ##
