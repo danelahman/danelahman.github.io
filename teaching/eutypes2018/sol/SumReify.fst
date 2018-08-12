@@ -17,10 +17,10 @@ let bind_st (a:Type) (b:Type) (f:st a) (g:a -> st b) : st b
   = fun s0 -> let (x,s) = f s0 in 
               g x s
 
-let get () : st int 
+let get () : st state 
   = fun s0 -> (s0,s0)
 
-let put (x:int) : st unit 
+let put (x:state) : st unit 
   = fun s0 -> ((), x)
 
 total reifiable reflectable new_effect {
