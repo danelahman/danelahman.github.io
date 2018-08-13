@@ -24,8 +24,8 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li><a href="code/pure-fun/Rev.fst" target="_blank">Rev.fst</a> (list reversal)</li>
 <li style="margin-bottom:5px"><a href="code/pure-fun/Divergence.fst" target="_blank">Divergence.fst</a> (potentially divergent evaluator)</li>
 </ul>
-<li><b>Exercise 1:</b> Summing 1 + 2 + 3 + ... (<a href="ex/Sum.fst" target="_blank">Sum.fst</a>)</li>
-<li><b>Exercise 2:</b> Simply typed stacks (<a href="ex/Stack.fsti" target="_blank">Stack.fsti</a>, <a href="ex/Stack.fst" target="_blank">Stack.fst</a>, <a href="ex/StackClient.fst" target="_blank">StackClient.fst</a>)</li>
+<li><b>Exercise 1:</b> Summing 1 + 2 + 3 + ... (<a href="ex/Sum.fst" target="_blank">Sum.fst</a>; <a href="sol/Sum.fst" target="_blank">solution</a>)</li>
+<li><b>Exercise 2:</b> Simply typed stacks (<a href="ex/Stack.fsti" target="_blank">Stack.fsti</a>, <a href="ex/Stack.fst" target="_blank">Stack.fst</a>, <a href="ex/StackClient.fst" target="_blank">StackClient.fst</a>; <a href="sol/Stack.fsti" target="_blank">solution1</a>, <a href="sol/Stack.fst" target="_blank">solution2</a>, <a href="sol/StackClient.fst" target="_blank">solution3</a>)</li>
 <li style="margin-bottom:20px"><b>Exercise 3:</b> Refined stacks (<a href="ex/RefinedStack.fsti" target="_blank">RefinedStack.fsti</a>)</li>
 </ul>
 </ul>
@@ -45,8 +45,8 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li style="margin-bottom:5px"><a href="code/state/BufferAlloc.fst" target="_blank">BufferAlloc.fst</a>, <a href="code/state/BufferAlloc.c" target="_blank">BufferAlloc.c</a> (low-level code)</li>
 </ul>
 <li><b>Exercise 1:</b> Sketch a hand proof of the correctness of integer reference swapping (<a href="code/state/SwapIntRefsST.fst" target="_blank">SwapIntRefsST.fst</a>)</li>
-<li><b>Exercise 2:</b> Stateful summing 1 + 2 + 3 + ... (<a href="ex/SumST.fst" target="_blank">SumST.fst</a>)</li>  
-<li><b>Exercise 3:</b> Stateful factorial (<a href="ex/FactorialST.fst" target="_blank">FactorialST.fst</a>)</li>  
+<li><b>Exercise 2:</b> Stateful summing 1 + 2 + 3 + ... (<a href="ex/SumST.fst" target="_blank">SumST.fst</a>; <a href="sol/SumST.fst" target="_blank">solution</a>)</li>  
+<li><b>Exercise 3:</b> Stateful factorial (<a href="ex/FactorialST.fst" target="_blank">FactorialST.fst</a>; <a href="sol/FactorialST.fst" target="_blank">solution</a>)</li>  
 <li style="margin-bottom:10px"><b>Exercise 4:</b> Experiment with the low-level memory model and extraction to C (see <a href="code/state/BufferAlloc.fst" target="_blank">BufferAlloc.fst</a>)</li>  
 </ul> 
 <li style="margin-bottom:20px">17:30--18:30 Exercise Class</li>
@@ -66,8 +66,8 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li><a href="code/monotonic/InitFreezeMST.fst" target="_blank">InitFreezeMST.fst</a> (initializable and freezable references)</li>
 <li style="margin-bottom:5px"><a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a> (escaping the preorder with snapshots)</li>
 </ul>
-<li><b>Exercise 1:</b> Typing of initializable and freezable references read and freeze actions (<a href="ex/InitFreezeMST.fst" target="_blank">InitFreezeMST.fst</a>)</li>
-<li style="margin-bottom:10px; width:600px"><b>Exercise 2:</b> Define a notion of initializable and freezable arrays (see the <a href="slides/out/monotonic/monotonic.html#/sec-exercise--initializable-and-freezable-arrays" target="_blank">lecture slides</a> for details)</li>
+<li><b>Exercise 1:</b> Typing of initializable and freezable references read and freeze actions (<a href="ex/InitFreezeMST.fst" target="_blank">InitFreezeMST.fst</a>; <a href="sol/InitFreezeMST.fst" target="_blank">solution</a>)</li>
+<li style="margin-bottom:10px; width:700px"><b>Exercise 2:</b> Define a notion of initializable and freezable arrays (see the <a href="slides/out/monotonic/monotonic.html#/sec-exercise--initializable-and-freezable-arrays" target="_blank">lecture slides</a> for details; <a href="sol/InitFreezeArrayMST.fst" target="_blank">solution</a>)</li>
 </ul>
 <li>12:00--13:00 F*'s <b>Extensible Effect System and Metaprogramming in F*</b> (<a href="slides/out/effects/effects.html" target="_blank">slides</a>)</li>
 <ul>
@@ -82,10 +82,10 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li><a href="code/effects/Printers.fst" target="_blank">Printers.fst</a> (synthesising F* terms: printer for inductive types)</li>
 <li style="margin-bottom:5px"><a href="code/effects/Typeclasses.fst" target="_blank">Typeclasses.fst</a> (metaprogramming typeclasses; needs a more recent version of F* than the v0.9.6.0 release)</li>
 </ul>
-<li style="width:600px"><b>Exercise1:</b> Implement stateful summing (similarly to <a href="slides/out/state/state.html#/sec-stateful-sum--1-2-3-" target="_blank">Lecture 2</a>, but with a weak type) using a global state (similarly to <a href="code/effects/IncrReify.fst" target="_blank">IncrReify.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful summing is equivalent to the purely functional code (<a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>)</li>
-<li style="width:600px"><b>Exercise2:</b> Implement stateful Fibonacci (similarly to <a href="slides/out/state/state.html#/sec-stateful-fibonacci--1-1-2-3-5-8-" target="_blank">Lecture 2</a>, but with a weak type) using a 2-location global state (as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful Fibonacci is equivalent to the purely functional code (<a href="ex/FibonacciReify.fst" target="_blank">FibonacciReify.fst</a>)</li>
-<li style="width:600px"><b>Exercise3:</b> Define the READER effect, show that it is a sub-effect of the STATE effect defined in <a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>, and demonstrate that the READER effect you defined is correct wrt STATE (<a href="ex/Reader.fst" target="_blank">Reader.fst</a>)</li>
-<li style="margin-bottom:10px; width:600px"><b>Exercise4:</b> Try out F*'s metaprogramming and tactics framework, starting with <a href="code/effects/Logic.fst" target="_blank">Logic.fst</a>, and try to extend it to prove more interesting logical properties</li>
+<li style="width:700px"><b>Exercise1:</b> Implement stateful summing (similarly to <a href="slides/out/state/state.html#/sec-stateful-sum--1-2-3-" target="_blank">Lecture 2</a>, but with a weak type) using a global state (similarly to <a href="code/effects/IncrReify.fst" target="_blank">IncrReify.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful summing is equivalent to the purely functional code (<a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>; <a href="sol/SumReify.fst" target="_blank">solution</a>)</li>
+<li style="width:700px"><b>Exercise2:</b> Implement stateful Fibonacci (similarly to <a href="slides/out/state/state.html#/sec-stateful-fibonacci--1-1-2-3-5-8-" target="_blank">Lecture 2</a>, but with a weak type) using a 2-location global state (as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful Fibonacci is equivalent to the purely functional code (<a href="ex/FibonacciReify.fst" target="_blank">FibonacciReify.fst</a>; <a href="sol/FibonacciReify.fst" target="_blank">solution</a>)</li>
+<li style="width:700px"><b>Exercise3:</b> Define the READER effect, show that it is a sub-effect of the STATE effect defined in <a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>, and demonstrate that the READER effect you defined is correct wrt STATE (<a href="ex/Reader.fst" target="_blank">Reader.fst</a>; <a href="sol/Reader.fst" target="_blank">solution</a>)</li>
+<li style="margin-bottom:10px; width:700px"><b>Exercise4:</b> Try out F*'s metaprogramming and tactics framework, starting with <a href="code/effects/Logic.fst" target="_blank">Logic.fst</a>, and try to extend it to prove more interesting logical properties</li>
 </ul>
 <li style="margin-bottom:20px">15:00--16:00 Exercise Class</li>
 </ul>
