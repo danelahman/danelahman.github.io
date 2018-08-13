@@ -30,6 +30,8 @@ total reifiable reflectable new_effect {
      ; get      = get
 }
 
+#reset-options
+
 effect Rd (a:Type) = READER a (fun _ p -> forall x . p x)
 
 let lift_rd_state (a:Type) (e:rd a) : st a
