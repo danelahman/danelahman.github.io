@@ -27,6 +27,6 @@ val lemma_push_top : s:stack -> i:int ->
 val lemma_push_pop : s:stack -> i:int -> 
   Lemma (Some? (pop (push i s)) /\ Some?.v (pop (push i s)) == s) [SMTPat (pop (push i s))]
 
-val lemma_top_pop_push : s:stack{~(is_empty s)} -> i:int -> 
+val lemma_top_pop_push : s:stack{~(is_empty s)} ->  
   Lemma (push (Some?.v (top s)) (Some?.v (pop s)) == s)
 // END: stack_lemmas

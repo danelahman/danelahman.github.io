@@ -26,4 +26,4 @@ module Stack
 
   let lemma_push_pop s i = ()
 
-  let lemma_top_pop_push s i = ()
+  let lemma_top_pop_push s = ()
