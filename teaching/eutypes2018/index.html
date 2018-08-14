@@ -25,8 +25,8 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li style="margin-bottom:5px"><a href="code/pure-fun/Divergence.fst" target="_blank">Divergence.fst</a> (potentially divergent evaluator)</li>
 </ul>
 <li><b>Exercise 1:</b> Summing 1 + 2 + 3 + ... (<a href="ex/Sum.fst" target="_blank">Sum.fst</a>; <a href="sol/Sum.fst" target="_blank">solution</a>)</li>
-<li><b>Exercise 2:</b> Simply typed stacks (<a href="ex/Stack.fsti" target="_blank">Stack.fsti</a>, <a href="ex/Stack.fst" target="_blank">Stack.fst</a>, <a href="ex/StackClient.fst" target="_blank">StackClient.fst</a>; <a href="sol/Stack.fsti" target="_blank">solution1</a>, <a href="sol/Stack.fst" target="_blank">solution2</a>, <a href="sol/StackClient.fst" target="_blank">solution3</a>)</li>
-<li style="margin-bottom:20px"><b>Exercise 3:</b> Refined stacks (<a href="ex/RefinedStack.fsti" target="_blank">RefinedStack.fsti</a>)</li>
+<li><b>Exercise 2:</b> Simply typed stacks (<a href="ex/Stack.fsti" target="_blank">Stack.fsti</a>, <a href="ex/Stack.fst" target="_blank">Stack.fst</a>, <a href="ex/StackClient.fst" target="_blank">StackClient.fst</a>; <a href="sol/Stack.fsti" target="_blank">solution 1</a>, <a href="sol/Stack.fst" target="_blank">solution 2</a>, <a href="sol/StackClient.fst" target="_blank">solution 3</a>)</li>
+<li style="margin-bottom:20px"><b>Exercise 3:</b> Refined stacks (<a href="ex/RefinedStack.fsti" target="_blank">RefinedStack.fsti</a>; <a href="sol/RefinedStack.fsti" target="_blank">solution 1</a>, <a href="sol/RefinedStack.fst" target="_blank">solution 2</a>, <a href="sol/RefinedStackClient.fst" target="_blank">solution 3</a>)</li>
 </ul>
 </ul>
 
@@ -82,10 +82,10 @@ Types for Programming and Verification</a> in <a href="https://goo.gl/maps/TULXT
 <li><a href="code/effects/Printers.fst" target="_blank">Printers.fst</a> (synthesising F* terms: printer for inductive types)</li>
 <li style="margin-bottom:5px"><a href="code/effects/Typeclasses.fst" target="_blank">Typeclasses.fst</a> (metaprogramming typeclasses; needs a more recent version of F* than the v0.9.6.0 release)</li>
 </ul>
-<li style="width:700px"><b>Exercise1:</b> Implement stateful summing (similarly to <a href="slides/out/state/state.html#/sec-stateful-sum--1-2-3-" target="_blank">Lecture 2</a>, but with a weak type) using a global state (similarly to <a href="code/effects/IncrReify.fst" target="_blank">IncrReify.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful summing is equivalent to the purely functional code (<a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>; <a href="sol/SumReify.fst" target="_blank">solution</a>)</li>
-<li style="width:700px"><b>Exercise2:</b> Implement stateful Fibonacci (similarly to <a href="slides/out/state/state.html#/sec-stateful-fibonacci--1-1-2-3-5-8-" target="_blank">Lecture 2</a>, but with a weak type) using a 2-location global state (as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful Fibonacci is equivalent to the purely functional code (<a href="ex/FibonacciReify.fst" target="_blank">FibonacciReify.fst</a>; <a href="sol/FibonacciReify.fst" target="_blank">solution</a>)</li>
-<li style="width:700px"><b>Exercise3:</b> Define the READER effect, show that it is a sub-effect of the STATE effect defined in <a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>, and demonstrate that the READER effect you defined is correct wrt STATE (<a href="ex/Reader.fst" target="_blank">Reader.fst</a>; <a href="sol/Reader.fst" target="_blank">solution</a>)</li>
-<li style="margin-bottom:10px; width:700px"><b>Exercise4:</b> Try out F*'s metaprogramming and tactics framework, starting with <a href="code/effects/Logic.fst" target="_blank">Logic.fst</a>, and try to extend it to prove more interesting logical properties</li>
+<li style="width:700px"><b>Exercise 1:</b> Implement stateful summing (similarly to <a href="slides/out/state/state.html#/sec-stateful-sum--1-2-3-" target="_blank">Lecture 2</a>, but with a weak type) using a global state (similarly to <a href="code/effects/IncrReify.fst" target="_blank">IncrReify.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful summing is equivalent to the purely functional code (<a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>; <a href="sol/SumReify.fst" target="_blank">solution</a>)</li>
+<li style="width:700px"><b>Exercise 2:</b> Implement stateful Fibonacci (similarly to <a href="slides/out/state/state.html#/sec-stateful-fibonacci--1-1-2-3-5-8-" target="_blank">Lecture 2</a>, but with a weak type) using a 2-location global state (as used in <a href="code/effects/NonInterference.fst" target="_blank">NonInterference.fst</a>) and use monadic reification (see <a href="slides/out/effects/effects.html#/sec-verifying-effectful-programs" target="_blank">Lecture 4</a>) to prove that this stateful Fibonacci is equivalent to the purely functional code (<a href="ex/FibonacciReify.fst" target="_blank">FibonacciReify.fst</a>; <a href="sol/FibonacciReify.fst" target="_blank">solution</a>)</li>
+<li style="width:700px"><b>Exercise 3:</b> Define the READER effect, show that it is a sub-effect of the STATE effect defined in <a href="ex/SumReify.fst" target="_blank">SumReify.fst</a>, and demonstrate that the READER effect you defined is correct wrt STATE (<a href="ex/Reader.fst" target="_blank">Reader.fst</a>; <a href="sol/Reader.fst" target="_blank">solution</a>)</li>
+<li style="margin-bottom:10px; width:700px"><b>Exercise 4:</b> Try out F*'s metaprogramming and tactics framework, starting with <a href="code/effects/Logic.fst" target="_blank">Logic.fst</a>, and try to extend it to prove more interesting logical properties</li>
 </ul>
 <li style="margin-bottom:20px">15:00--16:00 Exercise Class</li>
 </ul>
@@ -110,7 +110,7 @@ binary release</a>
 (<a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#binary-releases">documentation on this</a>)
 </li>
 <li>or Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package">OPAM package</a>
-(especially for people already using OCaml; note that you still need to get a specific version of Z3 separately)<br/>
+(especially for people already using OCaml; note that you still need to get Z3 separately)<br/>
 </li>
 </ol>
 </p>
@@ -120,11 +120,11 @@ In addition, if you're familiar with emacs, we recommend getting
 <a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> for it.
 </p>
 
-<p style="margin-bottom:20px">
+<p style="margin-bottom:20px; width:800px">
 For people who are more motivated, there are even more ways including
 building F* from sources (see
 <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#building-f-from-sources">documentation on this</a>).<br/><br/>
-<sup>&dagger;</sup><i><b>Note:</b> With recent (development) versions of F*, you need to replace the [@fail] attribute with [@expect_failure], e.g., in <a href="code/pure-fun/Ackermann.fst" target="_blank">Ackermann.fst</a></i>
+<sup>&dagger;</sup><i><b>Note:</b> Recent versions of F* use the [@expect_failure] attribute to denote expectation of failing typechecking, while the v0.9.6.0 release uses the [@fail] attribute for the same purpose. Change this according to the version of F* you use, e.g., this concerns <a href="code/pure-fun/Ackermann.fst" target="_blank">Ackermann.fst</a>. 
 </p>
 
 <h2 style="margin-bottom:-5px">More references</h2>

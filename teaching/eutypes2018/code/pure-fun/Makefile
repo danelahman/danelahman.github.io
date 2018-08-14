@@ -16,6 +16,7 @@ all:
 	$(FSTAR) RefinedStack.fst
 	$(FSTAR) AbstractStack.fst
 	$(FSTAR) AbstractStackClient.fst
+	$(FSTAR) GhostCode.fst
 
 divergence:
 #	$(MAKE) -C $(ULIB_ML)

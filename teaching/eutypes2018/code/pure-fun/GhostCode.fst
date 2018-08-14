@@ -1,9 +1,9 @@
 module GhostCode
 
-[@fail]
+[@expect_failure]
 let f1 (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()
 
-[@fail]
+[@expect_failure]
 let f2 (g:unit -> Dv nat) : Tot (n:nat{n = g ()}) = g ()
 
 let f3 (g:unit -> GTot (n:nat{n = 4})) : Tot (n:nat{n = g ()}) = 4
