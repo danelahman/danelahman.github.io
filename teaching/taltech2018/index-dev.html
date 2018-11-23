@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>Program verification with F*</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link REL=STYLESHEET TYPE="text/css" href="../../danel.css">
+</head>
+<body>
+<h1>Program verification with F*</h1>
+
+<p>Guest lecture and accompanying lab sessions for the <a href="https://courses.cs.ttu.ee/pages/Advanced_programming" target="_blank">Advanced Programming Course (ITT8060)</a> at the <a href="https://www.taltech.ee/en/" target="_blank">Tallinn University of Technology</a>.</p>
+
+<h2 id="slides">Lecture slides</h2>
+
+<ul><li>TBA</li></ul>
+
+<h2 id="exercises">Lab exercises</h2>
+
+<ul><li>TBA</li></ul>
+
+<h2 id="setup">Setup instructions</h2>
+
+<h3>Using F* in your browser</h3>
+
+<ul>
+<li style="margin-bottom:10px">
+The easiest way to try out F* quickly is directly in your browser
+using <a href="https://www.fstar-lang.org/run.php" target="_blank">the online editor</a>
+that's part of the <a href="https://www.fstar-lang.org/tutorial/" target="_blank">F* tutorial</a>.
+</li>
+</ul>
+
+<h3>Deploying F* on your computer</h3>
+
+<ul>
+<li style="margin-bottom:10px">
+For people who want to get F* (the most recent stable release, currently v0.9.6.0)
+installed on their machine there are 2 easy options:
+<ol>
+<li style="margin-bottom:5px; margin-top:10px;"> Using the <a href="https://fstar-lang.org/#download">binary releases</a>
+(<a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#binary-releases">documentation on this</a>); or 
+</li>
+<ul>
+<li style="margin-bottom:5px;"><i>WARNING: The most recent (development) version of F* and its libraries are often not compatible with these binary releases<sup>&dagger;</sup>.</i></li>
+<li style="margin-bottom:10px;">In order to get more recent, but also more experimental binary builds please look at the automatically generated <a href="https://github.com/FStarLang/binaries/tree/master/weekly" target="_blank">weekly builds</a> (Linux and Windows only).</li>
+</ul>
+<li style="margin-bottom:5px; margin-top:10px;">Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package">OPAM package</a>
+(especially for people already using OCaml)
+</li>
+<ul>
+<li style="margin-bottom:5px;"><i>WARNING: As with the binary releases, the stable version of F* on OPAM is often not compatible with with the most recent (develoment) version of F* and its libraries<sup>&dagger;</sup>.</i></li>
+<li style="margin-bottom:5px;">In order to install the recent (development) version of F* through OPAM, please follow the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package">instructions</a>.</li>
+<li style="margin-bottom:10px;">IMPORTANT: You need to additionally download and add to your PATH a supported version of the Z3 SMT-solver, see the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#runtime-dependency-z3-smt-solver" target="_blank">instructions</a>.</li>
+</ul>
+</ol>
+</li>
+<li style="margin-bottom:10px;">
+For people who are more motivated and more adventurous, there are even more ways for installing F*, including
+building F* directly from sources (see <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#building-f-from-sources">documentation on this</a>).
+</li>
+</ul>
+<p style="margin-bottom:20px;margin-left:10px">
+<sup>&dagger;</sup><i><b>Note:</b> E.g., recent versions of F* use the [@expect_failure] attribute to denote the expectation of failing typechecking, while the v0.9.6.0 release uses the [@fail] attribute for the same purpose. 
+</p>
+
+<h3>Using F* interactively</h3>
+
+<ul>
+<li style="margin-bottom:20px">
+If you are familiar with the <a href="https://www.gnu.org/software/emacs/" target="_blank">Emacs text editor</a>, it is recommended getting
+<a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> for it to make the most of F*'s interactive features.
+</li>
+</ul>
+
+<h2 style="margin-bottom:-5px">More references</h2>
+<ul>
+<li style="margin-bottom:5px;"><a href="https://www.fstar-lang.org" target="_blank">F* website</a></li>
+<li style="margin-bottom:5px;"><a href="https://www.fstar-lang.org/tutorial/" target="_blank">F* tutorial</a></li>
+<li style="margin-bottom:5px;"><a href="https://github.com/FStarLang/FStar" target="_blank">F* code on GitHub</a></li>
+<li style="margin-bottom:5px;"><a href="https://github.com/FStarLang/kremlin" target="_blank">KreMLin compiler for Low*</a></li>
+<li style="margin-bottom:5px;"><a href="https://project-everest.github.io" target="_blank">Project Everest</a></li>
+</ul>
+
+</html>
