@@ -137,7 +137,7 @@ open FStar.Ghost
 open FStar.Heap
 open FStar.ST
 
-abstract noeq type node = {
+noeq type node = {
   left  : treeptr;
   value : nat;
   right : treeptr
