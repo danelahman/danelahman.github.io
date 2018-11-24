@@ -1,6 +1,6 @@
 module BinarySearchTree
 
-(* Binary trees *)
+(* Binary node-labelled trees *)
 
 private abstract type btree = 
   | Leaf : btree
