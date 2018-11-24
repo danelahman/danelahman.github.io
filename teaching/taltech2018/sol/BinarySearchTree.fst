@@ -90,28 +90,28 @@ abstract type stree =
 
 (* Binary search tree operations, derived from tree operations defined above*)
 
-let contains (t:stree) (n:nat) : GTot bool =
+let stree_contains (t:stree) (n:nat) : GTot bool =
   btree_contains t n
 
-let empty () : GTot stree = 
+let empty_stree () : GTot stree = 
   empty_btree ()
 
-let insert (t:stree) (n:nat) : GTot stree = 
+let stree_insert (t:stree) (n:nat) : GTot stree = 
   lemma_btree_insert_is_sorted t n; 
   btree_insert t n
 
 (* Sanity check lemmas *)
 
 private let lemma_contains_equals (t:stree) (n:nat) 
-  : Lemma (t `btree_contains` n = t `contains` n) = 
+  : Lemma (t `btree_contains` n = t `stree_contains` n) = 
   ()
 
 private let lemma empty_equals () 
-  : Lemma (empty_btree () = empty ()) = 
+  : Lemma (empty_btree () = empty_stree ()) = 
   ()
 
 private let lemma_insert_equals (t:stree) (n:nat) 
-  : Lemma (btree_insert t n = insert t n) = 
+  : Lemma (btree_insert t n = stree_insert t n) = 
   ()
   
 (* Important properties of binary search trees *)
@@ -133,9 +133,8 @@ let rec lemma_exists_insert_equal (t:stree) (n:nat)
 (* ------------------------------------------------------ *)
 (* ------------------------------------------------------ *)
 
-//module H = FStar.Heap
-
 open FStar.Ghost
+open FStar.Heap
 open FStar.ST
 
 abstract noeq type node = {
@@ -145,26 +144,29 @@ abstract noeq type node = {
 } 
 and treeptr = ref (option node)
 
-let heap = FStar.Heap.heap
-let sel h (r:treeptr) = FStar.Heap.sel h r
-let upd h (r:treeptr) v = FStar.Heap.upd h r v 
-
-let is_leaf (r:treeptr) (h:heap) = None? (sel h r)
-let is_node (r:treeptr) (h:heap) = Some? (sel h r)
-
 let rec is_stree (r:treeptr) (t:stree) (h:heap) : GTot bool (decreases t) =
   match t with 
-  | Leaf -> is_leaf r h
+  | Leaf -> None? (sel h r)
   | Node t1 n t2 -> 
-      is_node r h &&
+      Some? (sel h r) &&
       (match (sel h r) with
        | Some nd -> is_stree nd.left t1 h &&
                     n = nd.value &&
                     is_stree nd.right t2 h)
 
+let rec addrs_of_tree (r:treeptr) (t:stree) (h:heap{is_stree r t h}) 
+  : GTot (Set.set nat) (decreases t) = 
+  match t with
+  | Leaf -> Set.empty
+  | Node t1 n t2 -> 
+      match (sel h r) with
+      | Some nd -> Set.union (Set.singleton (addr_of r)) 
+                             (Set.union (addrs_of_tree nd.left t1 h) 
+                                        (addrs_of_tree nd.right t2 h))
+
 let rec search (#t:erased stree) (r:treeptr) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 b h1 -> h0 == h1 /\ (reveal t) `contains` n <==> b = true)) =
+            (ensures  (fun h0 b h1 -> h0 == h1 /\ (reveal t) `stree_contains` n <==> b = true)) =
   match !r with 
   | None -> false
   | Some nd -> 
@@ -175,10 +177,23 @@ let rec search (#t:erased stree) (r:treeptr) (n:nat)
                             search #t2 nd.right n)
 
 let create () : ST treeptr (requires (fun _ -> True))
-                           (ensures  (fun _ r h1 -> is_leaf r h1)) =
+                           (ensures  (fun h0 r h1 -> fresh r h0 h1 /\
+                                                     modifies Set.empty h0 h1 /\
+                                                     is_stree r (empty_stree ()) h1)) =
   alloc None
 
 let rec insert (#t:erased stree) (r:treeptr) (n:nat) 
   : ST unit (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 _ h1 -> True))
-
+            (ensures  (fun h0 _ h1 -> modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
+                                      is_stree r (stree_insert (reveal t) n) h1)) = 
+  match !r with
+  | None -> 
+     (let t1 = create () in
+      let t2 = create () in 
+      let nd : node = {left = t1; value = n; right = t2} in
+      assert (Leaf? (reveal t));
+      assert (stree_insert (reveal t) n = Node Leaf n Leaf);
+      r := Some nd
+      ;admit ()
+      )
+  | Some nd -> admit ()
