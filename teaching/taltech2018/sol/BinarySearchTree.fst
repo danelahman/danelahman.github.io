@@ -2,7 +2,7 @@ module BinarySearchTree
 
 (* Binary node-labelled trees *)
 
-private abstract type btree = 
+private type btree = 
   | Leaf : btree
   | Node : btree -> nat -> btree -> btree
 
