@@ -67,7 +67,7 @@ To persist your work between different container runs, create a volume: <code cl
 Run the container and log into it: <code class="one-liner">docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs:latest /bin/bash</code>
 </li>
 <li style="margin-bottom:5px">
-When IN the container, add read-write permissions to the <tt style="font-size:11px">/fstar-vol</tt> directory to all users: <code class="one-liner">sudo chmod -R a+rw /fstar-vol</code>
+When IN the container (for the first time), add read-write permissions to the <tt style="font-size:11px">/fstar-vol</tt> volume to all users: <code class="one-liner">sudo chmod -R a+rw /fstar-vol</code>
 </li>
 <li style="margin-bottom:5px">
 Now you are ready to work on the exercises in <tt style="font-size:11px">/fstar-vol</tt>: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/hello.fst . ; emacs hello.fst</code>
