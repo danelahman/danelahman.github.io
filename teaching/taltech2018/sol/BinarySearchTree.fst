@@ -8,7 +8,7 @@ private type btree =
 
 (* Search function / containment predicate for binary (search) trees *)
 
-private let rec btree_contains (t:btree) (n:nat) : GTot bool =
+private let rec btree_contains (t:btree) (n:nat) : bool =
   match t with 
   | Leaf -> false
   | Node t1 m t2 -> 
@@ -18,11 +18,11 @@ private let rec btree_contains (t:btree) (n:nat) : GTot bool =
 
 (* Empty binary tree *)
 
-private let empty_btree () : GTot btree = Leaf
+private let empty_btree () : btree = Leaf
 
 (* Insertion into a binary (search) tree *)
 
-private let rec btree_insert (t:btree) (n:nat) : GTot btree =
+private let rec btree_insert (t:btree) (n:nat) : btree =
   match t with 
   | Leaf -> Node Leaf n Leaf
   | Node t1 m t2 -> 
@@ -32,21 +32,21 @@ private let rec btree_insert (t:btree) (n:nat) : GTot btree =
 
 (* Sortedness predicate for binary (search) trees *)
 
-private let rec sorted_left_of (t:btree) (n:nat) : GTot bool = 
+private let rec sorted_left_of (t:btree) (n:nat) : bool = 
   match t with
   | Leaf -> true
   | Node t1 m t2 -> t1 `sorted_left_of` m && 
                     m < n && 
                     t2 `sorted_right_of` m
 
-and sorted_right_of (t:btree) (n:nat) : GTot bool = 
+and sorted_right_of (t:btree) (n:nat) : bool = 
   match t with
   | Leaf -> true
   | Node t1 m t2 -> t1 `sorted_left_of` m && 
                     m > n && 
                     t2 `sorted_right_of` m
 
-private let rec sorted (t:btree) : GTot bool =
+private let rec sorted (t:btree) : bool =
   match t with
   | Leaf -> true
   | Node t1 n t2 -> t1 `sorted_left_of` n && 
@@ -87,13 +87,13 @@ abstract type stree =
 
 (* Binary search tree operations, derived from tree operations defined above*)
 
-let contains (t:stree) (n:nat) : GTot bool =
+let contains (t:stree) (n:nat) : bool =
   btree_contains t n
 
-let empty () : GTot stree = 
+let empty () : stree = 
   empty_btree ()
 
-let insert (t:stree) (n:nat) : GTot stree = 
+let insert (t:stree) (n:nat) : stree = 
   lemma_btree_insert_is_sorted t n; 
   btree_insert t n
 
@@ -119,3 +119,47 @@ let rec lemma_insert_exists (t:stree) (n:nat) : Lemma ((btree_insert t n) `btree
 let rec lemma_exists_insert_equal (t:stree) (n:nat) : Lemma (requires (t `btree_contains` n))
                                                             (ensures  (btree_insert t n = t)) = 
   lemma_exists_btree_insert_equal t n
+
+
+(* ------------------------------------------------------ *)
+(* ------------------------------------------------------ *)
+
+//module H = FStar.Heap
+
+open FStar.Ghost
+open FStar.ST
+
+abstract noeq type node = {
+  left  : treeptr;
+  value : nat;
+  right : treeptr
+} 
+and treeptr = ref (option node)
+
+let heap = FStar.Heap.heap
+let sel h (r:treeptr) = FStar.Heap.sel h r
+let upd h (r:treeptr) v = FStar.Heap.upd h r v 
+
+let rec is_stree (r:treeptr) (t:stree) (h:heap) : GTot bool (decreases t) =
+  match t with 
+  | Leaf -> None? (sel h r)
+  | Node t1 n t2 -> 
+      Some? (sel h r) &&
+      (match (sel h r) with
+       | Some nd -> is_stree nd.left t1 h &&
+                    n = nd.value &&
+                    is_stree nd.right t2 h)
+
+let rec search (#t:erased stree) (r:treeptr) (n:nat) : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
+                                                        (ensures  (fun h0 b h1 -> 
+                                                                     h0 == h1 /\ 
+                                                                     (reveal t) `contains` n <==> b = true)) =
+  let nd = !r in 
+  match nd with 
+  | None -> false
+  | Some nd -> 
+      if n = nd.value then true else 
+      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in 
+                            search #t1 nd.left n)
+                      else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                            search #t2 nd.right n)
