@@ -51,6 +51,32 @@ installed on their machine there are 2 easy options:
 <li style="margin-bottom:5px;">In order to install the recent (development) version of F* through OPAM, please follow the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package">instructions</a>.</li>
 <li style="margin-bottom:10px;">IMPORTANT: You need to additionally download and add to your PATH a supported version of the Z3 SMT-solver, see the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#runtime-dependency-z3-smt-solver" target="_blank">instructions</a>.</li>
 </ul>
+<li>
+Using the <a href="https://store.docker.com/community/images/fstarlang/fstar-emacs" target="_blank">F* Docker image</a> (especially if already you have <a href="https://www.docker.com/get-started" target="_blank">Docker</a> on your computer)
+<ul>
+<li style="margin-bottom:5px;margin-top:10px">
+Get the F* Docker image: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>
+</li>
+<li style="margin-bottom:5px">
+NOTE: This gets you both the most recent F* build and also the Emacs fstar-mode
+</li>
+<li style="margin-bottom:5px">
+To persist your work between different container runs, create a volume: <code class="one-liner">docker volume create fstar-vol</code>
+</li>
+<li style="margin-bottom:5px">
+Run the container and log into it: <code class="one-liner">docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs:latest /bin/bash</code>
+</li>
+<li style="margin-bottom:5px">
+When IN the container, add read-write permissions to the <tt style="font-size:11px">/fstar-vol</tt> directory to all users: <code class="one-liner">sudo chmod -R a+rw /fstar-vol</code>
+</li>
+<li style="margin-bottom:5px">
+Now you are ready to work on the exercises in <tt style="font-size:11px">/fstar-vol</tt>: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/hello.fst . ; emacs hello.fst</code>
+</li>
+<li style="margin-bottom:5px">
+And if needed, you can find the F* standard library in <tt style="font-size:11px">/home/FStar/FStar/ulib</tt> and various examples in <tt style="font-size:11px">/home/FStar/FStar/examples</tt>
+</li>
+</ul>
+</li>
 </ol>
 </li>
 <li style="margin-bottom:10px;">
