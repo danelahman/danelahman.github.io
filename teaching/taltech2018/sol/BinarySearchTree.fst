@@ -190,16 +190,15 @@ let rec insert (#t:erased stree) (r:treeptr) (n:nat)
                                                  is_stree r (reveal t') h1)) = 
                                                  //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
   match !r with
-  | None -> 
-     (let t1,r1 = create () in
-      let t2,r2 = create () in 
+  | None -> (
+      let t1,r1 = create () in
+      let t2,r2 = create () in  
       let nd = Some ({left = r1; value = n; right = r2}) in
       assert (Leaf? (reveal t));
       assert (stree_insert (reveal t) n = Node Leaf n Leaf);
       r := nd;
       admit ();
-      hide (Node Leaf n Leaf)
-      )
+      hide (Node Leaf n Leaf))
   | Some nd -> admit ()
 
 (* ------------------------------------------------------ *)
