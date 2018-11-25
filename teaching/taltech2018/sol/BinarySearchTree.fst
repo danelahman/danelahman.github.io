@@ -2,13 +2,13 @@ module BinarySearchTree
 
 (* Binary node-labelled trees *)
 
-private type btree = 
+abstract type btree = 
   | Leaf : btree
   | Node : btree -> nat -> btree -> btree
 
 (* Search function / containment predicate for binary (search) trees *)
 
-private let rec btree_contains (t:btree) (n:nat) : GTot bool =
+let rec btree_contains (t:btree) (n:nat) : GTot bool =
   match t with 
   | Leaf -> false
   | Node t1 m t2 -> 
@@ -18,11 +18,11 @@ private let rec btree_contains (t:btree) (n:nat) : GTot bool =
 
 (* Empty binary tree *)
 
-private let empty_btree () : GTot btree = Leaf
+let empty_btree () : GTot btree = Leaf
 
 (* Insertion into a binary (search) tree *)
 
-private let rec btree_insert (t:btree) (n:nat) : GTot btree =
+let rec btree_insert (t:btree) (n:nat) : GTot btree =
   match t with 
   | Leaf -> Node Leaf n Leaf
   | Node t1 m t2 -> 
@@ -32,7 +32,7 @@ private let rec btree_insert (t:btree) (n:nat) : GTot btree =
 
 (* Sortedness predicate for binary (search) trees *)
 
-private let rec sorted_left_of (t:btree) (n:nat) : GTot bool = 
+let rec sorted_left_of (t:btree) (n:nat) : GTot bool = 
   match t with
   | Leaf -> true
   | Node t1 m t2 -> t1 `sorted_left_of` m && 
@@ -46,15 +46,19 @@ and sorted_right_of (t:btree) (n:nat) : GTot bool =
                     m > n && 
                     t2 `sorted_right_of` m
 
-private let rec sorted (t:btree) : GTot bool =
+let rec sorted (t:btree) : GTot bool =
   match t with
   | Leaf -> true
   | Node t1 n t2 -> t1 `sorted_left_of` n && 
                     t2 `sorted_right_of` n
 
+(* Binary search trees = binary trees as defined above that are sorted *)
+
+abstract type stree = t:btree{sorted t}
+
 (* Useful lemmas about sortedness and the tree operations defined above *)
 
-private let rec lemma_btree_insert_is_sorted (t:btree) (n:nat) 
+let rec lemma_btree_insert_is_sorted (t:btree) (n:nat) 
   : Lemma (requires (sorted t))
           (ensures  (sorted (btree_insert t n))) = 
   match t with
@@ -64,7 +68,7 @@ private let rec lemma_btree_insert_is_sorted (t:btree) (n:nat)
       if n < m then lemma_btree_insert_is_sorted t1 n
                else lemma_btree_insert_is_sorted t2 n
 
-private let rec lemma_btree_insert_exists (t:btree) (n:nat) 
+let rec lemma_btree_insert_exists (t:btree) (n:nat) 
   : Lemma (requires (sorted t))
           (ensures  ((btree_insert t n) `btree_contains` n)) =
   match t with
@@ -74,7 +78,7 @@ private let rec lemma_btree_insert_exists (t:btree) (n:nat)
       if n < m then lemma_btree_insert_exists t1 n
                else lemma_btree_insert_exists t2 n
 
-private let rec lemma_exists_btree_insert_equal (t:btree) (n:nat) 
+let rec lemma_exists_btree_insert_equal (t:btree) (n:nat) 
   : Lemma (requires (sorted t && t `btree_contains` n))
           (ensures  (btree_insert t n = t)) = 
   match t with
@@ -82,11 +86,6 @@ private let rec lemma_exists_btree_insert_equal (t:btree) (n:nat)
       if n = m then () else 
       if n < m then lemma_exists_btree_insert_equal t1 n
                else lemma_exists_btree_insert_equal t2 n
-
-(* Binary search trees = binary trees as defined above that are sorted *)
-
-abstract type stree = 
-  t:btree{sorted t}
 
 (* Binary search tree operations, derived from tree operations defined above*)
 
@@ -102,15 +101,15 @@ let stree_insert (t:stree) (n:nat) : GTot stree =
 
 (* Sanity check lemmas *)
 
-private let lemma_contains_equals (t:stree) (n:nat) 
+let lemma_contains_equals (t:stree) (n:nat) 
   : Lemma (t `btree_contains` n = t `stree_contains` n) = 
   ()
 
-private let lemma empty_equals () 
+let lemma empty_equals () 
   : Lemma (empty_btree () = empty_stree ()) = 
   ()
 
-private let lemma_insert_equals (t:stree) (n:nat) 
+let lemma_insert_equals (t:stree) (n:nat) 
   : Lemma (btree_insert t n = stree_insert t n) = 
   ()
   
@@ -168,8 +167,8 @@ let rec search (#t:erased stree) (r:treeptr) (n:nat)
 
 let create () 
   : ST (erased stree * treeptr) (requires (fun _ -> True))
-                                (ensures  (fun h0 (t,r) h1 -> fresh r h0 h1 /\
-                                                              modifies Set.empty h0 h1 /\
+                                (ensures  (fun h0 (t,r) h1 -> //fresh r h0 h1 /\
+                                                              //modifies Set.empty h0 h1 /\
                                                               reveal t = empty_stree () /\
                                                               is_stree r (reveal t) h1)) =
   hide Leaf , alloc None
@@ -203,7 +202,7 @@ let rec insert (#t:erased stree) (r:treeptr) (n:nat)
 
 (* ------------------------------------------------------ *)
 
-let test () : St unit =
+let test_create_insert_search () : St unit =
   let t1,r = create () in
   let t2 = insert #t1 r 0 in
   let t3 = insert #t2 r 1 in 
@@ -215,8 +214,11 @@ let test () : St unit =
   let b4 = search #t5 r 3 in
   let t6 = insert #t5 r 3 in 
   let b5 = search #t6 r 3 in
+  let t1',r' = create () in
+  let b6 = search #t1' r' 0 in
   assert b1;
   assert b2;
   assert b3;
   assert (not b4);
-  assert b5
+  assert b5;
+  assert (not b6)
