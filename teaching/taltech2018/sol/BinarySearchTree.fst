@@ -154,6 +154,26 @@ let rec is_stree (r:treeptr) (t:stree) (h:heap) : GTot bool (decreases t) =
                     n = nd.value &&
                     is_stree nd.right t2 h)
 
+let rec search (#t:erased stree) (r:treeptr) (n:nat) 
+  : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
+            (ensures  (fun h0 b h1 -> h0 == h1 /\ b = (reveal t) `stree_contains` n)) =
+  match !r with 
+  | None -> false
+  | Some nd -> 
+      if n = nd.value then true else 
+      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in 
+                            search #t1 nd.left n)
+                      else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                            search #t2 nd.right n)
+
+let create () 
+  : ST (erased stree * treeptr) (requires (fun _ -> True))
+                                (ensures  (fun h0 (t,r) h1 -> fresh r h0 h1 /\
+                                                              modifies Set.empty h0 h1 /\
+                                                              reveal t = empty_stree () /\
+                                                              is_stree r (reveal t) h1)) =
+  hide Leaf , alloc None
+
 let rec addrs_of_tree (r:treeptr) (t:stree) (h:heap{is_stree r t h}) 
   : GTot (Set.set nat) (decreases t) = 
   match t with
@@ -164,36 +184,40 @@ let rec addrs_of_tree (r:treeptr) (t:stree) (h:heap{is_stree r t h})
                              (Set.union (addrs_of_tree nd.left t1 h) 
                                         (addrs_of_tree nd.right t2 h))
 
-let rec search (#t:erased stree) (r:treeptr) (n:nat) 
-  : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 b h1 -> h0 == h1 /\ (reveal t) `stree_contains` n <==> b = true)) =
-  match !r with 
-  | None -> false
-  | Some nd -> 
-      if n = nd.value then true else 
-      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in 
-                            search #t1 nd.left n)
-                      else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
-                            search #t2 nd.right n)
-
-let create () : ST treeptr (requires (fun _ -> True))
-                           (ensures  (fun h0 r h1 -> fresh r h0 h1 /\
-                                                     modifies Set.empty h0 h1 /\
-                                                     is_stree r (empty_stree ()) h1)) =
-  alloc None
-
 let rec insert (#t:erased stree) (r:treeptr) (n:nat) 
-  : ST unit (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 _ h1 -> modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
-                                      is_stree r (stree_insert (reveal t) n) h1)) = 
+  : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
+                      (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
+                                                 is_stree r (reveal t') h1)) = 
+                                                 //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
   match !r with
   | None -> 
-     (let t1 = create () in
-      let t2 = create () in 
-      let nd : node = {left = t1; value = n; right = t2} in
+     (let t1,r1 = create () in
+      let t2,r2 = create () in 
+      let nd = Some ({left = r1; value = n; right = r2}) in
       assert (Leaf? (reveal t));
       assert (stree_insert (reveal t) n = Node Leaf n Leaf);
-      r := Some nd
-      ;admit ()
+      r := nd;
+      admit ();
+      hide (Node Leaf n Leaf)
       )
   | Some nd -> admit ()
+
+(* ------------------------------------------------------ *)
+
+let test () : St unit =
+  let t1,r = create () in
+  let t2 = insert #t1 r 0 in
+  let t3 = insert #t2 r 1 in 
+  let t4 = insert #t3 r 2 in 
+  let t5 = insert #t4 r 0 in 
+  let b1 = search #t5 r 0 in
+  let b2 = search #t5 r 2 in
+  let b3 = search #t5 r 1 in
+  let b4 = search #t5 r 3 in
+  let t6 = insert #t5 r 3 in 
+  let b5 = search #t6 r 3 in
+  assert b1;
+  assert b2;
+  assert b3;
+  assert (not b4);
+  assert b5
