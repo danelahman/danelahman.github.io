@@ -193,12 +193,12 @@ let rec insert (#t:erased stree) (r:treeptr) (n:nat)
   | None -> (
       let t1,r1 = create () in
       let t2,r2 = create () in  
-      let nd = Some ({left = r1; value = n; right = r2}) in
+      let nd = {left = r1; value = n; right = r2} in
       assert (Leaf? (reveal t));
-      assert (stree_insert (reveal t) n = Node Leaf n Leaf);
-      r := nd;
+      assert (stree_insert (reveal t) n = Node (reveal t1) n (reveal t2));
+      r := Some nd;
       admit ();
-      hide (Node Leaf n Leaf))
+      hide (Node (reveal t1) n (reveal t2)))
   | Some nd -> admit ()
 
 (* ------------------------------------------------------ *)
