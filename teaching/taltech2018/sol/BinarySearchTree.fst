@@ -140,7 +140,9 @@ noeq type node = {
 } 
 and treeptr = ref (option node)
 
-let rec is_stree (r:treeptr) (t:stree) (h:heap) : GTot bool (decreases t) =
+let mtree = treeptr
+
+let rec is_stree (r:mtree) (t:stree) (h:heap) : GTot bool (decreases t) =
   match t with 
   | Leaf -> None? (sel h r)
   | Node t1 n t2 -> 
@@ -150,7 +152,7 @@ let rec is_stree (r:treeptr) (t:stree) (h:heap) : GTot bool (decreases t) =
                     n = nd.value &&
                     is_stree nd.right t2 h)
 
-let rec search (#t:erased stree) (r:treeptr) (n:nat) 
+let rec search (#t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
             (ensures  (fun h0 b h1 -> h0 == h1 /\ b = (reveal t) `stree_contains` n)) =
   match !r with 
@@ -163,14 +165,14 @@ let rec search (#t:erased stree) (r:treeptr) (n:nat)
                             search #t2 nd.right n)
 
 let create () 
-  : ST (erased stree * treeptr) (requires (fun _ -> True))
-                                (ensures  (fun h0 (t,r) h1 -> //fresh r h0 h1 /\
-                                                              //modifies Set.empty h0 h1 /\
-                                                              reveal t = empty_stree () /\
-                                                              is_stree r (reveal t) h1)) =
+  : ST (erased stree * mtree) (requires (fun _ -> True))
+                              (ensures  (fun h0 (t,r) h1 -> //fresh r h0 h1 /\
+                                                            //modifies Set.empty h0 h1 /\
+                                                            reveal t = empty_stree () /\
+                                                            is_stree r (reveal t) h1)) =
   hide Leaf , alloc None
 
-let rec addrs_of_tree (r:treeptr) (t:stree) (h:heap{is_stree r t h}) 
+let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h}) 
   : GTot (Set.set nat) (decreases t) = 
   match t with
   | Leaf -> Set.empty
@@ -180,7 +182,7 @@ let rec addrs_of_tree (r:treeptr) (t:stree) (h:heap{is_stree r t h})
                              (Set.union (addrs_of_tree nd.left t1 h) 
                                         (addrs_of_tree nd.right t2 h))
 
-let rec insert (#t:erased stree) (r:treeptr) (n:nat) 
+let rec insert (#t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
                       (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
                                                  is_stree r (reveal t') h1)) = 
