@@ -256,25 +256,29 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
                             let h = get () in 
                             (*assert (let (Some s) = wf (nd.left) (reveal t1) h in Set.disjoint (only r) s);
-                            assert (let (Some s) = wf (nd.right) (reveal t2) h in Set.disjoint (only r) s);
-                            assert (let (Some s) = wf (nd.left) (reveal t1) h in 
-                                    let (Some s') = wf (nd.right) (reveal t2) h in 
-                                    Set.disjoint s s');*)
+                            assert (let (Some s) = wf (nd.right) (reveal t2) h in Set.disjoint (only r) s);*)
                             let t1' = insert t1 (nd.left) n in 
                             let h' = get () in 
                             assert (is_stree (nd.left) (reveal t1') h');
-                            (*assert (let (Some s') = wf (nd.left) (reveal t1') h' in Set.disjoint (only r) s');*)
+
+                            assert (let (Some s) = wf (nd.left) (reveal t1) h in 
+                                    let (Some s') = wf (nd.right) (reveal t2) h in 
+                                    Set.disjoint s s');
+
                             assert (let (Some s) = wf (nd.right) (reveal t2) h in
                                     let (Some s') = wf (nd.right) (reveal t2) h' in 
                                     s == s');
+
+                            assume (let (Some s) = wf (nd.left) (reveal t1') h' in
+                                    let (Some s') = wf (nd.right) (reveal t2) h' in 
+                                    Set.disjoint s s');
+                                    
                             assert (is_stree (nd.right) (reveal t2) h');
-                            //assert (Node (reveal t1') nd.value (reveal t2) = stree_insert (reveal t) n);
                             assert (sorted (Node (reveal t1') nd.value (reveal t2)));
-                            
-                            assume (sel h' r == Some ({ left=nd.left; value=nd.value; right=nd.right}));
-                            //lemma_is_stree_node t1' t2 r nd.left nd.right nd.value h';
-                            assume (is_stree r (Node (reveal t1') nd.value (reveal t2)) h');
-                            admit ();
+                            assert (sel h' r == Some ({ left=nd.left; value=nd.value; right=nd.right}));
+                            assert (is_stree r (Node (reveal t1') nd.value (reveal t2)) h');
+
+                            //admit ();
                             hide (Node (reveal t1') nd.value (reveal t2)))
                       else (admit ())
 
