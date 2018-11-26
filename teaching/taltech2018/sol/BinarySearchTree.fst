@@ -152,7 +152,7 @@ let rec is_stree (r:mtree) (t:stree) (h:heap) : GTot bool (decreases t) =
                     n = nd.value &&
                     is_stree nd.right t2 h)
 
-let rec search (#t:erased stree) (r:mtree) (n:nat) 
+let rec search (t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
             (ensures  (fun h0 b h1 -> h0 == h1 /\ b = (reveal t) `stree_contains` n)) =
   match !r with 
@@ -160,9 +160,9 @@ let rec search (#t:erased stree) (r:mtree) (n:nat)
   | Some nd -> 
       if n = nd.value then true else 
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in 
-                            search #t1 nd.left n)
+                            search t1 nd.left n)
                       else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
-                            search #t2 nd.right n)
+                            search t2 nd.right n)
 
 let create () 
   : ST (erased stree * mtree) (requires (fun _ -> True))
@@ -182,7 +182,7 @@ let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h})
                              (Set.union (addrs_of_tree nd.left t1 h) 
                                         (addrs_of_tree nd.right t2 h))
 
-let rec insert (#t:erased stree) (r:mtree) (n:nat) 
+let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
                       (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
                                                  is_stree r (reveal t') h1)) = 
@@ -203,18 +203,18 @@ let rec insert (#t:erased stree) (r:mtree) (n:nat)
 
 let test_create_insert_search () : St unit =
   let t1,r = create () in
-  let t2 = insert #t1 r 0 in
-  let t3 = insert #t2 r 1 in 
-  let t4 = insert #t3 r 2 in 
-  let t5 = insert #t4 r 0 in 
-  let b1 = search #t5 r 0 in
-  let b2 = search #t5 r 2 in
-  let b3 = search #t5 r 1 in
-  let b4 = search #t5 r 3 in
-  let t6 = insert #t5 r 3 in 
-  let b5 = search #t6 r 3 in
+  let t2 = insert t1 r 0 in
+  let t3 = insert t2 r 1 in 
+  let t4 = insert t3 r 2 in 
+  let t5 = insert t4 r 0 in 
+  let b1 = search t5 r 0 in
+  let b2 = search t5 r 2 in
+  let b3 = search t5 r 1 in
+  let b4 = search t5 r 3 in
+  let t6 = insert t5 r 3 in 
+  let b5 = search t6 r 3 in
   let t1',r' = create () in
-  let b6 = search #t1' r' 0 in
+  let b6 = search t1' r' 0 in
   assert b1;
   assert b2;
   assert b3;
