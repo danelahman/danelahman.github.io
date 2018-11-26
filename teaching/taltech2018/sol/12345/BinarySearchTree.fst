@@ -301,7 +301,12 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
 
                             //admit ();
                             hide (Node (reveal t1') nd.value (reveal t2)))
-                      else (admit ())
+                      else (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
+                            let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                            let h = get () in 
+                            let t2' = insert t2 (nd.right) n in 
+                            let h' = get () in 
+                            hide (Node (reveal t1) nd.value (reveal t2')))
 
 
 (* ------------------------------------------------------ *)
