@@ -181,7 +181,7 @@ let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h})
       | Some nd -> Set.union (Set.singleton (addr_of r)) 
                              (Set.union (addrs_of_tree nd.left t1 h) 
                                         (addrs_of_tree nd.right t2 h))
- 
+
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
                       (ensures  (fun h0 t' h1 -> //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
@@ -199,13 +199,16 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       if n = nd.value then t else
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
-                            let t1' = insert t1 (nd.left) n in 
                             let h = get () in 
-                            assert (is_stree (nd.left) (stree_insert (reveal t1) n) h);
+                            assert (is_stree (nd.right) (reveal t2) h);
+                            let t1' = insert t1 (nd.left) n in 
+                            let h' = get () in 
+                            assert (is_stree (nd.left) (reveal t1') h');
+                            assume (is_stree (nd.right) (reveal t2) h');
                             admit ();
                             hide (Node (reveal t1') nd.value (reveal t2)))
                       else (admit ())
- 
+
 (* ------------------------------------------------------ *)
 
 let test_create_insert_search () : St unit =
