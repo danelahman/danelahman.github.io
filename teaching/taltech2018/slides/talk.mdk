@@ -225,37 +225,37 @@ effectful programming, SMT-based automation
 ```
 type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 ```
-* {.fragment} Refinements introduced by type annotations (code unchanged)
+* {.fragment} Refinements [introduced by type annotations]{color:DarkBlue} (code unchanged)
   ```
   val factorial : nat -> nat
   let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
-* {.fragment} Logical obligations discharged by SMT (for else branch, simplified)
+* {.fragment} [Logical obligations]{color:DarkBlue} discharged by SMT (for else branch, simplified)
   ```text
   n >= 0, n <> 0 |= n - 1 >= 0
   n >= 0, n <> 0, (factorial (n - 1)) >= 0 |= n * (factorial (n - 1)) >= 0
   ```
 
-* {.fragment} Refinements eliminated by **subtyping**: ` nat <: int`
+* {.fragment} Refinements [eliminated by subtyping]{color:DarkBlue}: ` nat <: int`
   ```
   let i : int = factorial 42
   
   let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Different kinds of extensional (in)equality ( (`=` and `==`) **vs** (`<>` and `=!=`) )
+* {.fragment} Different kinds of [extensional (in)equality]{color:DarkBlue} ( (`=` and `==`) **vs** (`<>` and `=!=`) )
 
 
 ## Dependent types ##
 
-* Dependent function types ($\Pi$), here together with refinements:
+* [Dependent function types]{color:DarkBlue} (here together with refinements):
   ```
   val incr : x:int -> y:int{x < y}
   let incr x = x + 1
   ```
 
-* {.fragment} Can express pre- and postconditions of pure functions
+* {.fragment} Can express [pre- and postconditions]{color:DarkBlue} of pure functions
   ```
   val incr' : x:nat{odd x} -> y:nat{even y}
   ```
@@ -266,43 +266,36 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     | Nil  : vec a 0
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
-  val map : #n:nat -> #a:Type -> #b:Type -> (a -> b) -> vec a n -> vec b n
-  let rec map #n #a #b f as =
+  let rec map (#n:nat) (#a #b:Type) (f:a -> b) (as:vec a n) : vec b n =
     match as with
     | Nil        -> Nil
     | Cons hd tl -> Cons (f hd) (map f tl)
-
-  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat -> m `less_than` n -> a
-  let rec lookup #a #n v m p = ...
   ```
 
 ## Inductive families + refinement types ##
 
-* As in e.g. Coq, we could define on the last slide
+* As in e.g. Coq, we could define type and define the [lookup function]{color:DarkBlue} as
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
-  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat -> m `less_than` n -> a
-  let rec lookup #a #n v m p = ...
+  let rec lookup #a #n (as:vec a n) (m:nat) (p:m `less_than` n) = ...
   ```
 
-* {.fragment} But can also combine `vec` with refinement types for more convenience
+* {.fragment} But can also [combine `vec` with refinement types]{color:DarkBlue} for more convenience
   ```
-  val lookup : #a:Type -> #n:nat -> vec a n -> m:nat{m `less_than` n} -> a
-  let rec lookup #a #n v m = ...
+  let rec lookup #a #n (as:vec a n) (m:nat{m `less_than` n}) = ...
   ```
 
-* {.fragment} Or we could even just use lists + refinement types
+* {.fragment} Or we could use [ordinary lists + refinement types]{color:DarkBlue}
   ```
-  type list (a:Type) = | Nil : list a | Cons : hd:a -> tl:list a -> list a
-
-  val length : #a:Type -> list a -> nat
-  let rec length #a l = match l with | Nil -> 0 | Cons _ tl -> 1 + length tl
+  let rec length #a (as:list a) =
+    match as with
+    | Nil       -> 0
+    | Cons _ tl -> 1 + length tl
     
-  val lookup : #a:Type -> l:list a -> m:nat{m `less_than` (length l)} -> a
-  let rec lookup #a l m = ...
+  let rec lookup #a (as:list a) (m:nat{m `less_than` (length as)}) = ...
   ```
 
 
@@ -333,6 +326,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   `factorial (-1)` loops! &nbsp;&nbsp; (`int` type in F\* is unbounded)
 ~
 
+<!------------------------------------------------------------------------------>
+
+<!--
 ## Semantic termination checking ##
 
 * based on **well-founded ordering on expressions** (`<<`)
@@ -380,8 +376,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     ./Divergence.exe
     ```
     ~
-  - {.fragment} web servers
+  - {.fragment} servers
   - {.fragment} ...
+-->
 
 <!------------------------------------------------------------------------------>
 
@@ -445,7 +442,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 <!------------------------------------------------------------------------------>
 
-## Verifying pure programs ## {#pure1}
+## Verifying [pure]{color:DarkBlue} programs ## {#pure1}
 ### Variant #1: [intrinsically]{color:DarkBlue} (at definition time) ###
 
 * Using refinement types (saw this already)
@@ -458,42 +455,16 @@ val factorial : x:int -> Pure int (requires (x >= 0))
                                     (ensures  (fun y -> y >= 0))
 ```
 * {.fragment} Each F\* [**computation type**]{color:DarkRed} is of the form
-  - *effect* (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *result type* (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     *spec.* (e.g. pre and post)<br/><br/>
-* {.fragment}`Tot` is essentially just an abbreviation
+  - <u>effect</u> (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>result type</u> (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <u>spec.</u> (e.g. pre and post)<br/><br/>
+* {.fragment}`Tot` is just an abbreviation
 ```
 Tot t = Pure t (requires True) (ensures (fun _ -> True))
 ```
 
-<!------------------------------------------------------------------------------>
-
-## Verifying potentially divergent programs ##
-### The only variant: [intrinsically]{color:DarkBlue} (partial correctness) ###
-
-* Using refinement types
-```
-val factorial : nat -> Dv nat
-```
-* {.fragment}Or the `Div` computation type (pre- and postconditions)
-  ```
-  val eval_closed : e:exp -> Div exp
-                                 (requires (closed e))
-                                 (ensures  (fun e' -> Lam? e' /\ closed e'))
-  let rec eval_closed e =
-    match e with           (* notice there is no match case for variables *)
-    | App e1 e2 ->
-        let Lam e1' = eval_closed e1 in
-        below_subst_beta 0 e1' e2;
-        eval_closed (subst (sub_beta e2) e1')
-    | Lam e1 -> Lam e1
-  ```
-* {.fragment}`Dv` is also just an abbreviation
-```
-Dv t = Div t (requires True) (ensures (fun _ -> True))
-```
-
 <!------------------------------------------------------------------------------->
 
+<!--
 ## Another way to look at this ##
 
 * **Two classes of types**
@@ -512,6 +483,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
     - `Div t pre post`
     - `Ghost t pre post`
     - these will get more interesting for more interesting effects
+-->
 
 <!------------------------------------------------------------------------------>
 
@@ -677,6 +649,33 @@ let rec progress #e #t h =
 ~
 
 * {.fragment} **Note:** match exhaustiveness check also semantic (via SMT)
+
+<!------------------------------------------------------------------------------>
+
+## Verifying potentially divergent programs ##
+### The only variant: [intrinsically]{color:DarkBlue} (partial correctness) ###
+
+* Using refinement types
+```
+val factorial : nat -> Dv nat
+```
+* {.fragment}Or the `Div` computation type (pre- and postconditions)
+  ```
+  val eval_closed : e:exp -> Div exp
+                                 (requires (closed e))
+                                 (ensures  (fun e' -> Lam? e' /\ closed e'))
+  let rec eval_closed e =
+    match e with           (* notice there is no match case for variables *)
+    | App e1 e2 ->
+        let Lam e1' = eval_closed e1 in
+        below_subst_beta 0 e1' e2;
+        eval_closed (subst (sub_beta e2) e1')
+    | Lam e1 -> Lam e1
+  ```
+* {.fragment}`Dv` is also just an abbreviation
+```
+Dv t = Div t (requires True) (ensures (fun _ -> True))
+```
 
 <!------------------------------------------------------------------------------>
 
