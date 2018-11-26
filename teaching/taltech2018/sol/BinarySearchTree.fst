@@ -144,17 +144,17 @@ let mtree = treeptr
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
   match t , sel h r with
-  | Leaf         , None    -> Some (only r)
+  | Leaf , None -> Some (only r)
   | Node t1 n t2 , Some nd -> (
       match (wf nd.left t1 h) , (n = nd.value) , (wf nd.right t2 h) with
       | Some s1 , true , Some s2 -> (
-          match not (Set.mem (addr_of r) s1) , not (Set.mem (addr_of r) s2) with 
-          | true , true -> Some (Set.union (only r) (Set.union s1 s2))
-          | _           -> None
+          match not (Set.mem (addr_of r) s1) , StrongExcludedMiddle.strong_excluded_middle (Set.disjoint s1 s2) , not (Set.mem (addr_of r) s2) with 
+          | true , true , true -> Some (Set.union (only r) (Set.union s1 s2))
+          | _ -> None
         )
-      | _                        -> None
+      | _ -> None
     )
-  | _                      -> None
+  | _ -> None
 
 let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
@@ -207,6 +207,7 @@ let lemma_is_stree_node (t1 t2:erased stree) (r:mtree) (nd:node) (s1 s2:Set.set 
                      wf (nd.left) (reveal t1) h == Some s1 /\ 
                      wf (nd.right) (reveal t2) h == Some s2 /\ 
                      not (Set.mem (addr_of r) s1) /\
+                     Set.disjoint s1 s2 /\
                      not (Set.mem (addr_of r) s2) /\
                      sorted (Node (reveal t1) nd.value (reveal t2))))
           (ensures  (is_stree r (Node (reveal t1) nd.value (reveal t2)) h)) = 
@@ -222,7 +223,7 @@ let lemma_is_stree_node (t1 t2:erased stree) (r r1 r2:mtree) (n:nat) (h:heap)
   ()*)
 
 let fresh_diff (s1 s2:Set.set nat) (h:heap) =
-  forall n . (not (Set.mem n s1) /\ Set.mem n s2) ==> addr_unused_in n h
+  forall r . (not (Set.mem r s1) /\ Set.mem r s2) ==> addr_unused_in r h
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
@@ -232,8 +233,7 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                                                  let (Some s') = wf r (reveal t') h1 in
                                                  modifies s h0 h1 /\
                                                  Set.subset s s' /\ 
-                                                 fresh_diff s s' h0
-                                                 ))) = 
+                                                 fresh_diff s s' h0))) = 
   recall r;
   match !r with
   | None -> (
@@ -248,10 +248,16 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             let h = get () in 
                             assert (let (Some s) = wf (nd.left) (reveal t1) h in Set.disjoint (only r) s);
                             assert (let (Some s) = wf (nd.right) (reveal t2) h in Set.disjoint (only r) s);
+                            assert (let (Some s) = wf (nd.left) (reveal t1) h in 
+                                    let (Some s') = wf (nd.right) (reveal t2) h in 
+                                    Set.disjoint s s');
                             let t1' = insert t1 (nd.left) n in 
                             let h' = get () in 
                             assert (is_stree (nd.left) (reveal t1') h');
-                            //assert (let (Some s') = wf (nd.left) (reveal t1') h' in Set.disjoint (Set.singleton (addr_of r)) s');
+                            assert (let (Some s') = wf (nd.left) (reveal t1') h' in Set.disjoint (only r) s');
+                            (*assert (let (Some s) = wf (nd.right) (reveal t2) h in
+                                    let (Some s') = wf (nd.right) (reveal t2) h' in 
+                                    Set.equal s s');*)
                             assume (is_stree (nd.right) (reveal t2) h');
                             
                             //assert (Node (reveal t1') nd.value (reveal t2) = stree_insert (reveal t) n);
