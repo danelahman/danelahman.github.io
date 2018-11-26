@@ -40,13 +40,13 @@ Tallinn, 12 December, 2018
 
 ## Overview ##
 
-* What is F\*?
+* **What is F\*?**
 
-* Verifying [Purely Functional]{color:DarkBlue} Programs in F\*
+* **Verifying [Purely Functional]{color:DarkBlue} Programs in F\***
 
-* Verifying [Stateful]{color:DarkRed} Programs in F\*
+* **Verifying [Stateful]{color:DarkRed} Programs in F\***
 
-* Highlights of other F\* Features
+* **Highlights of Other F\* Features**
 
 ~Fragment
 Slides, code, exercises, and setup instructions <br/>**@**<br/>
@@ -180,7 +180,7 @@ effectful programming, SMT-based automation
 ~
 
 ~Fragment
-* **Interactive: Emacs + fstar-mode**
+* **Interactive: Emacs + [fstar-mode](https://github.com/FStarLang/fstar-mode.el/)**
 ~
 
 <!------------------------------------------------------------------------------>
@@ -487,7 +487,7 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 
 <!------------------------------------------------------------------------------>
 
-## Verifying pure programs ## {#pure2}
+## Verifying [pure]{color:DarkBlue} programs ## {#pure2}
 ### Variant #2: [extrinsically]{color:DarkRed} using SMT-backed lemmas ###
 
 ```
@@ -500,7 +500,7 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 ~
 * {.fragment} Convenient syntactic sugar: **the `Lemma` effect**
 ```
-Lemma (property) = Pure unit (requires True) (ensures (fun _ -> property))
+Lemma property = Pure unit (requires True) (ensures (fun _ -> property))
 ```
 
 <!--
@@ -551,9 +551,7 @@ Lemma (property) = Pure unit (requires True) (ensures (fun _ -> property))
 ```
 let snoc l h = append l [h]
 
-val rev : #a:Type -> list a -> Tot (list a)
-
-let rec rev (#a:Type) l =
+let rec rev #a (l:list a) : Tot (list a) =
   match l with
   | []     -> []
   | hd::tl -> snoc (rev tl) hd
@@ -587,9 +585,7 @@ let rec rev_involutive (#a:Type) l =
 ```
 let snoc l h = append l [h]
 
-val rev : #a:Type -> list a -> Tot (list a)
-
-let rec rev (#a:Type) l =
+let rec rev #a (l:list a) : Tot (list a) =
   match l with
   | []     -> []
   | hd::tl -> snoc (rev tl) hd
@@ -616,22 +612,11 @@ let rec rev_involutive (#a:Type) l =
 
 <!------------------------------------------------------------------------------>
 
+<!--
 ## Verifying pure programs ## {#pure3}
 ### Variant #3: using [proof terms]{color:DarkGreen} ###
 
 <br/>
-
-<!--
-```
-val preservation : #e:exp -> #e':exp -> #g:env -> #t:typ ->
-       ht:(typing g e t) -> hs:step e e' -> Tot (typing g e' t) (decreases ht)
-let rec preservation #e #e' #g #t (TyApp h1 h2) hs =
-  match hs with
-  | SBeta tx e1' e2' -> substitution_beta h2 (TyLam?.hbody h1)
-  | SApp1 e2' hs1   -> TyApp (preservation h1 hs1) h2
-  | SApp2 e1' hs2   -> TyApp h1 (preservation h2 hs2)
-```
--->
 
 ~Fragment
 ```
@@ -650,10 +635,11 @@ let rec progress #e #t h =
 ~
 
 * {.fragment} **Note:** match exhaustiveness check also semantic (via SMT)
+-->
 
 <!------------------------------------------------------------------------------>
 
-## Verifying potentially divergent programs ##
+## Verifying [potentially divergent]{color:DarkBlue} programs ##
 ### The only variant: [intrinsically]{color:DarkBlue} (partial correctness) ###
 
 * Using refinement types
@@ -680,28 +666,34 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 <!------------------------------------------------------------------------------>
 
-## Functional core of F\* ## {#fcore}
+## Recap: Functional core of F\* ## {#fcore}
 
 * **[Variant of dependent type theory]{color:DarkBlue}**
   - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
 
-* {.fragment} **[Recursion and semantic termination check]{color:DarkRed}**
+* **[Recursion and semantic termination check]{color:DarkBlue}**
   - potential non-termination is an effect
 
-* {.fragment} **[Refinements]{color:DarkRed}**
-  - **Refined value types**:
+* **[Refinements]{color:DarkBlue}**
+  - **Refined [value types]{color:DarkRed}**:
     - `x:t{p}`
-  - **Refined computation types**:
+  - **Refined [computation types]{color:DarkRed}**:
     - `Pure t pre post`
     - `Div t pre post`
   - computationally and proof irrelevant, discharged by SMT
 
-* {.fragment} **[Subtyping and sub-effecting]{color:DarkRed}** (`<:`)
+* **[Subtyping and sub-effecting]{color:DarkBlue}** (`<:`)
 
-* {.fragment} **[Extensional equality]{color:DarkRed}** (`=`, `==`, `===`)
+* **[Extensional equality]{color:DarkBlue}** (`=`, `==`, `===`)
 
 <!------------------------------------------------------------------------------>
 
+# Verifying [Stateful]{color:DarkRed} Programs in F\* #
+
+<!------------------------------------------------------------------------------>
+
+
+<!--
 # Exercises #
 
 ## Exercise 1: Summing: 0 + 1 + 2 + 3 + ... ##
@@ -730,22 +722,6 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 [INCLUDE=../../../ex/StackClient.fst]
 ```
 
-<!--
-## Clients cannot break abstraction ##
-`StackClientBad.fst`
-```
-[INCLUDE=../../../code/pure-fun/StackClientBad.fst]
-```
-~Fragment{.console}
-```text
-fstar.exe StackClientBad.fst
-./StackClientBad.fst(6,9-6,11): (Error)
-Expected expression of type "Prims.list ((*?u13*) _ s0 s1)";
-got expression "s1" of type "Stack.stack"
-```
-~
--->
-
 ## Exercise 3: Refinement-typed stacks ##
 `RefinedStack.fsti`
 ```
@@ -759,15 +735,4 @@ let main () =
     let s3 = pop s2 (* <: stack *) in
     assert (s3 == s1)
 ```
-
-<!------------------------------------------------------------------------------>
-
-## Next steps in this course ##
-
-* Today: A Gentle Introduction to F\* (Purely Functional Programs)
-
-* **Tomorrow: Verifying Stateful Programs in F\***
-
-* Sunday: Monotonic State in F\*
-
-* Sunday: F\*'s Extensible Effect System and Metaprogramming in F\*
+-->
