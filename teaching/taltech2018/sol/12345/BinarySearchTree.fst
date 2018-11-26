@@ -186,15 +186,14 @@ let rec search (t:erased stree) (r:mtree) (n:nat)
 
 let create () 
   : ST (erased stree * mtree) (requires (fun _ -> True))
-                              (ensures  (fun h0 (t,r) h1 -> fresh r h0 h1 /\
+                              (ensures  (fun h0 (t,r) h1 -> reveal t = empty_stree () /\
+                                                            fresh r h0 h1 /\
                                                             modifies !{} h0 h1 /\
-                                                            reveal t = empty_stree () /\
                                                             wf r (reveal t) h1 == Some (only r))) =
   hide Leaf , alloc None
 
 let fresh_diff (s1 s2:Set.set nat) (h:heap) =
   forall r . (not (Set.mem r s1) /\ Set.mem r s2) ==> addr_unused_in r h
-
 
 let rec lemma_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
   : Lemma (requires (Some? (wf r t h0) /\ 
@@ -209,7 +208,6 @@ let rec lemma_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
       lemma_unchanged nd.left t1 s h0 h1;
       lemma_unchanged nd.right t2 s h0 h1
     )
-
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
@@ -231,38 +229,52 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       if n = nd.value then t else
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
-                            let h = get () in 
                             let t1' = insert t1 (nd.left) n in 
-                            let h' = get () in 
                             hide (Node (reveal t1') nd.value (reveal t2)))
                       else (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
-                            let h = get () in 
                             let t2' = insert t2 (nd.right) n in 
-                            let h' = get () in 
                             hide (Node (reveal t1) nd.value (reveal t2')))
 
 
 (* ------------------------------------------------------ *)
 
+#set-options "--max_ifuel 0"
+
 let test_create_insert_search () : St unit =
+
   let t1,r = create () in
   let t2 = insert t1 r 0 in
   let t3 = insert t2 r 1 in 
   let t4 = insert t3 r 2 in 
   let t5 = insert t4 r 0 in 
+    
   let b1 = search t5 r 0 in
   let b2 = search t5 r 2 in
   let b3 = search t5 r 1 in
   let b4 = search t5 r 3 in
+  
   let t6 = insert t5 r 3 in 
   let b5 = search t6 r 3 in
+  
   let t1',r' = create () in
   let b6 = search t1' r' 0 in
+  let t2' = insert t1' r' 4 in
+  let b7 = search t2' r' 4 in
+
+  let t7 = insert t6 r 5 in 
+  let b8 = search t7 r 5 in
+  let b9 = search t7 r 1 in 
+
   assert b1;
   assert b2;
   assert b3;
   assert (not b4);
   assert b5;
-  assert (not b6)
+  assert (not b6);
+  assert b7;
+  assert b8;
+  assert b9;
+
+  assert (t4 == t5)
 
