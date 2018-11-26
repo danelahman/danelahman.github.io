@@ -502,7 +502,10 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 ```
 Lemma (property) = Pure unit (requires True) (ensures (fun _ -> property))
 ```
+
+<!--
 * {.fragment} F\* also provides a `requires`-`ensures` variant of the `Lemma` effect
+-->
 
 <!------------------------------------------------------------------------------>
 
@@ -546,7 +549,7 @@ Lemma (property) = Pure unit (requires True) (ensures (fun _ -> property))
 - proof doesn't follow the structure of the program
 -->
 ```
-let snoc l h = l @ [h]
+let snoc l h = append l [h]
 
 val rev : #a:Type -> list a -> Tot (list a)
 
@@ -559,7 +562,6 @@ let rec rev (#a:Type) l =
 ```
 val rev_snoc : #a:Type -> l:list a -> h:a ->
                                         Lemma (rev (snoc l h) == h::rev l)
-
 
 let rec rev_snoc (#a:Type) l h =
   match l with
@@ -583,7 +585,7 @@ let rec rev_involutive (#a:Type) l =
 - proof doesn't follow the structure of the program
 -->
 ```
-let snoc l h = l @ [h]
+let snoc l h = append l [h]
 
 val rev : #a:Type -> list a -> Tot (list a)
 
@@ -597,7 +599,6 @@ let rec rev (#a:Type) l =
 val rev_snoc : #a:Type -> l:list a -> h:a -> 
                                         Lemma (rev (snoc l h) == h::rev l)
                                         [SMTPat (rev (snoc l h))]
-                                            
 let rec rev_snoc (#a:Type) l h =
   match l with
   | []     -> ()
