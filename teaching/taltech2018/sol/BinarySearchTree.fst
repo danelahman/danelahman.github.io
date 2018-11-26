@@ -144,19 +144,19 @@ let mtree = treeptr
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
   match t , sel h r with
-  | Leaf         , None    -> Some (Set.singleton (addr_of r))
+  | Leaf         , None    -> Some (only r)
   | Node t1 n t2 , Some nd -> (
       match (wf nd.left t1 h) , (n = nd.value) , (wf nd.right t2 h) with
       | Some s1 , true , Some s2 -> (
           match not (Set.mem (addr_of r) s1) , not (Set.mem (addr_of r) s2) with 
-          | true , true -> Some (Set.union (Set.singleton (addr_of r)) (Set.union s1 s2))
+          | true , true -> Some (Set.union (only r) (Set.union s1 s2))
           | _           -> None
         )
       | _                        -> None
     )
   | _                      -> None
 
-let is_stree r t h = Some? (wf r t h)
+let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
 
 (*let rec is_stree (r:mtree) (t:stree) (h:heap) : GTot bool (decreases t) =
@@ -202,15 +202,14 @@ let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h})
 *)
 
 
-let lemma_is_stree_node (t1 t2:erased stree) (r:mtree) (nd:node) (n:nat) (s1 s2:Set.set nat) (h:heap)
+let lemma_is_stree_node (t1 t2:erased stree) (r:mtree) (nd:node) (s1 s2:Set.set nat) (h:heap)
   : Lemma (requires (sel h r == Some nd /\
-                     n = nd.value /\
                      wf (nd.left) (reveal t1) h == Some s1 /\ 
                      wf (nd.right) (reveal t2) h == Some s2 /\ 
                      not (Set.mem (addr_of r) s1) /\
                      not (Set.mem (addr_of r) s2) /\
-                     sorted (Node (reveal t1) n (reveal t2))))
-          (ensures  (is_stree r (Node (reveal t1) n (reveal t2)) h)) = 
+                     sorted (Node (reveal t1) nd.value (reveal t2))))
+          (ensures  (is_stree r (Node (reveal t1) nd.value (reveal t2)) h)) = 
   ()
 
 (*
@@ -222,48 +221,48 @@ let lemma_is_stree_node (t1 t2:erased stree) (r r1 r2:mtree) (n:nat) (h:heap)
           (ensures  (is_stree r (Node (reveal t1) n (reveal t2)) h)) = 
   ()*)
 
+let fresh_diff (s1 s2:Set.set nat) (h:heap) =
+  forall n . (not (Set.mem n s1) /\ Set.mem n s2) ==> addr_unused_in n h
+
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
-                      (ensures  (fun h0 t' h1 -> let (Some s) = wf r (reveal t) h0 in 
+                      (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
+                                                 is_stree r (reveal t') h1 /\ (
+                                                 let (Some s) = wf r (reveal t) h0 in 
+                                                 let (Some s') = wf r (reveal t') h1 in
                                                  modifies s h0 h1 /\
-                                                 reveal t' = stree_insert (reveal t) n /\
-                                                 is_stree r (reveal t') h1)) = 
-                                                 //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
+                                                 Set.subset s s' /\ 
+                                                 fresh_diff s s' h0
+                                                 ))) = 
   recall r;
   match !r with
   | None -> (
       let t1,r1 = create () in
       let t2,r2 = create () in  
-      assert (addr_of r <> addr_of r1);
-      assert (addr_of r <> addr_of r2);
-      assert (not (Set.mem (addr_of r) (Set.singleton (addr_of r1))));
-      assert (not (Set.mem (addr_of r) (Set.singleton (addr_of r2))));
       r := Some ({left = r1; value = n; right = r2});
-      let h = get () in 
-      //assert (wf r1);
-      admit ();
       hide (Node (reveal t1) n (reveal t2)))
   | Some nd -> 
-      admit ()
-
-(*
       if n = nd.value then t else
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
                             let h = get () in 
-                            assert (is_stree (nd.right) (reveal t2) h);
+                            assert (let (Some s) = wf (nd.left) (reveal t1) h in Set.disjoint (only r) s);
+                            assert (let (Some s) = wf (nd.right) (reveal t2) h in Set.disjoint (only r) s);
                             let t1' = insert t1 (nd.left) n in 
                             let h' = get () in 
                             assert (is_stree (nd.left) (reveal t1') h');
+                            //assert (let (Some s') = wf (nd.left) (reveal t1') h' in Set.disjoint (Set.singleton (addr_of r)) s');
                             assume (is_stree (nd.right) (reveal t2) h');
+                            
                             //assert (Node (reveal t1') nd.value (reveal t2) = stree_insert (reveal t) n);
                             assert (sorted (Node (reveal t1') nd.value (reveal t2)));
                             assume (sel h' r == Some ({ left=nd.left; value=nd.value; right=nd.right}));
                             //lemma_is_stree_node t1' t2 r nd.left nd.right nd.value h';
+                            assume (is_stree r (Node (reveal t1') nd.value (reveal t2)) h');
                             admit ();
                             hide (Node (reveal t1') nd.value (reveal t2)))
                       else (admit ())
-*)
+
 
 (* ------------------------------------------------------ *)
 
