@@ -158,6 +158,19 @@ let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases
 
 let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
+let rec lemma_wf_addrs_in (r:mtree) (t:stree) (h:heap)
+  : Lemma (requires (Some? (wf r t h)))
+          (ensures  (let (Some s) = wf r t h in 
+                     forall r' . Set.mem r' s ==> ~(addr_unused_in r' h))) 
+          (decreases t)
+          [SMTPat (wf r t h)] = 
+  match t with 
+  | Leaf -> ()
+  | Node t1 n t2 -> (
+      let (Some nd) = sel h r in
+      lemma_wf_addrs_in nd.left t1 h;
+      lemma_wf_addrs_in nd.right t2 h
+    )
 
 (*let rec is_stree (r:mtree) (t:stree) (h:heap) : GTot bool (decreases t) =
   match t with 
@@ -255,8 +268,6 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
                             let h = get () in 
-                            (*assert (let (Some s) = wf (nd.left) (reveal t1) h in Set.disjoint (only r) s);
-                            assert (let (Some s) = wf (nd.right) (reveal t2) h in Set.disjoint (only r) s);*)
                             let t1' = insert t1 (nd.left) n in 
                             let h' = get () in 
                             assert (is_stree (nd.left) (reveal t1') h');
@@ -269,7 +280,17 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                                     let (Some s') = wf (nd.right) (reveal t2) h' in 
                                     s == s');
 
-                            assume (let (Some s) = wf (nd.left) (reveal t1') h' in
+                            assert (let (Some s) = wf (nd.left) (reveal t1) h in
+                                    let (Some s') = wf (nd.left) (reveal t1') h' in 
+                                    Set.subset s s');
+
+                            assert (let (Some s) = wf (nd.left) (reveal t1) h in 
+                                    let (Some s') = wf (nd.right) (reveal t2) h in 
+                                    let (Some s'') = wf (nd.left) (reveal t1') h' in
+                                    let (Some s''') = wf (nd.right) (reveal t2) h' in
+                                    Set.disjoint s' (Set.intersect (Set.complement s) s''));
+
+                            assert (let (Some s) = wf (nd.left) (reveal t1') h' in
                                     let (Some s') = wf (nd.right) (reveal t2) h' in 
                                     Set.disjoint s s');
                                     
