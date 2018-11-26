@@ -144,7 +144,7 @@ let mtree = treeptr
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
   match t , sel h r with
-  | Leaf         , None    -> Some (Set.empty)
+  | Leaf         , None    -> Some (Set.singleton (addr_of r))
   | Node t1 n t2 , Some nd -> (
       match (wf nd.left t1 h) , (n = nd.value) , (wf nd.right t2 h) with
       | Some s1 , true , Some s2 -> (
@@ -186,7 +186,7 @@ let create ()
                               (ensures  (fun h0 (t,r) h1 -> fresh r h0 h1 /\
                                                             modifies Set.empty h0 h1 /\
                                                             reveal t = empty_stree () /\
-                                                            is_stree r (reveal t) h1)) =
+                                                            wf r (reveal t) h1 == Some (Set.singleton (addr_of r)))) =
   hide Leaf , alloc None
 
 (*
@@ -224,7 +224,8 @@ let lemma_is_stree_node (t1 t2:erased stree) (r r1 r2:mtree) (n:nat) (h:heap)
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
-                      (ensures  (fun h0 t' h1 -> //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
+                      (ensures  (fun h0 t' h1 -> let (Some s) = wf r (reveal t) h0 in 
+                                                 modifies s h0 h1 /\
                                                  reveal t' = stree_insert (reveal t) n /\
                                                  is_stree r (reveal t') h1)) = 
                                                  //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
@@ -233,9 +234,19 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
   | None -> (
       let t1,r1 = create () in
       let t2,r2 = create () in  
+      assert (addr_of r <> addr_of r1);
+      assert (addr_of r <> addr_of r2);
+      assert (not (Set.mem (addr_of r) (Set.singleton (addr_of r1))));
+      assert (not (Set.mem (addr_of r) (Set.singleton (addr_of r2))));
       r := Some ({left = r1; value = n; right = r2});
+      let h = get () in 
+      //assert (wf r1);
+      admit ();
       hide (Node (reveal t1) n (reveal t2)))
   | Some nd -> 
+      admit ()
+
+(*
       if n = nd.value then t else
       if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
                             let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
@@ -252,7 +263,7 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             admit ();
                             hide (Node (reveal t1') nd.value (reveal t2)))
                       else (admit ())
-
+*)
 
 (* ------------------------------------------------------ *)
 
