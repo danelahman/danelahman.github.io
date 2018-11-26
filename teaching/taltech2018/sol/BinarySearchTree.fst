@@ -201,7 +201,7 @@ let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h})
                                         (addrs_of_tree nd.right t2 h))
 *)
 
-
+(*
 let lemma_is_stree_node (t1 t2:erased stree) (r:mtree) (nd:node) (s1 s2:Set.set nat) (h:heap)
   : Lemma (requires (contains h r /\
                      sel h r == Some nd /\
@@ -213,6 +213,7 @@ let lemma_is_stree_node (t1 t2:erased stree) (r:mtree) (nd:node) (s1 s2:Set.set 
                      sorted (Node (reveal t1) nd.value (reveal t2))))
           (ensures  (is_stree r (Node (reveal t1) nd.value (reveal t2)) h)) = 
   ()
+*)
 
 let fresh_diff (s1 s2:Set.set nat) (h:heap) =
   forall r . (not (Set.mem r s1) /\ Set.mem r s2) ==> addr_unused_in r h
@@ -222,7 +223,8 @@ let rec lemma_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
   : Lemma (requires (Some? (wf r t h0) /\ 
                      Set.disjoint (Some?.v (wf r t h0)) s /\ 
                      modifies s h0 h1))
-          (ensures  (wf r t h0 == wf r t h1)) (decreases t) = 
+          (ensures  (wf r t h0 == wf r t h1)) (decreases t)
+          [SMTPat (wf r t h0); SMTPat (modifies s h0 h1)]= 
   match t with
   | Leaf -> ()
   | Node t1 n t2 -> (
@@ -262,14 +264,13 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             let h' = get () in 
                             assert (is_stree (nd.left) (reveal t1') h');
                             (*assert (let (Some s') = wf (nd.left) (reveal t1') h' in Set.disjoint (only r) s');*)
-                            
-                            (*assert (let (Some s) = wf (nd.right) (reveal t2) h in
+                            assert (let (Some s) = wf (nd.right) (reveal t2) h in
                                     let (Some s') = wf (nd.right) (reveal t2) h' in 
-                                    True);*)
-                            assume (is_stree (nd.right) (reveal t2) h');
-                            
+                                    s == s');
+                            assert (is_stree (nd.right) (reveal t2) h');
                             //assert (Node (reveal t1') nd.value (reveal t2) = stree_insert (reveal t) n);
                             assert (sorted (Node (reveal t1') nd.value (reveal t2)));
+                            
                             assume (sel h' r == Some ({ left=nd.left; value=nd.value; right=nd.right}));
                             //lemma_is_stree_node t1' t2 r nd.left nd.right nd.value h';
                             assume (is_stree r (Node (reveal t1') nd.value (reveal t2)) h');
