@@ -152,11 +152,6 @@ let rec is_stree (r:mtree) (t:stree) (h:heap) : GTot bool (decreases t) =
                     n = nd.value &&
                     is_stree nd.right t2 h)
 
-let lemma_is_stree_leaf (r:mtree) (h:heap) 
-  : Lemma (requires (is_stree r (empty_stree ()) h))
-          (ensures  (None? (sel h r)))
-  = ()
-
 let rec search (t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
             (ensures  (fun h0 b h1 -> h0 == h1 /\ b = (reveal t) `stree_contains` n)) =
@@ -186,30 +181,31 @@ let rec addrs_of_tree (r:mtree) (t:stree) (h:heap{is_stree r t h})
       | Some nd -> Set.union (Set.singleton (addr_of r)) 
                              (Set.union (addrs_of_tree nd.left t1 h) 
                                         (addrs_of_tree nd.right t2 h))
-
-let lemma_insert_into_leaf (t:erased stree) (r:mtree) (n:nat) (h0 h1:heap) (r1 r2:mtree)
-  : Lemma (requires (Leaf? (reveal t) /\
-                     is_stree r (reveal t) h0 /\ 
-                     sel h1 r1 == None /\
-                     sel h1 r2 == None /\
-                     sel h1 r == Some ({left = r1; value = n; right = r2})))
-          (ensures  (is_stree r (stree_insert (reveal t) n) h1)) = 
-  ()
  
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
-                      (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
+                      (ensures  (fun h0 t' h1 -> //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
+                                                 reveal t' = stree_insert (reveal t) n /\
                                                  is_stree r (reveal t') h1)) = 
                                                  //modifies (addrs_of_tree r (reveal t) h0) h0 h1 /\
+  recall r;
   match !r with
   | None -> (
-      recall r;
       let t1,r1 = create () in
       let t2,r2 = create () in  
       r := Some ({left = r1; value = n; right = r2});
       hide (Node (reveal t1) n (reveal t2)))
-  | Some nd -> admit ()
-
+  | Some nd -> 
+      if n = nd.value then t else
+      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
+                            let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                            let t1' = insert t1 (nd.left) n in 
+                            let h = get () in 
+                            assert (is_stree (nd.left) (stree_insert (reveal t1) n) h);
+                            admit ();
+                            hide (Node (reveal t1') nd.value (reveal t2)))
+                      else (admit ())
+ 
 (* ------------------------------------------------------ *)
 
 let test_create_insert_search () : St unit =
