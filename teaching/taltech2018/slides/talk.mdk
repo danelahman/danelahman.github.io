@@ -38,19 +38,19 @@ Tallinn, 12 December, 2018
 
 <!-------------------------------------------------------------------------------->
 
-## Schedule ##
+## Overview ##
 
-* **Today: A Gentle Introduction to F\* (Purely Functional Programs)**
+* What is F\*?
 
-* Tomorrow: Verifying Stateful Programs in F\*
+* Verifying [Purely Functional]{color:DarkBlue} Programs in F\*
 
-* Sunday: Monotonic State in F\*
+* Verifying [Stateful]{color:DarkRed} Programs in F\*
 
-* Sunday: F\*'s Extensible Effect System and Metaprogramming in F\*
+* Highlights of other F\* Features
 
 ~Fragment
-Slides, code, exercises, and setup instructions <br/>@<br/>
-[https://danelahman.github.io/teaching/eutypes2018/](https://danelahman.github.io/teaching/eutypes2018/)
+Slides, code, exercises, and setup instructions <br/>**@**<br/>
+[https://danelahman.github.io/teaching/taltech2018/](https://danelahman.github.io/teaching/taltech2018/)
 
 <br/>
 ~
@@ -58,6 +58,11 @@ Slides, code, exercises, and setup instructions <br/>@<br/>
 ~Fragment
 **Please ask questions at any time!**
 ~
+
+<!-------------------------------------------------------------------------------->
+
+# What is F\*? #
+
 
 <!-------------------------------------------------------------------------------->
 
@@ -72,35 +77,41 @@ Slides, code, exercises, and setup instructions <br/>@<br/>
 | &nbsp;&nbsp;&nbsp; **Coq**,                   |               | \ \ *air* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Dafny**,                           |                            |
 | &nbsp;&nbsp;&nbsp; **Agda**,              |                   |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **FramaC**,                          |                         |
 | &nbsp;&nbsp;&nbsp; **Lean**,                  |                | \ \ *gap* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Why3**,                              |                              |
-| &nbsp;&nbsp;&nbsp; **Isabelle**                  |               |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Liquid Types**                                 |                              |
+| &nbsp;&nbsp;&nbsp; **Isabelle**                  |               |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Liquid Haskell**                                 |                              |
 
-* **[Left corner]{color:DarkRed;}**:
-very expressive higher-order logics, interactive proving,\
-tactics, but mostly only purely functional programming
+* **[Left side]{color:DarkRed;}**:
+very expressive logics, interactive proving, tactics
 
-* **[Right corner]{color:DarkBlue;}**:
-effectful programming, SMT-based automation,\
-but only very weak logics
+  * but mostly only <u>purely functional programming</u>
+
+* **[Right side]{color:DarkBlue;}**:
+effectful programming, SMT-based automation
+
+  * but only <u>very weak logics</u>
 
 <!------------------------------------------------------------------------------>
 
-## Bridging the gap: F\* ##
+## Bridging the air gap: [F\*]{color:DarkRed} ##
 
 <!-- General-purpose -->
 * **[Functional programming language with effects]{color:Black;}**
-  - like OCaml, F#, Haskell, ...
+  - like F#, OCaml, Haskell, ...
     ```
     let incr (r:ref a) = r := !r + 1
     ```
-  - F\* extracted to OCaml or F\# by default
-  - subset of F\* extracted to efficient C code (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
+  - by default <u>extracted to OCaml or F\#</u>
+  - subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
 
-* **[Semi-automated verification system using SMT]{color:DarkBlue;}**
-  - like Dafny, FramaC, Why3, Liquid Types, ...
+~Fragment
+* **[Semi-automated verification system using SMT (Z3)]{color:DarkBlue;}**
+  - <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Types, ...
+~
 
+~Fragment
 * **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
   <!-- - full dependency, inductive types, universe polymorphism -->
-  - like Coq, Agda, Lean, ...
+  - <u>interactive proving and tactics</u> like in Coq, Agda, Lean, ...
+~
 
 <!-- * {.fragment} Other tools in this space: -->
 <!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
@@ -116,16 +127,16 @@ but only very weak logics
 
 *  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
   - **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
-      - [miTLS*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
-      - [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Cryptographic Library
+      - [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
+      - [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in Firefox and Wireguard)
       - [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
 
 *  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
   - Fallback when SMT fails; also for mechanized metatheory
     - [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
-    - [Wys*](http://research.microsoft.com/en-us/um/people/nswamy/papers/wys.pdf): Verified DSL for secure multi-party computations
+    - [Wys\*](http://research.microsoft.com/en-us/um/people/nswamy/papers/wys.pdf): Verified DSL for secure multi-party computations
     - [ReVer](https://github.com/msr-quarc/ReVerC): Verified compiler to reversible circuits
-  - F\*'s new metaprogramming framework increasingly used in **[Everest](https://project-everest.github.io/)**
+  - Meta-F\* (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 # The current F\* team #
 
@@ -135,21 +146,46 @@ but only very weak logics
 
   |   |  
 --- | --- |
-[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>[Kenji Maillard]{color:DarkBlue} | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
-
-
+[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
 
 <!------------------------------------------------------------------------------>
 
-## The rest of this lecture ##
+## How to use F* ##
 
-* **The functional core of F\***
+* **Two kinds of source files**
 
-* **Verifying purely functional programs** <br/><br/>
+  * A.fsti - [interface]{color:DarkBlue} file for module called A (can be omitted)
 
-* Using very simple examples throughout
+  * A.fst - [source code]{color:DarkRed} file for module called A
 
-* Small hands-on exercises in the end (for the exercise classes)
+~Fragment
+* **Command line: typechecking / program verification**
+~
+~Fragment {.console}
+  ```text
+  $ fstar.exe Ackermann.fst
+  
+  Verified module: Ackermann (429 milliseconds)
+  All verification conditions discharged successfully
+  ```
+~
+
+~Fragment
+* **Command line: typechecking + program extraction**
+~
+~Fragment {.console}
+  ```text
+  $ fstar.exe Ackermann.fst --odir out-dir --codegen FSharp
+  ```
+~
+
+~Fragment
+* **Interactive: Emacs + fstar-mode**
+~
+
+<!------------------------------------------------------------------------------>
+
+## Verifying [Purely Functional]{color:DarkBlue} Programs in F\* ##
 
 <!------------------------------------------------------------------------------>
 
@@ -169,12 +205,10 @@ but only very weak logics
     | Nil  : list a
     | Cons : hd:a -> tl:list a -> list a
 
-  val map : ('a -> 'b) -> list 'a -> list 'b
-  
-  let rec map f x =
+  let rec map (f:'a -> 'b) (x:list 'a) : list 'b = (* combines val and let *)
     match x with
-    | []     -> []
-    | h :: t -> f h :: map f t
+    | Nil      -> Nil
+    | Cons h t -> Cons (f h) (map f t)
   ```
 
 * {.fragment} Lambdas
@@ -189,7 +223,7 @@ but only very weak logics
 ## Refinement types ##
 
 ```
-type nat = x:int{x >= 0}
+type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 ```
 * {.fragment} Refinements introduced by type annotations (code unchanged)
   ```
@@ -210,7 +244,7 @@ type nat = x:int{x >= 0}
   let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Different kinds of extensional equality (`=`, `==`, `===`)
+* {.fragment} Different kinds of extensional (in)equality ( (`=` and `==`) **vs** (`<>` and `=!=`) )
 
 
 ## Dependent types ##
