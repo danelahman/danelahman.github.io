@@ -62,13 +62,13 @@ Tallinn, 12 December, 2018
 
 ## Overview ##
 
-* **What is F\*?**
+* **What is [F\*]{color:DarkRed}?**
 
 * **Verifying [Purely Functional]{color:DarkBlue} Programs in F\***
 
 * **Verifying [Stateful]{color:DarkRed} Programs in F\***
 
-* **Highlights of Other F\* Features**<br/><br/>
+* **Highlights of [Other F\* Features]{color:DarkBlue}**<br/><br/>
 
 ~Fragment
 Slides, code, exercises, and setup instructions <br/>**@**<br/>
@@ -800,7 +800,13 @@ let incr r = r := !r + 1
 [INCLUDE=../../../code/state/Incr2ST.fst:incr2]
 ```
 ```
-[INCLUDE=../../../code/state/ST.fsti:ops]
+val (!) : #a:Type -> r:ref a -> 
+  ST a (requires (fun _ -> True))
+       (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
+
+val (:=) : #a:Type -> r:ref a -> v:a -> 
+  ST unit (requires (fun _ -> True))
+          (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
 <!--~Fragment
@@ -912,7 +918,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   val sel     : #a:Type -> heap -> ref a -> GTot a
   val addr_of : #a:Type -> ref a -> GTot nat
 
-  val modifies : s:set nat -> h0:heap -> h1:heap -> prop
+  val modifies : s:set nat -> h0:heap -> h1:heap -> Type0
   ```
 
 * `St` effect for simple ML-style programming
@@ -932,10 +938,11 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 ## F*'s Memory Models are Based on [Monotonicity]{color:DarkRed} ##
 
-* {.fragment} Monotonicity for [**garbage collected references**]{color:DarkBlue}
+* {.fragment} 'Containment for free' for [**garbage collected references**]{color:DarkBlue}
   ```
   val recall_contains #a (r:ref a) 
-    : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
+    : ST unit (requires (fun _       -> True))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
   ```
 
 * {.fragment} [`ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
@@ -943,20 +950,21 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   val mref : a:Type -> preorder a -> Type
   ```
 
-* {.fragment} Such monotonic references also come with [**modal operators**]{color:DarkBlue}
+* {.fragment} Such monotonic references also come with a [**modal operator**]{color:DarkBlue} (`token`)
   ```
-  val witness #a #rel (r:mref a rel) (p:(a -> prop)) 
+  val witness #a #rel (r:mref a rel) (p:(a -> Type0)) 
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
 
-  val recall #a #rel (r:mref a rel) (p:(a -> prop)) 
+  val recall #a #rel (r:mref a rel) (p:(a -> Type0)) 
     : ST unit (requires (fun _       -> token r p))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
   ```
   
 * {.fragment}
   ```
-  assert (p !r);  witness r p;  black_box r;  recall r p;  assert (p !r)
+  let p (x:nat) = x > 0 in    (* where r:mref nat rel, for rel x y = x < y *)
+  r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
 
 <!------------------------------------------------------------------------------>
@@ -973,7 +981,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Uses a hierarchical region-based stack-and-heap memory model<br/><br/>
 
-* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue}
+* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue} (aka Dijkstra Monads For Free)
 
   * In addition to `St`, ...,  users can define their own (monadic) effects
   
@@ -983,9 +991,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Tactics are just another F\* effect (proof state + exceptions)
 
-  * Run using the normalizer (slow) or compiled to native OCaml plugins
-
   * Can access the proof state, can introspect and synthesise F\* terms
+
+  * Run using the normalizer (slow) or compiled to native OCaml plugins
 
 <!--  * Uses: discharging VCs, massaging VCs, synthesizing terms, typeclasses -->
 
