@@ -121,6 +121,7 @@ effectful programming, SMT-based automation
     ```
     let incr (r:ref a) = r := !r + 1
     ```
+  - but with a much richer type system<br/><br/>
   - by default <u>extracted to OCaml or F\#</u>
   - subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
 
