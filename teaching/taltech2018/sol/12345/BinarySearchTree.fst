@@ -155,7 +155,8 @@ let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases
   | Node t1 n t2 , true , Some nd -> (
       match (wf nd.left t1 h) , (n = nd.value) , (wf nd.right t2 h) with
       | Some s1 , true , Some s2 -> (
-          match not (Set.mem (addr_of r) s1) , not (Set.mem (addr_of r) s2) , StrongExcludedMiddle.strong_excluded_middle (Set.disjoint s1 s2) with 
+          match not (Set.mem (addr_of r) s1) , not (Set.mem (addr_of r) s2) , 
+                StrongExcludedMiddle.strong_excluded_middle (Set.disjoint s1 s2) with 
           | true , true , true -> Some (Set.union (only r) (Set.union s1 s2))
           | _ -> None
         )
@@ -171,24 +172,28 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
 let rec search (t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 b h1 -> h0 == h1 /\ b = (reveal t) `stree_contains` n)) =
+            (ensures  (fun h0 b h1 -> h0 == h1 /\ 
+                                      b = (reveal t) `stree_contains` n)) =
   match !r with 
   | None -> false
   | Some nd -> 
       if n = nd.value then true else 
-      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in 
+      if n < nd.value then (let t1 = hide (match (reveal t) with 
+                                           | Node t1 _ _ -> t1) in 
                             search t1 nd.left n)
-                      else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                      else (let t2 = hide (match (reveal t) with 
+                                           | Node _ _ t2 -> t2) in
                             search t2 nd.right n)
 
 (* Create an empty mutable binary search tree *)
 
 let create () 
   : ST (erased stree * mtree) (requires (fun _ -> True))
-                              (ensures  (fun h0 (t,r) h1 -> reveal t = empty_stree () /\
-                                                            fresh r h0 h1 /\
-                                                            modifies !{} h0 h1 /\
-                                                            wf r (reveal t) h1 == Some (only r))) =
+                              (ensures  (fun h0 (t,r) h1 -> 
+                                 reveal t = empty_stree () /\
+                                 fresh r h0 h1 /\
+                                 modifies !{} h0 h1 /\
+                                 wf r (reveal t) h1 == Some (only r))) =
   hide Leaf , alloc None
 
 (* Lemmas showing how well-formedness evolves on heaps *)
@@ -201,11 +206,10 @@ let rec lemma_disjoint_wf_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:h
           [SMTPat (wf r t h0); SMTPat (modifies s h0 h1)]= 
   match t with
   | Leaf -> ()
-  | Node t1 n t2 -> (
+  | Node t1 n t2 -> 
       let (Some nd) = sel h0 r in 
       lemma_disjoint_wf_unchanged nd.left t1 s h0 h1;
       lemma_disjoint_wf_unchanged nd.right t2 s h0 h1
-    )
 
 let rec lemma_wf_addrs_in (r:mtree) (t:stree) (h:heap)
   : Lemma (requires (Some? (wf r t h)))
@@ -214,11 +218,10 @@ let rec lemma_wf_addrs_in (r:mtree) (t:stree) (h:heap)
           [SMTPat (wf r t h)] = 
   match t with 
   | Leaf -> ()
-  | Node t1 n t2 -> (
+  | Node t1 n t2 -> 
       let (Some nd) = sel h r in
       lemma_wf_addrs_in nd.left t1 h;
       lemma_wf_addrs_in nd.right t2 h
-    )
 
 (* Insertion into a mutable binary search tree *)
 
@@ -228,12 +231,13 @@ let fresh_extension (s0 s1:Set.set nat) (h:heap) =
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
-                      (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
-                                                 is_stree r (reveal t') h1 /\ (
-                                                 let (Some s0) = wf r (reveal t) h0 in 
-                                                 let (Some s1) = wf r (reveal t') h1 in
-                                                 modifies s0 h0 h1 /\
-                                                 fresh_extension s0 s1 h0))) = 
+                      (ensures  (fun h0 t' h1 -> 
+                         reveal t' = stree_insert (reveal t) n /\
+                         is_stree r (reveal t') h1 /\ (
+                         let (Some s0) = wf r (reveal t) h0 in 
+                         let (Some s1) = wf r (reveal t') h1 in
+                         modifies s0 h0 h1 /\
+                         fresh_extension s0 s1 h0))) = 
   recall r;
   match !r with
   | None -> (
@@ -243,12 +247,16 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       hide (Node (reveal t1) n (reveal t2)))
   | Some nd -> 
       if n = nd.value then t else
-      if n < nd.value then (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
-                            let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+      if n < nd.value then (let t1 = hide (match (reveal t) with 
+                                           | Node t1 _ _ -> t1) in
+                            let t2 = hide (match (reveal t) with 
+                                           | Node _ _ t2 -> t2) in
                             let t1' = insert t1 (nd.left) n in 
                             hide (Node (reveal t1') nd.value (reveal t2)))
-                      else (let t1 = hide (match (reveal t) with | Node t1 _ _ -> t1) in
-                            let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
+                      else (let t1 = hide (match (reveal t) with 
+                                           | Node t1 _ _ -> t1) in
+                            let t2 = hide (match (reveal t) with 
+                                           | Node _ _ t2 -> t2) in
                             let t2' = insert t2 (nd.right) n in 
                             hide (Node (reveal t1) nd.value (reveal t2')))
 
