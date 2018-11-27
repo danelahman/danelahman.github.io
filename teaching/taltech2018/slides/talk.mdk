@@ -919,19 +919,131 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   assert (p !r);  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
 
+<!------------------------------------------------------------------------------>
 
-# Highlights of Other F\* Features #
+# Highlights of [Other F\* Features]{color:DarkBlue} #
+
+<!------------------------------------------------------------------------------>
+
+## Highlights of [Other F\* Features](#conclusion) ##
+
+* {.fragment} Low\*: programming and verifying [**low-level C code**]{color:DarkBlue}
+
+  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not<br/><br/>*
+
+* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue}
+
+  * In addition to `St`, ...,  users can define their own (monadic) effects
+  
+  * Given a mon. definition, F\* derives the effect and the spec. calculus<br/><br/>
+
+* {.fragment} Meta-F\* - a [**tactics and metaprogramming framework**]{color:DarkBlue} for F\*
+
+  * Tactics are just another F\* effect (proof state + exceptions)
+
+  * Ran using the normalizer (slow) or compiled to native OCaml plugins
+
+  * Have access to the proof state, can introspect F\* terms
+
+  * Uses: discharging VCs, massaging VCs, synthesising terms, typeclasses
+
+<!------------------------------------------------------------------------------>
+
+## Low*: a small example ##
+
+```
+let f (): Stack UInt64.t (requires (fun _ -> True))
+                         (ensures  (fun _ _ _ -> True))
+                         
+  = push_frame ();                         (* pushing a new stack frame *)
+    
+    let b = LowStar.Buffer.alloca 1UL 64ul in
+    assert (b.(42ul) = 1UL);      (* high-level reasoning in F*'s logic *)
+
+    b.(42ul) <- b.(42ul) +^ 42UL;
+    let r = b.(42ul) in
+      
+    pop_frame ();           (* popping the stack frame we pushed above, *)
+                            
+    assert (r = 43UL);                    
+    r
+```
+```
+uint64_t f()
+{
+  uint64_t b[64U];
+    
+  for (uint32_t _i = 0U; _i < (uint32_t)64U; ++_i)
+    b[_i] = (uint64_t)1U;
+      
+  b[42U] = b[42U] + (uint64_t)42U;
+  uint64_t r = b[42U];
+  return r;
+}
+```
+
+<!------------------------------------------------------------------------------>
+
+## Tactics can [discharge]{color:DarkBlue} verification conditions (replacing SMT) ##
+
+~Center
+<img src="../../stuff/tactics-assert_by_tactic.png" width="80%">
+~
+
+<!-- [tactics-assert_by_tactic]: ../../stuff/tactics-assert_by_tactic.png { heigth=50% } -->
+
+<!------------------------------------------------------------------------------>
 
 
+## Tactics can [massage]{color:DarkGreen} verification conditions (complementing SMT) ##
 
+~Center
+<img src="../../stuff/tactics-canon.png" width="90%">
+~
 
+<!-- [tactics-canon]: ../../stuff/tactics-canon.png { heigth=50% } -->
 
+<!------------------------------------------------------------------------------>
 
+## Tactics can [synthesize]{color:DarkRed} F\* terms (metaprogramming) ##
 
+~Center
+<img src="../../stuff/tactics-synth_by_tactic.png" width="90%">
+~
 
+<!-- [tactics-synth_by_tactic]: ../../stuff/tactics-synth_by_tactic.png { heigth=50% } -->
 
+<!------------------------------------------------------------------------------>
 
+## Tactics have also been used to extend F\* with [typeclasses]{color:DarkOrange} ##
 
+~Center
+<img src="../../stuff/tactics-typeclasses.png" width="100%">
+~
+
+<!------------------------------------------------------------------------------>
+
+## F\* ## {#conclusion}
+
+* An ML-style effectful [**functional programming language**]{color:DarkBlue}
+
+* A semi-automated [**SMT-based program verifier**]{color:DarkRed}
+
+* An interactive [**dependently typed proof assistant**]{color:DarkBlue}<br/><br/>
+
+* Used successfully in [**security and crypto verification**]{color:DarkRed}
+
+  * miTLS: F\*-verified reference implementation of TLS
+
+  * HACL*: F\*-verified crypto (used in Firefox and Wireguard)
+
+  * Vale: F\* verified assembly language<br/><br/>
+
+* Small [**exercises for the lab sessions**]{color:DarkBlue} to try out F\* yourselves
+
+  * verifying both purely functional and stateful programs
+
+[https://danelahman.github.io/teaching/taltech2018/](https://danelahman.github.io/teaching/taltech2018/)
 
 
 
