@@ -68,7 +68,7 @@ Tallinn, 12 December, 2018
 
 * **Verifying [Stateful]{color:DarkRed} Programs in F\***
 
-* **Highlights of Other F\* Features**
+* **Highlights of Other F\* Features**<br/><br/>
 
 ~Fragment
 Slides, code, exercises, and setup instructions <br/>**@**<br/>
@@ -78,7 +78,7 @@ Slides, code, exercises, and setup instructions <br/>**@**<br/>
 ~
 
 ~Fragment
-**Please ask questions at any time!**
+**Please do ask questions!**
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -121,8 +121,10 @@ effectful programming, SMT-based automation
     ```
     let incr (r:ref a) = r := !r + 1
     ```
-  - but with a much richer type system<br/><br/>
+    but with a much richer type system<br/><br/>
+    
   - by default <u>extracted to OCaml or F\#</u>
+  
   - subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
 
 ~Fragment
@@ -750,15 +752,34 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 ## `Heap` and `ST` interfaces (much simplified) ##
 ```
 module Heap
+  val heap : Type
+  val ref : Type -> Type
 
-[INCLUDE=../../../code/state/Heap.fsti:heap_model]
+  val sel : #a:Type -> heap -> ref a -> GTot a
+  val addr_of: #a:Type -> ref a -> GTot nat
+  val contains : #a:Type -> heap -> ref a -> Type0
+
+  let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) = 
+    forall a (r:ref a). (~(addr_of r `mem` s) /\ h0 `contains` r)
+                                                  ==> sel h1 r == sel h0 r
 ```
 
 ~Fragment
 ```
 module ST
 
-[INCLUDE=../../../code/state/ST.fsti:ops]
+  val alloc : #a:Type -> init:a -> 
+    ST (ref a) (requires (fun _ -> True))
+               (ensures  (fun h0 r h1 -> 
+                  modifies !{} h0 h1 /\ sel h1 r == init /\ fresh r h0 h1))
+
+  val (!) : #a:Type -> r:ref a -> 
+    ST a (requires (fun _ -> True))
+         (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
+
+  val (:=) : #a:Type -> r:ref a -> v:a -> 
+    ST unit (requires (fun _ -> True))
+            (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
 
@@ -836,7 +857,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * Correctness of this variant relies on `r1` and `r2` [**not being aliased**]{color:DarkRed}
 
-* ... and on `int` being unbounded (mathematical) integers<br/><br/>
+* ... and on `int` being [**unbounded**]{color:DarkBlue} (mathematical) integers<br/><br/>
 
 * {.fragment} **Exercise:** Sketch a hand proof that this code is correct
 
@@ -850,6 +871,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
+<!--
 ## Stateful count: 1 + 1 + 1 + ... ##
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
@@ -861,6 +883,23 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   ```
   [INCLUDE=../../../code/state/ST.fsti:alloc]
   ```
+-->
+
+<!------------------------------------------------------------------------------>
+
+## Stateful Fibonacci: 1 + 1 + 2 + 3 + 5 + 8 + ... ##
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci]
+```
+~Fragment
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_stprime]
+```
+~
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_st]
+```
+
 
 <!------------------------------------------------------------------------------>
 
@@ -891,9 +930,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-## F*'s Memory Models are Based on [Monotonicity]{color:DarkBlue} ##
+## F*'s Memory Models are Based on [Monotonicity]{color:DarkRed} ##
 
-* {.fragment} Monotonicity for [garbage collected references]{color:DarkRed}
+* {.fragment} Monotonicity for [**garbage collected references**]{color:DarkBlue}
   ```
   val recall_contains #a (r:ref a) 
     : ST unit (ensures (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
@@ -904,7 +943,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   val mref : a:Type -> preorder a -> Type
   ```
 
-* {.fragment} Such monotonic references also come with [modal operators]{color:DarkRed}
+* {.fragment} Such monotonic references also come with [**modal operators**]{color:DarkBlue}
   ```
   val witness #a #rel (r:mref a rel) (p:(a -> prop)) 
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
@@ -930,7 +969,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} Low\*: programming and verifying [**low-level C code**]{color:DarkBlue}
 
-  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not<br/><br/>*
+  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not*
+
+  * Uses a hierarchical region-based stack-and-heap memory model<br/><br/>
 
 * {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue}
 
@@ -942,11 +983,11 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Tactics are just another F\* effect (proof state + exceptions)
 
-  * Ran using the normalizer (slow) or compiled to native OCaml plugins
+  * Run using the normalizer (slow) or compiled to native OCaml plugins
 
-  * Have access to the proof state, can introspect F\* terms
+  * Can access the proof state, can introspect and synthesise F\* terms
 
-  * Uses: discharging VCs, massaging VCs, synthesising terms, typeclasses
+<!--  * Uses: discharging VCs, massaging VCs, synthesizing terms, typeclasses -->
 
 <!------------------------------------------------------------------------------>
 
