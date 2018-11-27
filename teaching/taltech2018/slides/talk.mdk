@@ -38,6 +38,28 @@ Tallinn, 12 December, 2018
 
 <!-------------------------------------------------------------------------------->
 
+## Bio ##
+
+* **2007 - 2011, [Tallinn University of Technology]{color:DarkBlue}, BSc (+ stopped MSc)**
+
+* **2011 - 2012, [University of Cambridge]{color:DarkBlue}, MPhil**
+
+* **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD**<br/><br/>
+
+* **2011, [Institute of Cybernetics]{color:DarkRed}, Research Intern (2 projects)**
+
+* **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern**
+
+* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern**<br/><br/>
+
+* **2017 - 2018, [Inria Paris]{color:DarkBlue}, PostDoc**
+
+* **2018 - . . .   , [University of Ljubljana]{color:DarkBlue}, PostDoc**<br/><br/>
+
+* **2016 - . . .   , Member of the F\* team**
+
+<!-------------------------------------------------------------------------------->
+
 ## Overview ##
 
 * **What is F\*?**
@@ -82,7 +104,7 @@ Slides, code, exercises, and setup instructions <br/>**@**<br/>
 * **[Left side]{color:DarkRed;}**:
 very expressive logics, interactive proving, tactics
 
-  * but mostly only <u>purely functional programming</u>
+  * but mostly only <u>purely functional programming</u><br/><br/>
 
 * **[Right side]{color:DarkBlue;}**:
 effectful programming, SMT-based automation
@@ -128,15 +150,15 @@ effectful programming, SMT-based automation
 *  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
   - **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
       - [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
-      - [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in Firefox and Wireguard)
+      - [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in [Firefox]{color:DarkBlue} and [Wireguard]{color:DarkBlue})
       - [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
 
 *  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
   - Fallback when SMT fails; also for mechanized metatheory
     - [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
-    - [Wys\*](http://research.microsoft.com/en-us/um/people/nswamy/papers/wys.pdf): Verified DSL for secure multi-party computations
-    - [ReVer](https://github.com/msr-quarc/ReVerC): Verified compiler to reversible circuits
-  - Meta-F\* (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
+    - [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for [secure multi-party computations]{color:DarkBlue}
+    - [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to [reversible circuits]{color:DarkBlue}
+  - **Meta-F\*** (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 # The current F\* team #
 
@@ -382,7 +404,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 <!------------------------------------------------------------------------------>
 
-## F\* effect system encapsulates effectful code (`Tot` and `Dv`) ##
+## Effect encapsulation (`Tot` and `Dv`) ##
 
 * Pure code cannot call potentially divergent code
 
@@ -410,9 +432,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 <!------------------------------------------------------------------------------>
 
-## F\* effect system encapsulates effectful code (`Tot` and `GTot`) ##
+## Effect encapsulation (`Tot` and `GTot`) ##
 
-* {.fragment} **[Ghost]{color:DarkBlue}** effect for code used only in specifications
+* {.fragment} **[Ghost effect]{color:DarkBlue}** for code used only in specifications
   ```
   val sel : #a:Type -> heap -> ref a -> GTot a
   ```
@@ -421,7 +443,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 * {.fragment} **[BUT NOT:]{color:DarkRed}** ` GTot t <: Tot t   ` [(holds for non-informative types)]{color:Gray}
 
-* {.fragment} So, (informative) ghost code [cannot]{color:DarkRed} be used in total functions
+* {.fragment} So, (informative) ghost code [**cannot**]{color:DarkRed} be used in total functions
   ```
   let f (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()
   ```
@@ -432,7 +454,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   ```
 ~
 
-* {.fragment} But total functions [can]{color:DarkGreen} appear in ghost code (regardless of their type)
+* {.fragment} But total functions [**can**]{color:DarkGreen} appear in ghost code (regardless of their type)
   ```
   let f (g:unit -> Tot nat) : GTot (n:nat{n = g ()}) = g ()
   ```
@@ -640,7 +662,7 @@ let rec progress #e #t h =
 <!------------------------------------------------------------------------------>
 
 ## Verifying [potentially divergent]{color:DarkBlue} programs ##
-### The only variant: [intrinsically]{color:DarkBlue} (partial correctness) ###
+### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (partial correctness) ###
 
 * Using refinement types
 ```
@@ -691,6 +713,19 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 # Verifying [Stateful]{color:DarkRed} Programs in F\* #
 
 <!------------------------------------------------------------------------------>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!--
