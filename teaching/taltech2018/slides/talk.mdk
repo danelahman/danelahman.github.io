@@ -920,7 +920,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   ```
 
 
-
+# Highlights of Other F\* Features #
 
 
 
