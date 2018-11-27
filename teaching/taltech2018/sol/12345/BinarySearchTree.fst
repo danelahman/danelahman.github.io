@@ -1,5 +1,7 @@
 module BinarySearchTree
 
+(*** PART 1 ***)
+
 (* Binary node-labelled trees *)
 
 private type btree = 
@@ -51,6 +53,9 @@ private let rec sorted (t:btree) : GTot bool =
   | Leaf -> true
   | Node t1 n t2 -> t1 `sorted_left_of` n && 
                     t2 `sorted_right_of` n
+
+
+(*** PART 2 ***)
 
 (* Binary search trees = binary trees as defined above that are sorted *)
 
@@ -113,7 +118,7 @@ private let lemma_insert_equals (t:stree) (n:nat)
   : Lemma (btree_insert t n = stree_insert t n) = 
   ()
   
-(* Important properties of binary search trees *)
+(* Properties of binary search trees *)
 
 let rec lemma_insert_exists (t:stree) (n:nat) 
   : Lemma ((stree_insert t n) `stree_contains` n) =
@@ -125,13 +130,13 @@ let rec lemma_exists_insert_equal (t:stree) (n:nat)
   lemma_exists_btree_insert_equal t n
 
 
-(* ------------------------------------------------------ *)
-(* ------------------------------------------------------ *)
-
+(*** PART 3 ***)
 
 open FStar.Ghost
 open FStar.Heap
 open FStar.ST
+
+(* Mutable binary trees *)
 
 noeq type node = {
   left  : treeptr;
@@ -141,6 +146,8 @@ noeq type node = {
 and treeptr = ref (option node)
 
 let mtree = treeptr
+
+(* Well-formedness of a mutable binary tree wrt a functional specification *)
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
   match t , StrongExcludedMiddle.strong_excluded_middle (h `contains` r) , sel h r with
@@ -156,21 +163,11 @@ let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases
     )
   | _ -> None
 
+(* Mutable binary search tree is one that is well-formed wrt a functional specification *)
+
 let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
-let rec lemma_wf_addrs_in (r:mtree) (t:stree) (h:heap)
-  : Lemma (requires (Some? (wf r t h)))
-          (ensures  (let (Some s) = wf r t h in 
-                     forall r' . Set.mem r' s ==> ~(addr_unused_in r' h))) 
-          (decreases t)
-          [SMTPat (wf r t h)] = 
-  match t with 
-  | Leaf -> ()
-  | Node t1 n t2 -> (
-      let (Some nd) = sel h r in
-      lemma_wf_addrs_in nd.left t1 h;
-      lemma_wf_addrs_in nd.right t2 h
-    )
+(* Search in a mutable binary search tree *)
 
 let rec search (t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
@@ -184,6 +181,8 @@ let rec search (t:erased stree) (r:mtree) (n:nat)
                       else (let t2 = hide (match (reveal t) with | Node _ _ t2 -> t2) in
                             search t2 nd.right n)
 
+(* Create an empty mutable binary search tree *)
+
 let create () 
   : ST (erased stree * mtree) (requires (fun _ -> True))
                               (ensures  (fun h0 (t,r) h1 -> reveal t = empty_stree () /\
@@ -192,10 +191,9 @@ let create ()
                                                             wf r (reveal t) h1 == Some (only r))) =
   hide Leaf , alloc None
 
-let fresh_diff (s1 s2:Set.set nat) (h:heap) =
-  forall r . (not (Set.mem r s1) /\ Set.mem r s2) ==> addr_unused_in r h
+(* Lemmas showing how well-formedness evolves on heaps *)
 
-let rec lemma_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
+let rec lemma_disjoint_wf_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
   : Lemma (requires (Some? (wf r t h0) /\ 
                      Set.disjoint (Some?.v (wf r t h0)) s /\ 
                      modifies s h0 h1))
@@ -205,19 +203,37 @@ let rec lemma_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
   | Leaf -> ()
   | Node t1 n t2 -> (
       let (Some nd) = sel h0 r in 
-      lemma_unchanged nd.left t1 s h0 h1;
-      lemma_unchanged nd.right t2 s h0 h1
+      lemma_disjoint_wf_unchanged nd.left t1 s h0 h1;
+      lemma_disjoint_wf_unchanged nd.right t2 s h0 h1
     )
+
+let rec lemma_wf_addrs_in (r:mtree) (t:stree) (h:heap)
+  : Lemma (requires (Some? (wf r t h)))
+          (ensures  (forall r' . Set.mem r' (Some?.v (wf r t h)) ==> ~(addr_unused_in r' h))) 
+          (decreases t)
+          [SMTPat (wf r t h)] = 
+  match t with 
+  | Leaf -> ()
+  | Node t1 n t2 -> (
+      let (Some nd) = sel h r in
+      lemma_wf_addrs_in nd.left t1 h;
+      lemma_wf_addrs_in nd.right t2 h
+    )
+
+(* Insertion into a mutable binary search tree *)
+
+let fresh_extension (s0 s1:Set.set nat) (h:heap) = 
+  Set.subset s0 s1 /\
+  (forall r . (not (Set.mem r s0) /\ Set.mem r s1) ==> addr_unused_in r h)
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
   : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
                       (ensures  (fun h0 t' h1 -> reveal t' = stree_insert (reveal t) n /\
                                                  is_stree r (reveal t') h1 /\ (
-                                                 let (Some s) = wf r (reveal t) h0 in 
-                                                 let (Some s') = wf r (reveal t') h1 in
-                                                 modifies s h0 h1 /\
-                                                 Set.subset s s' /\ 
-                                                 fresh_diff s s' h0))) = 
+                                                 let (Some s0) = wf r (reveal t) h0 in 
+                                                 let (Some s1) = wf r (reveal t') h1 in
+                                                 modifies s0 h0 h1 /\
+                                                 fresh_extension s0 s1 h0))) = 
   recall r;
   match !r with
   | None -> (
@@ -237,7 +253,9 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             hide (Node (reveal t1) nd.value (reveal t2')))
 
 
-(* ------------------------------------------------------ *)
+(*** PART 4 ***)
+
+(* Some code to test such mutable binary search trees *)
 
 #set-options "--max_ifuel 0"
 
