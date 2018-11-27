@@ -73,24 +73,24 @@ private let rec lemma_btree_insert_is_sorted (t:btree) (n:nat)
       if n < m then lemma_btree_insert_is_sorted t1 n
                else lemma_btree_insert_is_sorted t2 n
 
-private let rec lemma_btree_insert_exists (t:btree) (n:nat) 
+private let rec lemma_btree_insert_contains (t:btree) (n:nat) 
   : Lemma (requires (sorted t))
           (ensures  ((btree_insert t n) `btree_contains` n)) =
   match t with
   | Leaf -> ()
   | Node t1 m t2 -> 
       if n = m then () else
-      if n < m then lemma_btree_insert_exists t1 n
-               else lemma_btree_insert_exists t2 n
+      if n < m then lemma_btree_insert_contains t1 n
+               else lemma_btree_insert_contains t2 n
 
-private let rec lemma_exists_btree_insert_equal (t:btree) (n:nat) 
+private let rec lemma_contains_btree_insert_equal (t:btree) (n:nat) 
   : Lemma (requires (sorted t && t `btree_contains` n))
           (ensures  (btree_insert t n = t)) = 
   match t with
   | Node t1 m t2 -> 
       if n = m then () else 
-      if n < m then lemma_exists_btree_insert_equal t1 n
-               else lemma_exists_btree_insert_equal t2 n
+      if n < m then lemma_contains_btree_insert_equal t1 n
+               else lemma_contains_btree_insert_equal t2 n
 
 (* Binary search tree operations *)
 
@@ -120,14 +120,14 @@ private let lemma_insert_equals (t:stree) (n:nat)
   
 (* Properties of binary search trees *)
 
-let rec lemma_insert_exists (t:stree) (n:nat) 
+let rec lemma_insert_contains (t:stree) (n:nat) 
   : Lemma ((stree_insert t n) `stree_contains` n) =
-  lemma_btree_insert_exists t n
+  lemma_btree_insert_contains t n
 
-let rec lemma_exists_insert_equal (t:stree) (n:nat) 
+let rec lemma_contains_insert_equal (t:stree) (n:nat) 
   : Lemma (requires (t `stree_contains` n))
           (ensures  (stree_insert t n = t)) = 
-  lemma_exists_btree_insert_equal t n
+  lemma_contains_btree_insert_equal t n
 
 
 (*** PART 3 ***)
@@ -280,9 +280,11 @@ let test_create_insert_search () : St unit =
   let t2' = insert t1' r' 4 in
   let b7 = search t2' r' 4 in
 
-  let t7 = insert t6 r 5 in 
-  let b8 = search t7 r 5 in
-  let b9 = search t7 r 1 in 
+  let b8 = search t6 r 5 in
+  let t7 = insert t6 r 6 in 
+  let b9 = search t7 r 5 in
+  let b10 = search t7 r 6 in
+  let b11 = search t7 r 1 in 
 
   assert b1;
   assert b2;
@@ -291,8 +293,10 @@ let test_create_insert_search () : St unit =
   assert b5;
   assert (not b6);
   assert b7;
-  assert b8;
-  assert b9;
+  assert (not b8);
+  assert (not b9);
+  assert b10;
+  assert b11;
 
   assert (t4 == t5)
 

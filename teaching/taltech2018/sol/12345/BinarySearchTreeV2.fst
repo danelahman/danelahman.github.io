@@ -92,6 +92,25 @@ private let rec lemma_exists_btree_insert_equal (t:btree) (n:nat)
       if n < m then lemma_exists_btree_insert_equal t1 n
                else lemma_exists_btree_insert_equal t2 n
 
+(*
+private let rec lemma_not_contains_subtree (t t1 t2:btree) (n m:nat) 
+  : Lemma (requires (sorted t /\ not(t `btree_contains` n) /\ t == Node t1 m t2))
+          (ensures  (not(t1 `btree_contains` n) /\ not(t2 `btree_contains` n)))
+  = admit ()
+
+private let rec lemma_not_contains_btree_insert (t:btree) (n m:nat)
+  : Lemma (requires (sorted t /\ not(t `btree_contains` n) /\ n <> m))
+          (ensures  (not((btree_insert t m) `btree_contains` n))) = 
+  match t with
+  | Leaf -> ()
+  | Node t1 k t2 -> 
+      if m = k then () else
+      if m < k then (lemma_not_contains_subtree t t1 t2 n k;
+                     lemma_not_contains_btree_insert t1 n m)
+               else (lemma_not_contains_subtree t t1 t2 n k;
+                     lemma_not_contains_btree_insert t2 n m)
+*)
+
 (* Binary search tree operations *)
 
 let stree_contains (t:stree) (n:nat) : GTot bool =
@@ -232,7 +251,7 @@ let create ()
   
 (* Lemmas showing how well-formedness evolves on heaps *)
 
-let rec lemma_disjoint_wf_unchanged (r:treeptr) (t:stree) (s:Set.set nat) (h0 h1:heap)
+let rec lemma_disjoint_addrs_in_unchanged (r:treeptr) (t:stree) (s:Set.set nat) (h0 h1:heap)
   : Lemma (requires (Some? (addrs_in r t h0) /\ 
                      Set.disjoint (Some?.v (addrs_in r t h0)) s /\ 
                      modifies s h0 h1))
@@ -242,11 +261,11 @@ let rec lemma_disjoint_wf_unchanged (r:treeptr) (t:stree) (s:Set.set nat) (h0 h1
   | Leaf -> ()
   | Node t1 n t2 -> (
       let (Some nd) = sel h0 r in 
-      lemma_disjoint_wf_unchanged nd.left t1 s h0 h1;
-      lemma_disjoint_wf_unchanged nd.right t2 s h0 h1
+      lemma_disjoint_addrs_in_unchanged nd.left t1 s h0 h1;
+      lemma_disjoint_addrs_in_unchanged nd.right t2 s h0 h1
     )
 
-let rec lemma_wf_addrs_in (r:treeptr) (t:stree) (h:heap)
+let rec lemma_addrs_in (r:treeptr) (t:stree) (h:heap)
   : Lemma (requires (Some? (addrs_in r t h)))
           (ensures  (forall r' . Set.mem r' (Some?.v (addrs_in r t h)) ==> ~(addr_unused_in r' h))) 
           (decreases t)
@@ -255,9 +274,16 @@ let rec lemma_wf_addrs_in (r:treeptr) (t:stree) (h:heap)
   | Leaf -> ()
   | Node t1 n t2 -> (
       let (Some nd) = sel h r in
-      lemma_wf_addrs_in nd.left t1 h;
-      lemma_wf_addrs_in nd.right t2 h
+      lemma_addrs_in nd.left t1 h;
+      lemma_addrs_in nd.right t2 h
     )
+
+let lemma_wf_no_modifies_unchanged (r:mtree) (h0 h1:heap) 
+  : Lemma (requires (wf r h0 /\ modifies !{} h0 h1))
+          (ensures  (wf r h1))  
+          [SMTPat (wf r h0); SMTPat (modifies !{} h0 h1)] =
+  ()
+
 
 (* Insertion into a mutable binary search tree *)
 
@@ -314,7 +340,9 @@ let insert (r:mtree) (n:nat)
 
 (* Some code to test such mutable binary search trees *)
 
+(*
 #set-options "--max_ifuel 0"
+
 
 let test_create_insert_search () : St unit =
 
@@ -333,7 +361,10 @@ let test_create_insert_search () : St unit =
   let b5 = search r 3 in 
   
   let r' = create () in
+
   insert r 5; 
+
+  let h = get () in 
 
   let b6 = search r' 0 in
   insert r' 4;
@@ -351,43 +382,4 @@ let test_create_insert_search () : St unit =
   assert b7;
   assert b8;
   assert b9
-  
-
-(*
-let test_create_insert_search () : St unit =
-
-  let t1,r = create () in
-  let t2 = insert t1 r 0 in
-  let t3 = insert t2 r 1 in 
-  let t4 = insert t3 r 2 in 
-  let t5 = insert t4 r 0 in 
-    
-  let b1 = search t5 r 0 in
-  let b2 = search t5 r 2 in
-  let b3 = search t5 r 1 in
-  let b4 = search t5 r 3 in
-  
-  let t6 = insert t5 r 3 in 
-  let b5 = search t6 r 3 in
-  
-  let t1',r' = create () in
-  let b6 = search t1' r' 0 in
-  let t2' = insert t1' r' 4 in
-  let b7 = search t2' r' 4 in
-
-  let t7 = insert t6 r 5 in 
-  let b8 = search t7 r 5 in
-  let b9 = search t7 r 1 in 
-
-  assert b1;
-  assert b2;
-  assert b3;
-  assert (not b4);
-  assert b5;
-  assert (not b6);
-  assert b7;
-  assert b8;
-  assert b9;
-
-  assert (t4 == t5)
 *)
