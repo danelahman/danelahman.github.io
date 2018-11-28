@@ -878,14 +878,14 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 <!------------------------------------------------------------------------------>
 
 
-## But you don't escape having to come up with invariants ##
+## But you don't escape having to come up with [invariants]{color:DarkRed} ##
 
 ### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
 
-* {.fragment} You will see much more involved invariants in the lab exercises
+* {.fragment} You'll see much more involved invariants in the lab exercises
 
 <!------------------------------------------------------------------------------>
 
@@ -947,7 +947,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-## Monotonic References [` mref a rel `]{color:DarkBlue} ##
+## Monotonic References [` mref a rel `]{color:DarkRed} ##
 
 * Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
   ```

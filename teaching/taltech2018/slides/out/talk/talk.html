@@ -6926,7 +6926,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
 
 
 </section>
-<section id="sec-but-you-dont-escape-having-to-come-up-with-invariants" class="section section2" data-section-depth="2" data-line="881"><h3 id="heading-sec-but-you-dont-escape-having-to-come-up-with-invariants" class="h2" data-heading-depth="2" style="display:block">But you don&#39;t escape having to come up with invariants</h3><h4 id="sec-stateful-count--1-1-1-1-1-1-" class="h3" data-line="883" data-heading-depth="3" style="display:block"><span data-line="883"></span>Stateful Count: 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ <span data-line="883"></span>&#8230;</h4>
+<section id="sec-but-you-dont-escape-having-to-come-up-with-invariantscolor-darkred" class="section section2" data-section-depth="2" data-line="881"><h3 id="heading-sec-but-you-dont-escape-having-to-come-up-with-invariantscolor-darkred" class="h2" data-heading-depth="2" style="display:block">But you don&#39;t escape having to come up with <span style="color:DarkRed">invariants</span></h3><h4 id="sec-stateful-count--1-1-1-1-1-1-" class="h3" data-line="883" data-heading-depth="3" style="display:block"><span data-line="883"></span>Stateful Count: 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ 1<span data-line="883"></span> <span data-line="883"></span>+ <span data-line="883"></span>&#8230;</h4>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="884" data-line-first="885;out/talk/../../../code/state/CountST.fst:23" style="display:block"><code data-line="885;out/talk/../../../code/state/CountST.fst:23"><span style="color:blue">let</span> <span style="color:blue">rec</span> count_st&#39; (r:ref nat) (n:nat) 
   : <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _       <span style="color:blue">-&gt;</span> True))
             (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> sel h1 r == sel h0 r + n /\ 
@@ -6945,7 +6945,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
   count_st&#39; r n; 
   !r</code></pre>
 <ul class="ul list-star compact" data-line="888">
-<li class="li ul-li list-star-li compact-li fragment" data-line="888"><span data-line="888"></span>You will see much more involved invariants in the lab exercises
+<li class="li ul-li list-star-li compact-li fragment" data-line="888"><span data-line="888"></span>You<span data-line="888"></span>&#39;<span data-line="888"></span>ll see much more involved invariants in the lab exercises
 </li></ul>
 <!------------------------------------------------------------------------------>
 
@@ -7010,7 +7010,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
 
 
 </section>
-<section id="sec-monotonic-references-mref-a-rel-color-darkblue" class="section section2" data-section-depth="2" data-line="950"><h3 id="heading-sec-monotonic-references-mref-a-rel-color-darkblue" class="h2" data-heading-depth="2" style="display:block">Monotonic References <span style="color:DarkBlue"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> mref a rel </code></span></h3>
+<section id="sec-monotonic-references-mref-a-rel-color-darkred" class="section section2" data-section-depth="2" data-line="950"><h3 id="heading-sec-monotonic-references-mref-a-rel-color-darkred" class="h2" data-heading-depth="2" style="display:block">Monotonic References <span style="color:DarkRed"><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"> mref a rel </code></span></h3>
 <ul class="ul list-star loose" data-line="952">
 <li class="li ul-li list-star-li loose-li" data-line="952">
 <p data-line="952"><span data-line="952"></span>Such monotonic references also come with a<span data-line="952"></span> <span style="color:DarkBlue"><strong class="strong-star2">modal operator</strong></span><span data-line="952"></span>
