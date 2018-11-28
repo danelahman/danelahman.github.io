@@ -745,7 +745,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 * {.fragment} **Sub-effecting:** ` Pure <: ST ` and in fact also ` Div <: ST `
 
-* {.fragment} As such, `ST` has a a [**partial correctness**]{color:DarkBlue} reading
+* {.fragment} As such, `ST` has a a [**partial correctness**]{color:DarkRed} reading
 
 <!------------------------------------------------------------------------------>
 
@@ -774,11 +774,11 @@ module ST
                   modifies !{} h0 h1 /\ sel h1 r == init /\ fresh r h0 h1))
 
   val (!) : #a:Type -> r:ref a -> 
-    ST a (requires (fun _ -> True))
+    ST a (requires (fun _       -> True))
          (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
 
   val (:=) : #a:Type -> r:ref a -> v:a -> 
-    ST unit (requires (fun _ -> True))
+    ST unit (requires (fun _      -> True))
             (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
@@ -806,7 +806,7 @@ val (!) : #a:Type -> r:ref a ->
 
 val (:=) : #a:Type -> r:ref a -> v:a -> 
   ST unit (requires (fun _ -> True))
-          (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+          (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
 <!--~Fragment
@@ -865,7 +865,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * ... and on `int` being [**unbounded**]{color:DarkBlue} (mathematical) integers<br/><br/>
 
-* {.fragment} **Exercise:** Sketch a hand proof that this code is correct
+<!-- * {.fragment} **Exercise:** Sketch a hand proof that this code is correct -->
 
 <!-- ~Block {.console} -->
 <!-- ```text -->
@@ -877,35 +877,13 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-<!--
-## Stateful count: 1 + 1 + 1 + ... ##
+
+## But you don't escape having to come up with invariants ##
+
+### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
-* {.fragment} The truth about modifies and allocation (kind of, still simplified)
-  ```
-  [INCLUDE=../../../code/state/Heap2.fsti:modifies_contains]
-  ```
-  ```
-  [INCLUDE=../../../code/state/ST.fsti:alloc]
-  ```
--->
-
-<!------------------------------------------------------------------------------>
-
-## Stateful Fibonacci: 1 + 1 + 2 + 3 + 5 + 8 + ... ##
-```
-[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci]
-```
-~Fragment
-```
-[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_stprime]
-```
-~
-```
-[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_st]
-```
-
 
 <!------------------------------------------------------------------------------>
 
@@ -932,7 +910,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
           (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == n))
   ```
 
-* {.fragment} But [**that's not all**]{color:DarkRed} there is to F*'s memory models!
+* {.fragment} But **that's not all** there is to F*'s memory models!
+
+  * [monotonicity]{color:DarkRed}, [regions]{color:DarkBlue}, [heaps-and-stacks]{color:DarkRed} (for low-level programming)
 
 <!------------------------------------------------------------------------------>
 
@@ -944,28 +924,54 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
     : ST unit (requires (fun _       -> True))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
   ```
+* {.fragment}
+  ```
+  val (!) : #a:Type -> r:ref a -> 
+    ST a (requires (fun _       -> True))
+         (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
 
-* {.fragment} [`ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
-  ```
-  val mref : a:Type -> preorder a -> Type
+  val (:=) : #a:Type -> r:ref a -> v:a -> 
+    ST unit (requires (fun _      -> True))
+            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
   ```
 
-* {.fragment} Such monotonic references also come with a [**modal operator**]{color:DarkBlue} (`token`)
+* {.fragment} Moreover, [` ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
   ```
-  val witness #a #rel (r:mref a rel) (p:(a -> Type0)) 
+  val mref : a:Type -> rel:preorder a -> Type
+
+  let ref a = mref a (fun _ _ -> True)
+  ```
+
+<!------------------------------------------------------------------------------>
+
+## Monotonic References [` mref a rel `]{color:DarkBlue} ##
+
+* Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
+  ```
+  val token #a #rel (r:mref a rel) : (a -> Type0) -> Type0
+  ```
+
+* And corresponding [**introduction**]{color:DarkRed} and [**elimination**]{color:DarkRed} rules
+  ```
+  val witness_token #a #rel (r:mref a rel) (p:(a -> Type0)) 
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
 
-  val recall #a #rel (r:mref a rel) (p:(a -> Type0)) 
+  val recall_token #a #rel (r:mref a rel) (p:(a -> Type0)) 
     : ST unit (requires (fun _       -> token r p))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
   ```
-  
-* {.fragment}
+
+* {.fragment} Enabling the following verification pattern
   ```
-  let p (x:nat) = x > 0 in    (* where r:mref nat rel, for rel x y = x < y *)
-  r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
+  fun (r:mref nat less_than_equal_to) -> 
+    let p (x:nat) = x > 0 in           
+    r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
+
+  * {.fragment} [monotonic counters]{color:DarkBlue}, [monotonic logs]{color:DarkRed}, [monotonic network traffic]{color:DarkBlue}, ...
+
+  * {.fragment} also crucial for, e.g., verifying the Ariadne [state continuity]{color:DarkRed} protocol
 
 <!------------------------------------------------------------------------------>
 
