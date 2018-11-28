@@ -978,9 +978,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
     r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
 
-  * {.fragment} [monotonic counters]{color:DarkBlue}, [monotonic logs]{color:DarkRed}, [monotonic network traffic]{color:DarkBlue}, ...
+  * {.fragment} [**monotonic counters**]{color:DarkBlue}, [**monotonic logs**]{color:DarkRed}, [**network traffic history**]{color:DarkBlue}, ...
 
-  * {.fragment} also crucial for, e.g., verifying the Ariadne [state continuity]{color:DarkRed} protocol
+  * {.fragment} also crucial for, e.g., verifying the [**Ariadne state continuity protocol**]{color:DarkRed}
 
 <!------------------------------------------------------------------------------>
 
@@ -996,7 +996,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Uses a hierarchical region-based stack-and-heap memory model<br/><br/>
 
-* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue} (aka Dijkstra Monads For Free)
+* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue} (aka [**Dijkstra Monads For Free**]{color:DarkRed})
 
   * In addition to `St`, ...,  users can define their own (monadic) effects
   
@@ -1102,9 +1102,9 @@ uint64_t f()
 
   * HACL*: F\*-verified crypto (used in Firefox and Wireguard)
 
-  * Vale: F\* verified assembly language<br/><br/>
+  * Vale: F\*-verified assembly language<br/><br/>
 
-* Some fun [**exercises for the lab sessions**]{color:DarkBlue} to try out F\* yourselves
+* Small [**exercises for the lab sessions**]{color:DarkBlue} to try out F\* yourselves
 
   * verifying pure and stateful programs, using monotonicity, ...
 
