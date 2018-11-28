@@ -356,12 +356,12 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 <!--
 ## Semantic termination checking ##
 
-* based on **well-founded ordering on expressions** (`<<`)
+* based on [**well-founded ordering on expressions**]{color:DarkBlue} (`<<`)
   - naturals related by `<` (negative integers unrelated)
   - inductives related by subterm ordering
   - lex tuples `%[a;b;c]` with lexicographic ordering
 * {.fragment} order constraints discharged by the SMT solver
-* {.fragment} arbitrary total expression as **decreases metric**
+* {.fragment} arbitrary total expression as [**decreases metric**]{color:DarkBlue}
   ```
   val ackermann: m:nat -> n:nat -> Tot nat (decreases %[m;n])
   let rec ackermann m n =
@@ -373,6 +373,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   ```
   val ackermann: m:nat -> n:nat -> Tot nat
   ```
+-->
 
 ## The divergence effect (`Dv`) ##
 
@@ -403,7 +404,6 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     ~
   - {.fragment} servers
   - {.fragment} ...
--->
 
 <!------------------------------------------------------------------------------>
 
@@ -467,7 +467,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 <!------------------------------------------------------------------------------>
 
-## Verifying [pure]{color:DarkBlue} programs ## {#pure1}
+## Verifying [pure]{color:DarkRed} programs ## {#pure1}
 ### Variant #1: [intrinsically]{color:DarkBlue} (at definition time) ###
 
 * Using refinement types (saw this already)
@@ -512,8 +512,8 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 
 <!------------------------------------------------------------------------------>
 
-## Verifying [pure]{color:DarkBlue} programs ## {#pure2}
-### Variant #2: [extrinsically]{color:DarkRed} using SMT-backed lemmas ###
+## Verifying [pure]{color:DarkRed} programs ## {#pure2}
+### Variant #2: [extrinsically]{color:DarkBlue} using SMT-backed lemmas ###
 
 ```
 [INCLUDE=../../../code/pure-fun/AppendLength.fst:append]
@@ -601,7 +601,7 @@ let rec rev_involutive (#a:Type) l =
   | hd::tl -> rev_involutive tl; rev_snoc (rev tl) hd
 ```
 
-## Often lemmas are unavoidable ([but SMT can help]{color:DarkBlue}) ##
+## Often lemmas are unavoidable ([but SMT can help]{color:DarkRed}) ##
 <!-- need lemma for 3 reasons:
 - as before, this property is rather arbitrary
 - this property is "relational" (2 calls to reverse)
@@ -664,7 +664,7 @@ let rec progress #e #t h =
 
 <!------------------------------------------------------------------------------>
 
-## Verifying [potentially divergent]{color:DarkBlue} programs ##
+## Verifying [potentially divergent]{color:DarkRed} programs ##
 ### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (partial correctness) ###
 
 * Using refinement types
@@ -696,7 +696,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 * **[Variant of dependent type theory]{color:DarkBlue}**
   - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
 
-* **[Recursion and semantic termination check]{color:DarkBlue}**
+* **[General recursion and semantic termination check]{color:DarkBlue}**
   - potential non-termination is an effect
 
 * **[Refinements]{color:DarkBlue}**
@@ -884,6 +884,8 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
+
+* {.fragment} You will see much more involved invariants in the lab exercises
 
 <!------------------------------------------------------------------------------>
 

@@ -6,6 +6,8 @@ open FStar.Ref
 let rec count_st' (r:ref nat) (n:nat) 
   : ST unit (requires (fun _       -> True))
             (ensures  (fun h0 _ h1 -> sel h1 r == sel h0 r + n /\ 
+                                      (* sel h1 r == n alone would 
+                                                       be too weak *)
                                       modifies !{r} h0 h1)) =
   if n > 0 then (r := !r + 1; 
                  count_st' r (n - 1))
