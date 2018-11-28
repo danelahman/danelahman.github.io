@@ -117,25 +117,25 @@ effectful programming, SMT-based automation
 
 <!-- General-purpose -->
 * **[Functional programming language with effects]{color:Black;}**
-  - like F#, OCaml, Haskell, ...
+  * like F#, OCaml, Haskell, ...
     ```
     let incr (r:ref a) = r := !r + 1
     ```
-    but with a much richer type system<br/><br/>
+    but with a much richer type system
     
-  - by default <u>extracted to OCaml or F\#</u>
+  * by default <u>extracted to OCaml or F\#</u>
   
-  - subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
+  * subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
 
 ~Fragment
 * **[Semi-automated verification system using SMT (Z3)]{color:DarkBlue;}**
-  - <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Types, ...
+  * <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Types, ...
 ~
 
 ~Fragment
 * **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
   <!-- - full dependency, inductive types, universe polymorphism -->
-  - <u>interactive proving and tactics</u> like in Coq, Agda, Lean, ...
+  * <u>interactive proving and tactics</u> like in Coq, Agda, Lean, ...
 ~
 
 <!-- * {.fragment} Other tools in this space: -->
@@ -148,20 +148,20 @@ effectful programming, SMT-based automation
 ## F\* in action, at scale ##
 
 * **[Functional programming language with effects]{color:Black;}**
-  - F\* is programmed in F\*, but not (yet) verified
+  * F\* is programmed in F\*, but not (yet) verified
 
 *  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
-  - **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
-      - [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
-      - [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in [Firefox]{color:DarkBlue} and [Wireguard]{color:DarkBlue})
-      - [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
+  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
+      * [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
+      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in <u>Firefox</u> and <u>Wireguard</u>)
+      * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
 
 *  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
-  - Fallback when SMT fails; also for mechanized metatheory
-    - [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
-    - [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for [secure multi-party computations]{color:DarkBlue}
-    - [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to [reversible circuits]{color:DarkBlue}
-  - **Meta-F\*** (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
+  * Fallback when SMT fails; also for mechanized metatheory
+    * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
+    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
+    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
+  * **Meta-F\*** (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 # The current F\* team #
 
@@ -177,14 +177,14 @@ effectful programming, SMT-based automation
 
 ## How to use F* ##
 
-* **Two kinds of source files**
+* **Two kinds of F\* files**
 
-  * A.fsti - [interface]{color:DarkBlue} file for module called A (can be omitted)
+  * A.fsti - <u>interface</u> file for module called A (can be omitted)
 
-  * A.fst - [source code]{color:DarkRed} file for module called A
+  * A.fst - <u>source code</u> file for module called A
 
 ~Fragment
-* **Command line: typechecking / program verification**
+* **Command line: [typechecking/verification]{color:DarkBlue}**
 ~
 ~Fragment {.console}
   ```text
@@ -196,7 +196,7 @@ effectful programming, SMT-based automation
 ~
 
 ~Fragment
-* **Command line: typechecking + program extraction**
+* **Command line: [typechecking/verification]{color:DarkBlue} + [program extraction]{color:DarkRed}**
 ~
 ~Fragment {.console}
   ```text
@@ -205,7 +205,7 @@ effectful programming, SMT-based automation
 ~
 
 ~Fragment
-* **Interactive: Emacs + [fstar-mode](https://github.com/FStarLang/fstar-mode.el/)**
+* **Interactive: [development]{color:DarkRed} + [verification]{color:DarkBlue} (Emacs with [fstar-mode](https://github.com/FStarLang/fstar-mode.el/))**
 ~
 
 <!------------------------------------------------------------------------------>
@@ -250,42 +250,44 @@ effectful programming, SMT-based automation
 ```
 type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 ```
-* {.fragment} Refinements [introduced by type annotations]{color:DarkBlue} (code unchanged)
+* {.fragment} Refinements [**introduced by type annotations**]{color:DarkBlue} (code unchanged)
   ```
   val factorial : nat -> nat
   let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
-* {.fragment} [Logical obligations]{color:DarkBlue} discharged by SMT (for else branch, simplified)
+* {.fragment} Logical obligations [**discharged by SMT**]{color:DarkRed} (for else branch, simplified)
   ```text
   n >= 0, n <> 0 |= n - 1 >= 0
   n >= 0, n <> 0, (factorial (n - 1)) >= 0 |= n * (factorial (n - 1)) >= 0
   ```
 
-* {.fragment} Refinements [eliminated by subtyping]{color:DarkBlue}: ` nat <: int`
+* {.fragment} Refinements [**eliminated by subtyping**]{color:DarkBlue}: ` nat <: int`
   ```
-  let i : int = factorial 42
-  
-  let f : x:nat{x > 0} -> int = factorial
+  let i : int = factorial 42         let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Different kinds of [extensional (in)equality]{color:DarkBlue} ( (`=` and `==`) **vs** (`<>` and `=!=`) )
+* {.fragment} Different kinds of [**logical connectives**]{color:DarkBlue}
+
+  * ` = `, ` <> `, ` && `, ` || `, ` not `  [(`bool`-valued)]{color:DarkRed}
+  
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` [(`prop`-valued)]{color:DarkRed}
 
 
 ## Dependent types ##
 
-* [Dependent function types]{color:DarkBlue} (here together with refinements):
+* [**Dependent function types**]{color:DarkBlue} (here together with refinements)
   ```
   val incr : x:int -> y:int{x < y}
   let incr x = x + 1
   ```
 
-* {.fragment} Can express [pre- and postconditions]{color:DarkBlue} of pure functions
+* {.fragment} Can express [**pre- and postconditions**]{color:DarkRed} of pure functions
   ```
   val incr' : x:nat{odd x} -> y:nat{even y}
   ```
 
-* {.fragment} (Parameterised and indexed) inductive datatypes; implicit arguments
+* {.fragment} ([**Parameterised**]{color:DarkBlue} and [**indexed**]{color:DarkBlue}) inductive datatypes; [**implicit arguments**]{color:DarkBlue}
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
@@ -299,45 +301,48 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 ## Inductive families + refinement types ##
 
-* As in e.g. Coq, we could define type and define the [lookup function]{color:DarkBlue} as
+* As in e.g. Coq, we could define type and define the [**lookup function**]{color:DarkBlue} as
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
-  let rec lookup #a #n (as:vec a n) (m:nat) (p:m `less_than` n) = ...
+  let rec lookup #a #n (as:vec a n) (m:nat) (p:m `less_than` n) : a = ...
   ```
 
-* {.fragment} But can also [combine `vec` with refinement types]{color:DarkBlue} for more convenience
+* {.fragment} But can also [**combine `vec` with refinement types**]{color:DarkRed} for more convenience
   ```
-  let rec lookup #a #n (as:vec a n) (m:nat{m `less_than` n}) = ...
+  let rec lookup #a #n (as:vec a n) (m:nat{m `less_than` n}) : a = ...
   ```
 
-* {.fragment} Or we could use [ordinary lists + refinement types]{color:DarkBlue}
+* {.fragment} Another alternative is to use [**ordinary lists + refinement types**]{color:DarkBlue}
   ```
   let rec length #a (as:list a) =
     match as with
     | Nil       -> 0
     | Cons _ tl -> 1 + length tl
     
-  let rec lookup #a (as:list a) (m:nat{m `less_than` (length as)}) = ...
+  let rec lookup #a (as:list a) (m:nat{m `less_than` (length as)}) : a = ...
   ```
 
 
 
 ## Total functions in F\* ##
 
-* The F\* functions we saw so far were all [**total**]{color:DarkBlue}
+* The F\* functions we saw so far were all [**total**]{color:DarkRed}
 
-* `Tot` effect (default) = no side-effects, terminates on all inputs
+* [**`Tot` effect**]{color:DarkBlue} (default) = no side-effects, terminates on all inputs
 
   ```
+  (*val factorial : nat -> nat*)
+  
   val factorial : nat -> Tot nat
+
   let rec factorial n =
     if n = 0 then 1 else n * (factorial (n - 1))
   ```
 
-* {.fragment} **Quiz:** How about giving this weaker type to factorial?
+* {.fragment} [**Quiz:**]{color:DarkRed} How about giving this weaker type to factorial?
   ```
   val factorial : int -> Tot int
   ```
@@ -384,7 +389,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 * {.fragment} Some useful code really is not always terminating
 
-  - {.fragment} evaluator for lambda terms
+  * {.fragment} evaluator for lambda terms
     ```
     val eval : exp -> Dv exp
     let rec eval e = 
@@ -402,16 +407,16 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     ./Divergence.exe
     ```
     ~
-  - {.fragment} servers
-  - {.fragment} ...
+  * {.fragment} servers
+  * {.fragment} ...
 
 <!------------------------------------------------------------------------------>
 
 ## Effect encapsulation (`Tot` and `Dv`) ##
 
-* Pure code cannot call potentially divergent code
+* Pure code [**cannot call**]{color:DarkRed} potentially divergent code
 
-* {.fragment} Only pure code can appear in specifications
+* {.fragment} [**Only (!)**]{color:DarkBlue} pure code [**can appear**]{color:DarkBlue} in specifications
   ```
   val factorial : int -> Dv int
 
@@ -426,9 +431,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 ~
 <!-- Cheating quite badly above since I don't want to tell them about ghost -->
 
-* {.fragment} **Sub-effecting:** `Tot t <: Dv t`
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Tot t <: Dv t`
 
-* {.fragment} So, divergent code can include pure code
+* {.fragment} So, divergent code [**can include**]{color:DarkBlue} pure code
   ```
   incr 2 + factorial (-1) : Dv int
   ```
@@ -442,11 +447,11 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   val sel : #a:Type -> heap -> ref a -> GTot a
   ```
 
-* {.fragment} **Sub-effecting:** ` Tot t <: GTot t`
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Tot t <: GTot t`
 
-* {.fragment} **[BUT NOT:]{color:DarkRed}** ` GTot t <: Tot t   ` [(holds for non-informative types)]{color:Gray}
+* {.fragment} **[BUT NOT (!):]{color:DarkRed}** ` GTot t <: Tot t   ` [(holds for non-informative types)]{color:Gray}
 
-* {.fragment} So, (informative) ghost code [**cannot**]{color:DarkRed} be used in total functions
+* {.fragment} So, (informative) ghost code [**cannot be used**]{color:DarkRed} in total functions
   ```
   let f (g:unit -> GTot nat) : Tot (n:nat{n = g ()}) = g ()
   ```
@@ -457,7 +462,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   ```
 ~
 
-* {.fragment} But total functions [**can**]{color:DarkGreen} appear in ghost code (regardless of their type)
+* {.fragment} But total functions [**can appear**]{color:DarkBlue} in ghost code (regardless of their type)
   ```
   let f (g:unit -> Tot nat) : GTot (n:nat{n = g ()}) = g ()
   ```
@@ -470,17 +475,17 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 ## Verifying [pure]{color:DarkRed} programs ## {#pure1}
 ### Variant #1: [intrinsically]{color:DarkBlue} (at definition time) ###
 
-* Using refinement types (saw this already)
+* Using [**refinement types**]{color:DarkBlue} (saw this already)
 ```
 val factorial : nat -> Tot nat              (* type nat = x:int{x >= 0} *)
 ```
-* {.fragment}Can equivalently use [**pre- and postconditions**]{color:DarkGreen} for this
+* {.fragment}Can equivalently use [**pre- and postconditions**]{color:DarkRed} for this
 ```
 val factorial : x:int -> Pure int (requires (x >= 0))
                                     (ensures  (fun y -> y >= 0))
 ```
-* {.fragment} Each F\* [**computation type**]{color:DarkRed} is of the form
-  - <u>effect</u> (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>result type</u> (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* {.fragment} Each F\* [**computation type**]{color:DarkBlue} is of the form
+  * <u>effect</u> (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>result type</u> (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      <u>spec.</u> (e.g. pre and post)<br/><br/>
 * {.fragment}`Tot` is just an abbreviation
 ```
@@ -523,7 +528,7 @@ Tot t = Pure t (requires True) (ensures (fun _ -> True))
 [INCLUDE=../../../code/pure-fun/AppendLength.fst:append_length]
 ```
 ~
-* {.fragment} Convenient syntactic sugar: **the `Lemma` effect**
+* {.fragment} Convenient syntactic sugar: [**the `Lemma` effect**]{color:DarkBlue}
 ```
 Lemma property = Pure unit (requires True) (ensures (fun _ -> property))
 ```
@@ -667,11 +672,11 @@ let rec progress #e #t h =
 ## Verifying [potentially divergent]{color:DarkRed} programs ##
 ### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (partial correctness) ###
 
-* Using refinement types
+* Using [**refinement types**]{color:DarkBlue}
 ```
 val factorial : nat -> Dv nat
 ```
-* {.fragment}Or the `Div` computation type (pre- and postconditions)
+* {.fragment}Or the `Div` computation type ([**pre- and postconditions**]{color:DarkRed})
   ```
   val eval_closed : e:exp -> Div exp
                                  (requires (closed e))
@@ -691,7 +696,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 <!------------------------------------------------------------------------------>
 
-## Recap: Functional core of F\* ## {#fcore}
+## Recap: [Functional core]{color:DarkRed} of F\* ## {#fcore}
 
 * **[Variant of dependent type theory]{color:DarkBlue}**
   - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
@@ -727,25 +732,26 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
   let incr r = r := !r + 1
   ```
 
-* {.fragment} Hoare logic-style **[preconditions]{color:DarkGreen}** and **[postconditions]{color:DarkRed}** with `ST`
+* {.fragment} Hoare logic-style **[preconditions]{color:DarkBlue}** and **[postconditions]{color:DarkRed}** with `ST`
   ```
   val incr : r:ref int -> 
     ST unit (requires (fun h0      -> True))                        
             (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
                                       sel h2 r == sel h0 r + 1))
   ```
-  - {.fragment} **[precondition]{color:DarkGreen}** ([requires]{color:Blue}) is a predicate on **[initial states]{color:DarkGreen}**
+  - {.fragment} **[precondition]{color:DarkBlue}** ([requires]{color:Blue}) is a predicate on **[initial states]{color:DarkBlue}**
   - {.fragment} **[postcondition]{color:DarkRed}** ([ensures]{color:Blue}) relates [**initial states**]{color:DarkRed}, [**results**]{color:DarkRed}, and [**final states**]{color:DarkRed}
 <!--  - {.fragment}
     ```
     e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
     ```-->
 
-* {.fragment} `St` is again just an abbreviation for `ST` with trivial pre-postconditions
+* {.fragment} `St` is again just an abbreviation
+```
+St t = ST t (requires True) (ensures (fun _ -> True))
+```
 
-* {.fragment} **Sub-effecting:** ` Pure <: ST ` and in fact also ` Div <: ST `
-
-* {.fragment} As such, `ST` has a a [**partial correctness**]{color:DarkRed} reading
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Pure <: ST ` and ` Div <: ST ` ([**partial correctness**]{color:DarkRed})
 
 <!------------------------------------------------------------------------------>
 
@@ -891,7 +897,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 ## Summary: Verifying Stateful Programs ##
 
-* ML-style garbage-collected memory model
+* ML-style [**garbage-collected references**]{color:DarkBlue}
   ```
   val heap : Type
   val ref  : Type -> Type
@@ -902,12 +908,12 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   val modifies : s:set nat -> h0:heap -> h1:heap -> Type0
   ```
 
-* `St` effect for simple ML-style programming
+* `St` effect for simple [**ML-style programming**]{color:DarkRed}
   ```
   let incr (r:ref int) : St unit = r := !r + 1
   ```
 
-* `ST` effect for pre- and postcondition based (intrinsic) reasoning
+* `ST` effect for [**pre- and postcondition based (intrinsic) reasoning**]{color:DarkBlue}
   ```
   ST unit (requires (fun h0      -> True))                        
           (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == n))
@@ -915,13 +921,13 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} But **that's not all** there is to F*'s memory models!
 
-  * [monotonicity]{color:DarkRed}, [regions]{color:DarkBlue}, [heaps-and-stacks]{color:DarkRed} (for low-level programming)
+  * [**monotonicity**]{color:DarkRed}, [**regions**]{color:DarkBlue}, [**heaps-and-stacks**]{color:DarkRed} (for low-level programming)
 
 <!------------------------------------------------------------------------------>
 
 ## F*'s Memory Models are Based on [Monotonicity]{color:DarkRed} ##
 
-* {.fragment} 'Containment for free' for [**garbage collected references**]{color:DarkBlue}
+* {.fragment} [**'Containment for free'**]{color:DarkBlue} for garbage collected references
   ```
   val recall_contains #a (r:ref a) 
     : ST unit (requires (fun _       -> True))
@@ -965,7 +971,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
   ```
 
-* {.fragment} Enabling the following verification pattern
+* {.fragment} Enabling the following [**useful verification pattern**]{color:DarkBlue}
   ```
     let p (x:nat) = x > 0 in   (* assuming (r:mref nat less_than_equal_to) *)       
 
