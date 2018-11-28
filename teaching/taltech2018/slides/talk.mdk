@@ -730,7 +730,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 * {.fragment} Hoare logic-style **[preconditions]{color:DarkGreen}** and **[postconditions]{color:DarkRed}** with `ST`
   ```
   val incr : r:ref int -> 
-    ST unit (requires (fun h0 -> True))                        
+    ST unit (requires (fun h0      -> True))                        
             (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
                                       sel h2 r == sel h0 r + 1))
   ```
@@ -801,11 +801,11 @@ let incr r = r := !r + 1
 ```
 ```
 val (!) : #a:Type -> r:ref a -> 
-  ST a (requires (fun _ -> True))
+  ST a (requires (fun _       -> True))
        (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
 
 val (:=) : #a:Type -> r:ref a -> v:a -> 
-  ST unit (requires (fun _ -> True))
+  ST unit (requires (fun _       -> True))
           (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
@@ -907,7 +907,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * `ST` effect for pre- and postcondition based (intrinsic) reasoning
   ```
-  ST unit (requires (fun h0 -> True))                        
+  ST unit (requires (fun h0      -> True))                        
           (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == n))
   ```
 
@@ -1009,7 +1009,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 ## Low*: a small example ##
 
 ```
-let f (): Stack UInt64.t (requires (fun _ -> True))
+let f (): Stack UInt64.t (requires (fun _     -> True))
                          (ensures  (fun _ _ _ -> True))
                          
   = push_frame ();                         (* pushing a new stack frame *)
@@ -1021,7 +1021,7 @@ let f (): Stack UInt64.t (requires (fun _ -> True))
     let r = b.(42ul) in
       
     pop_frame ();           (* popping the stack frame we pushed above, *)
-                            
+                          (* necessary for establishing Stack invariant *)
     assert (r = 43UL);                    
     r
 ```

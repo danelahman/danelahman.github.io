@@ -6731,7 +6731,7 @@ let rec progress #e #t h =
 <p data-line="730"><span data-line="730"></span>Hoare logic-style <span data-line="730"></span><strong class="strong-star2"><span style="color:DarkGreen">preconditions</span></strong><span data-line="730"></span> and <span data-line="730"></span><strong class="strong-star2"><span style="color:DarkRed">postconditions</span></strong><span data-line="730"></span> with <span data-line="730"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="730"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="731" data-line-first="732" style="display:block"><code data-line="732"><span style="color:blue">val</span> incr : r:ref int <span style="color:blue">-&gt;</span> 
-  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
+  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> True))                        
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ 
                                     sel h2 r == sel h0 r + <span class="constant" style="color:purple">1</span>))</code></pre>
 <ul class="ul list-dash compact" data-line="737">
@@ -6806,11 +6806,11 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
   <span style="color:blue">let</span> x = !r <span style="color:blue">in</span> 
   r := x + <span class="constant" style="color:purple">1</span></code></pre>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="802" data-line-first="803" style="display:block"><code data-line="803"><span style="color:blue">val</span> (!) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> 
-  <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+  <span style="color:blue">ST</span> a (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _       <span style="color:blue">-&gt;</span> True))
        (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x h1 <span style="color:blue">-&gt;</span> h0 == h1 /\ x == sel h0 r))
 
 <span style="color:blue">val</span> (:=) : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> r:ref a <span style="color:blue">-&gt;</span> v:a <span style="color:blue">-&gt;</span> 
-  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+  <span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _       <span style="color:blue">-&gt;</span> True))
           (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> modifies !{r} h0 h1 /\ sel h1 r == v))</code></pre></div><!--~Fragment
 ```
 let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
@@ -6964,7 +6964,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
 <li class="li ul-li list-star-li loose-li" data-line="908">
 <p data-line="908"><span data-line="908"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized"><span style="color:blue">ST</span></code><span data-line="908"></span> effect for pre- and postcondition based (intrinsic) reasoning
 </p>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="909" data-line-first="910" style="display:block"><code data-line="910"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> True))                        
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="909" data-line-first="910" style="display:block"><code data-line="910"><span style="color:blue">ST</span> unit (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0      <span style="color:blue">-&gt;</span> True))                        
         (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 _ h2 <span style="color:blue">-&gt;</span> modifies !{r} h0 h2 /\ sel h2 r == n))</code></pre></li>
 <li class="li ul-li list-star-li loose-li fragment" data-line="914">
 <p data-line="914"><span data-line="914"></span>But <span data-line="914"></span><strong class="strong-star2">that&#39;s not all</strong><span data-line="914"></span> there is to F<span data-line="914"></span>*<span data-line="914"></span>&#39;<span data-line="914"></span>s memory models!
@@ -7088,7 +7088,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
 
 </section>
 <section id="sec-low---a-small-example" class="section section2" data-section-depth="2" data-line="1009"><h3 id="heading-sec-low---a-small-example" class="h2" data-heading-depth="2" style="display:block">Low*: a small example</h3>
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="1011" data-line-first="1012" style="display:block"><code data-line="1012"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _ <span style="color:blue">-&gt;</span> True))
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="1011" data-line-first="1012" style="display:block"><code data-line="1012"><span style="color:blue">let</span> f (): <span style="color:blue">Stack</span> UInt64.t (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> _     <span style="color:blue">-&gt;</span> True))
                          (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> _ _ _ <span style="color:blue">-&gt;</span> True))
                          
   = push_frame ();                         <span style="color:darkgreen">(*</span><span style="color:darkgreen"> pushing a new stack frame </span><span style="color:darkgreen">*)</span>
@@ -7100,7 +7100,7 @@ G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</sp
     <span style="color:blue">let</span> r = b.(<span class="constant" style="color:purple">42</span>ul) <span style="color:blue">in</span>
       
     pop_frame ();           <span style="color:darkgreen">(*</span><span style="color:darkgreen"> popping the stack frame we pushed above, </span><span style="color:darkgreen">*)</span>
-                            
+                          <span style="color:darkgreen">(*</span><span style="color:darkgreen"> necessary for establishing Stack invariant </span><span style="color:darkgreen">*)</span>
     <span style="color:blue">assert</span> (r = <span class="constant" style="color:purple">43</span>UL);                    
     r</code></pre>
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="1028" data-line-first="1029" style="display:block"><code data-line="1029">uint64_t f()
