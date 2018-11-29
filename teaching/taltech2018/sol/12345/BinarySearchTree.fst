@@ -160,6 +160,7 @@ let lemma_distinct_insert_not_contains (t:stree) (n m:nat)
           (ensures  (not ((btree_insert t n) `stree_contains` m))) = 
   lemma_distinct_btree_insert_not_contains t n m
 
+
 (*** PART 3 ***)
 
 open FStar.Ghost
