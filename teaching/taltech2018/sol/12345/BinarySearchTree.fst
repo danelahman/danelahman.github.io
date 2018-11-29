@@ -100,14 +100,12 @@ private let rec lemma_distinct_btree_insert_contains (t:btree) (n m:nat)
   | Leaf -> ()
   | Node t1 k t2 -> 
       if n = k then () else 
-      if n < k then (Classical.excluded_middle ((btree_insert t1 n) `btree_contains` m);
-                     Classical.or_elim #((btree_insert t1 n) `btree_contains` m) 
+      if n < k then (Classical.or_elim #((btree_insert t1 n) `btree_contains` m) 
                                        #(not((btree_insert t1 n) `btree_contains` m)) 
                                        #(fun _ -> (Node t1 k t2) `btree_contains` m \/ n = m) 
                                        (fun _ -> lemma_distinct_btree_insert_contains t1 n m) 
                                        (fun _ -> ()))
-               else (Classical.excluded_middle ((btree_insert t2 n) `btree_contains` m);
-                     Classical.or_elim #((btree_insert t2 n) `btree_contains` m) 
+               else (Classical.or_elim #((btree_insert t2 n) `btree_contains` m) 
                                        #(not((btree_insert t2 n) `btree_contains` m)) 
                                        #(fun _ -> (Node t1 k t2) `btree_contains` m \/ n = m) 
                                        (fun _ -> lemma_distinct_btree_insert_contains t2 n m) 
