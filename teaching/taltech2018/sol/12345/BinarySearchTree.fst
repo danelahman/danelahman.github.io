@@ -65,7 +65,8 @@ abstract type stree = t:btree{sorted t}
 
 private let rec lemma_btree_insert_is_sorted (t:btree) (n:nat) 
   : Lemma (requires (sorted t))
-          (ensures  (sorted (btree_insert t n))) = 
+          (ensures  (sorted (btree_insert t n))) 
+          [SMTPat (sorted (btree_insert t n))] = 
   match t with
   | Leaf -> ()
   | Node t1 m t2 -> 
@@ -91,6 +92,31 @@ private let rec lemma_contains_btree_insert_equal (t:btree) (n:nat)
       if n = m then () else 
       if n < m then lemma_contains_btree_insert_equal t1 n
                else lemma_contains_btree_insert_equal t2 n
+
+private let rec lemma_distinct_btree_insert_contains (t:btree) (n m:nat)
+  : Lemma (requires ((btree_insert t n) `btree_contains` m))
+          (ensures  (t `btree_contains` m \/ n = m)) = 
+  match t with 
+  | Leaf -> ()
+  | Node t1 k t2 -> 
+      if n = k then () else 
+      if n < k then (Classical.excluded_middle ((btree_insert t1 n) `btree_contains` m);
+                     Classical.or_elim #((btree_insert t1 n) `btree_contains` m) 
+                                       #(not((btree_insert t1 n) `btree_contains` m)) 
+                                       #(fun _ -> (Node t1 k t2) `btree_contains` m \/ n = m) 
+                                       (fun _ -> lemma_distinct_btree_insert_contains t1 n m) 
+                                       (fun _ -> ()))
+               else (Classical.excluded_middle ((btree_insert t2 n) `btree_contains` m);
+                     Classical.or_elim #((btree_insert t2 n) `btree_contains` m) 
+                                       #(not((btree_insert t2 n) `btree_contains` m)) 
+                                       #(fun _ -> (Node t1 k t2) `btree_contains` m \/ n = m) 
+                                       (fun _ -> lemma_distinct_btree_insert_contains t2 n m) 
+                                       (fun _ -> ()))
+
+private let lemma_distinct_btree_insert_not_contains (t:btree) (n m:nat)
+  : Lemma (requires (not (t `btree_contains` m) /\ n <> m))
+          (ensures  (not ((btree_insert t n) `btree_contains` m))) = 
+  Classical.move_requires (fun _ -> lemma_distinct_btree_insert_contains t n m) ()
 
 (* Binary search tree operations *)
 
@@ -129,6 +155,10 @@ let rec lemma_contains_insert_equal (t:stree) (n:nat)
           (ensures  (stree_insert t n = t)) = 
   lemma_contains_btree_insert_equal t n
 
+let lemma_distinct_insert_not_contains (t:stree) (n m:nat)
+  : Lemma (requires (not (t `stree_contains` m) /\ n <> m))
+          (ensures  (not ((btree_insert t n) `stree_contains` m))) = 
+  lemma_distinct_btree_insert_not_contains t n m
 
 (*** PART 3 ***)
 
