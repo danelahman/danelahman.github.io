@@ -65,8 +65,7 @@ abstract type stree = t:btree{sorted t}
 
 private let rec lemma_btree_insert_is_sorted (t:btree) (n:nat) 
   : Lemma (requires (sorted t))
-          (ensures  (sorted (btree_insert t n))) 
-          [SMTPat (sorted (btree_insert t n))] = 
+          (ensures  (sorted (btree_insert t n))) = 
   match t with
   | Leaf -> ()
   | Node t1 m t2 -> 
@@ -155,7 +154,7 @@ let rec lemma_contains_insert_equal (t:stree) (n:nat)
 
 let lemma_distinct_insert_not_contains (t:stree) (n m:nat)
   : Lemma (requires (not (t `stree_contains` m) /\ n <> m))
-          (ensures  (not ((btree_insert t n) `stree_contains` m))) = 
+          (ensures  (not ((stree_insert t n) `stree_contains` m))) = 
   lemma_distinct_btree_insert_not_contains t n m
 
 
@@ -323,6 +322,8 @@ let test_create_insert_search () : St unit =
   let b10 = search t7 r 6 in
   let b11 = search t7 r 1 in 
 
+  assert (t4 == t5);
+
   assert b1;
   assert b2;
   assert b3;
@@ -333,7 +334,4 @@ let test_create_insert_search () : St unit =
   assert (not b8);
   assert (not b9);
   assert b10;
-  assert b11;
-
-  assert (t4 == t5)
-
+  assert b11
