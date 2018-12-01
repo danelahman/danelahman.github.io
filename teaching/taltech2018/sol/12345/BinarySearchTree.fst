@@ -126,20 +126,6 @@ let empty_stree () : GTot stree =
 let stree_insert (t:stree) (n:nat) : GTot stree = 
   lemma_btree_insert_is_sorted t n; 
   btree_insert t n
-
-(* Sanity check lemmas *)
-
-private let lemma_contains_equals (t:stree) (n:nat) 
-  : Lemma (t `btree_contains` n = t `stree_contains` n) = 
-  ()
-
-private let lemma empty_equals () 
-  : Lemma (empty_btree () = empty_stree ()) = 
-  ()
-
-private let lemma_insert_equals (t:stree) (n:nat) 
-  : Lemma (btree_insert t n = stree_insert t n) = 
-  ()
   
 (* Properties of binary search trees *)
 
