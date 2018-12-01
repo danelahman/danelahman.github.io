@@ -714,7 +714,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 * **[Subtyping and sub-effecting]{color:DarkBlue}** (`<:`)
 
-* **[Extensional equality]{color:DarkBlue}** (`=`, `==`, `===`)
+* **[Different kinds of logical connectives]{color:DarkBlue}** (`=`, `&&`, `||`, ...) [**vs**]{color:DarkRed} (`==`, `/\`, `\/`, ...)
 
 <!------------------------------------------------------------------------------>
 
