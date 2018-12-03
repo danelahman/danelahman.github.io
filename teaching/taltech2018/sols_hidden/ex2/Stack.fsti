@@ -1,21 +1,34 @@
 module Stack
 
+(*
+
+   Exercise 2.
+
+   See `Stack.fst` for details.
+
+*)
+
 val stack : Type0
+
 val empty : stack
+
 val is_empty : stack -> GTot bool
+
 val push : int -> stack -> stack
+
 val pop : stack -> option stack
+
 val top : stack -> option int
 
 val lemma_empty_is_empty : unit -> Lemma (is_empty (empty))
 
-val lemma_push_is_empty : s:stack -> i:int ->
+val lemma_push_is_not_empty : s:stack -> i:int ->
   Lemma (~(is_empty (push i s))) [SMTPat (is_empty (push i s))]
 
-val lemma_is_empty_top_some : s:stack{~(is_empty s)} -> 
+val lemma_is_not_empty_top_some : s:stack{~(is_empty s)} -> 
   Lemma (Some? (top s)) [SMTPat (top s)]
 
-val lemma_is_empty_pop_some : s:stack{~(is_empty s)} -> 
+val lemma_is_not_empty_pop_some : s:stack{~(is_empty s)} -> 
   Lemma (Some? (pop s)) [SMTPat (pop s)]
 
 val lemma_push_top : s:stack -> i:int -> 

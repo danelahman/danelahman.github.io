@@ -4,6 +4,8 @@ open FStar.Mul
 
 (* 
 
+  Exercise 1.
+
   In this exercise you will practice defining recursive functions and doing proofs about them
      
   Task 1: Define a recursive total function `sum` that sums up natural numbers from 1 to n.

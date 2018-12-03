@@ -4,9 +4,11 @@ open FStar.Mul
 
 (* 
 
-  In this exercise you will practice defining recursive functions and doing proofs about them
+  Exercise 1.
+
+  In this exercise you will practice writing purely functional programs and doing proofs about them
      
-  Task 1: Define a recursive total function `sum` that sums up natural numbers from 1 to n.
+  Task 1: Define a total recursive function `sum` that sums up natural numbers from 1 to n.
           That is, replace the 1st `admit ()` with an appropriate recursive definition.
 
   Task 2: Prove that `sum` is equal to the nth triangual number (as computed by the function `triangular`).
