@@ -1,7 +1,7 @@
 [INCLUDE=presentation]
-Title         : A Gentle Introduction to F*
+Title         : Program Verification in F*
 Author        : Danel Ahman
-Affiliation   : Inria Paris
+Affiliation   : University of Ljubljana
 Reveal Url    : ../reveal.js
 Reveal Theme  : white
 Colorizer     : ../../stuff/fstarlang
@@ -25,9 +25,10 @@ HTML Meta     : clear
 
 <br/>
 
-**[Danel Ahman](https://danelahman.github.io/)**
+##[Danel Ahman](https://danelahman.github.io/)##
 
-**University of Ljubljana**
+
+###University of Ljubljana###
 
 <br/><br/>
 
@@ -46,11 +47,11 @@ Tallinn, 12 December, 2018
 
 * **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD**<br/><br/>
 
-* **2011, [Institute of Cybernetics]{color:DarkRed}, Research Intern (2 projects)**
+* **2011, [IoC at TUT]{color:DarkRed}, Research Intern (MBT & Directed Containers)**
 
-* **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern**
+* **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern (Big Data)**
 
-* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern**<br/><br/>
+* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern (F\*)**<br/><br/>
 
 * **2017 - 2018, [Inria Paris]{color:DarkBlue}, PostDoc**
 
