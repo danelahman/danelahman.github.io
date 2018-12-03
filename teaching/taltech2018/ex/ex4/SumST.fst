@@ -18,9 +18,11 @@ open FStar.Mul
   Task 2: Provide a definition for the `sum_st_aux` function that verifies against 
           the type you gave it in Task 1, i.e., replace the `admit ()` with code.
 
-          Hint: The type you gave `sum_st_aux` in Task 1 might not be strong enough 
+          Hint 1: The type you gave `sum_st_aux` in Task 1 might not be strong enough 
           to act as a loop invariant for the recursive calls. So you might need to 
           revisit Task 1 and give `sum_st_aux` a stronger invariant-like type.
+
+          Hint 2: For inspiration, see the `count_st` example the lecture slides.
           
 *)
 
