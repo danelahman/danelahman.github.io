@@ -28,13 +28,13 @@ let nth_triangular (n:nat) = ((n+1) * n) / 2
 
 let rec sum_st_aux (r:ref nat) (n:nat) 
   : ST unit (requires (fun _ -> True))
-            (ensures  (fun h0 _ h1 -> True)) = 
+            (ensures  (fun _ _ _ -> True)) = 
   admit ()
 
 [@expect_failure]
 let rec sum_st (n:nat) 
   : ST nat (requires (fun _ -> True))
-           (ensures  (fun h0 x h1 -> x == nth_triangular n /\ 
+           (ensures  (fun h0 x h1 -> x = nth_triangular n /\ 
                                      modifies !{} h0 h1)) =
   let r = alloc 0 in 
   sum_st_aux r n; 
