@@ -9,41 +9,18 @@
 
 <p>Guest lecture and accompanying lab sessions for the <a href="https://courses.cs.ttu.ee/pages/Advanced_programming" target="_blank">Advanced Programming Course (ITT8060)</a> at the <a href="https://www.taltech.ee/en/" target="_blank">Tallinn University of Technology</a>.</p>
 
-<h2 id="slides" style="margin-top:30px">Lecture slides</h2>
+<h2 id="slides" style="margin-top:30px">Lecture slides (12.12.2018)</h2>
 
 <ul>
 <li>TBA</li>
 </ul>
 
-<h2 id="snippets" style="margin-top:30px">Useful code snippets</h2>
 
-<ul>
-<li>Ackermann function, interfaces, and decreases metrics: <a href="code/talk/Ackermann.fsti" target="_blank">Ackermann.fsti</a>, <a href="code/talk/Ackermann.fst" target="_blank">Ackermann.fst</a></li>
-<li>List reversal: <a href="code/pure-fun/Rev.fst" target="_blank">Rev.fst</a></li>
-<li style="margin-bottom:10px">Potential divergence:<a href="code/pure-fun/Divergence.fst" target="_blank">Divergence.fst</a></li>
+<h2 id="exercises" style="margin-top:30px">Lab exercises (12-14.12.2018)</h2>
 
-<li>F*'s ML-style garbage-collected memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Heap.fst" target="_blank">FStar.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a></li>
-<li style="margin-bottom:10px">F*'s low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.fst" target="_blank">FStar.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
+<p>The exercises below are mostly independent of each other, so you don't need to do them in the given order.</p>
 
-<li>Stateful increment function: <a href="code/state/IncrST.fst" target="_blank">IncrST.fst</a>, <a href="code/state/Incr2ST.fst" target="_blank">Incr2ST.fst</a></li>
-<li>Reference swapping: <a href="code/state/SwapRefsST.fst" target="_blank">SwapRefsST.fst</a></li>
-<li>Stateful counting: <a href="code/state/CountST.fst" target="_blank">CountST.fst</a>
-<li style="margin-bottom:10px">Low-level code example: <a href="code/state/BufferAlloc.fst" target="_blank">BufferAlloc.fst</a>, <a href="code/state/BufferAlloc.c" target="_blank">BufferAlloc.c</a></li>
-
-<li>F*'s witnessed modality: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fsti" target="_blank">FStar.Monotonic.Witnessed.fsti</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fst" target="_blank">FStar.Monotonic.Witnessed.fst</a></li>
-<li>F*'s monotonic ML-style memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Heap.fst" target="_blank">FStar.Monotonic.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Ref.fst" target="_blank">FStar.Ref.fst</a></li>
-<li style="margin-bottom:10px">F*'s monotonic low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.HyperStack.fst" target="_blank">FStar.Monotonic.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
-
-<li>Monotonic counters: <a href="code/monotonic/CounterMST.fst" target="_blank">CounterMST.fst</a></li>
-<li>Monotonic logs: <a href="code/monotonic/SimpleLogMST.fst" target="_blank">SimpleLogMST.fst</a></li>
-<li>Temporarily escaping monotonicity with snapshots: <a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a></li>
-
-
-</ul>
-
-<h2 id="exercises" style="margin-top:30px">Lab exercises</h2>
-
-<p>These exercises are mostly independent of each other, so you don't need to do them in the given order. Exercise 7 is the most involved.</p>
+<p>Exercise 7 is the most involved. It lets you simultaneously practice the verification of both pure and stateful programs.</p>
 
 <h3>Verifying purely functional programs</h3>
 
@@ -80,6 +57,29 @@
 <li><b>Exercise 10:</b> Stateful Fibonacci (files to appear here)</li>
 </ul>
 
+<h2 id="snippets" style="margin-top:30px">Useful code snippets</h2>
+
+<ul>
+<li>Ackermann function, interfaces, and decreases metrics: <a href="code/talk/Ackermann.fsti" target="_blank">Ackermann.fsti</a>, <a href="code/talk/Ackermann.fst" target="_blank">Ackermann.fst</a></li>
+<li>List reversal: <a href="code/pure-fun/Rev.fst" target="_blank">Rev.fst</a></li>
+<li style="margin-bottom:10px">Potential divergence:<a href="code/pure-fun/Divergence.fst" target="_blank">Divergence.fst</a></li>
+
+<li>F*'s ML-style garbage-collected memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Heap.fst" target="_blank">FStar.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a></li>
+<li style="margin-bottom:10px">F*'s low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.fst" target="_blank">FStar.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
+
+<li>Stateful increment function: <a href="code/state/IncrST.fst" target="_blank">IncrST.fst</a>, <a href="code/state/Incr2ST.fst" target="_blank">Incr2ST.fst</a></li>
+<li>Reference swapping: <a href="code/state/SwapRefsST.fst" target="_blank">SwapRefsST.fst</a></li>
+<li>Stateful counting: <a href="code/state/CountST.fst" target="_blank">CountST.fst</a>
+<li style="margin-bottom:10px">Low-level code example: <a href="code/state/BufferAlloc.fst" target="_blank">BufferAlloc.fst</a>, <a href="code/state/BufferAlloc.c" target="_blank">BufferAlloc.c</a></li>
+
+<li>F*'s witnessed modality: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fsti" target="_blank">FStar.Monotonic.Witnessed.fsti</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fst" target="_blank">FStar.Monotonic.Witnessed.fst</a></li>
+<li>F*'s monotonic ML-style memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Heap.fst" target="_blank">FStar.Monotonic.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Ref.fst" target="_blank">FStar.Ref.fst</a></li>
+<li style="margin-bottom:10px">F*'s monotonic low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.HyperStack.fst" target="_blank">FStar.Monotonic.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
+
+<li>Monotonic counters: <a href="code/monotonic/CounterMST.fst" target="_blank">CounterMST.fst</a></li>
+<li>Monotonic logs: <a href="code/monotonic/SimpleLogMST.fst" target="_blank">SimpleLogMST.fst</a></li>
+<li>Temporarily violating monotonicity with snapshots: <a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a></li>
+</ul>
 
 <h2 id="setup" style="margin-top:30px">Setup instructions</h2>
 
