@@ -37,8 +37,8 @@ let rec fibonacci_tot (n:nat) : Tot nat
   = if n <= 1 then 1 else fibonacci_tot (n - 1) + fibonacci_tot (n - 2)
 
 let rec fibonacci_st_aux (i:pos) (n:nat) (r1 r2:ref nat) 
-  : ST unit (requires (fun h0 -> True))
-            (ensures  (fun h0 a h1 -> True)) =
+  : ST unit (requires (fun _ -> True))
+            (ensures  (fun _ _ _ -> True)) =
   admit ()
 
 [@expect_failure]
