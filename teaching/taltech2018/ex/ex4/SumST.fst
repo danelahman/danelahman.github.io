@@ -13,7 +13,7 @@ open FStar.Mul
   that we saw in Exercise 1, where we gave a purely functional definition of it. 
 
   Task 1: Give a more precise type to `sum_st_aux` so that you can remove the 
-          [@expect_failure] attribute from `sum_st`, and that it verifies.
+          [@expect_failure] attribute from `sum_st` and show that it verifies.
 
   Task 2: Provide a definition for the `sum_st_aux` function that verifies against 
           the type you gave it in Task 1, i.e., replace the `admit ()` with code.
