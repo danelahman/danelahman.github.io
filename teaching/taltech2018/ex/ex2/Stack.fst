@@ -11,7 +11,7 @@ module Stack
    and use it in the client code in `StackClient.fst`, including verifying simple properties.
 
    Task 1: In the space below, define all the types, functions, and lemmas required by the  
-           interface `Stack.fsti` so that this file (`Stack.fst`) verifies (i.e., typechecks).
+           interface `Stack.fsti` so that the current file (`Stack.fst`) verifies.
 
            Note: When using the interactive fstar-mode, F* will not complain if you haven't
            defined all the functions and lemmas required by `Stack.fsti` (but it will 
@@ -27,7 +27,7 @@ module Stack
 
    Task 3: To overcome the failure in Task 2, extend the interface `Stack.fsti` with 
            additional properties (lemmas) about the behaviour of stacks, and of course 
-           prove the validity of these additional properties in this file (`Stack.fst`).
+           prove the validity of these additional properties in the current file (`Stack.fst`).
            Add as many lemmas as needed to get the client code (`StackClient.fst`) to verify. 
 
            Hint: To get `StackClient.fst` to verify without having to call these extra lemmas
