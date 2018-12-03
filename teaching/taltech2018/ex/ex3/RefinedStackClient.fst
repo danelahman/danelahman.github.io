@@ -10,6 +10,7 @@ open RefinedStack
 
 *)
 
+[@expect_failure]
 let main() =
   let s0 = empty (* <: stack *) in
 
@@ -29,4 +30,3 @@ let main() =
 
   let j = top s3 in
   assert (j = 3)
-
