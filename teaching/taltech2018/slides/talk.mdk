@@ -17,7 +17,7 @@ HTML Meta     : clear
 [INCLUDE=../../stuff/latex.tex]
 ~
 
-# Program Verification in F\* #
+# <br/>Program Verification in F\* #
 
 ~Center
 
@@ -45,19 +45,25 @@ Tallinn, 12 December, 2018
 
 * **2011 - 2012, [University of Cambridge]{color:DarkBlue}, MPhil**
 
-* **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD**<br/><br/>
+  * [**Algebraic Effects + Normalisation by Evaluation**]{color:Gray}
 
-* **2011, [IoC at TUT]{color:DarkRed}, Research Intern (MBT & Directed Containers)**
+* **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD**
 
-* **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern (Big Data)**
+  * [**Computational Effects + Dependent Types + Fibred Adjunction Models**]{color:Gray} <br/><br/>
 
-* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern (F\*)**<br/><br/>
+* **2011, [IoC at TUT]{color:DarkRed}, Research Intern [(MBT & Comonadic Containers)]{color:Gray}**
 
-* **2017 - 2018, [Inria Paris]{color:DarkBlue}, PostDoc**
+* **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern [(Big Data)]{color:Gray}**
 
-* **2018 - . . .   , [University of Ljubljana]{color:DarkBlue}, PostDoc**<br/><br/>
+* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern [(F\*)]{color:Gray}**<br/><br/>
 
-* **2016 - . . .   , Member of the F\* team**
+* **2017 - 2018, [Inria Paris]{color:DarkBlue}, PostDoc [(F\*)]{color:Gray}**
+
+* **2018 - . . .   , [University of Ljubljana]{color:DarkBlue}, PostDoc [(Eff)]{color:Gray}**<br/><br/>
+
+
+
+<!-- * **2016 - . . .   , Member of the F\* team** -->
 
 <!-------------------------------------------------------------------------------->
 
@@ -79,7 +85,7 @@ Slides, code, exercises, and setup instructions <br/>**@**<br/>
 ~
 
 ~Fragment
-**Please do ask questions!**
+**Do ask questions!**
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -172,7 +178,7 @@ effectful programming, SMT-based automation
 
   |   |  
 --- | --- |
-[Danel Ahman]{color:DarkBlue}<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
+Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
 
 <!------------------------------------------------------------------------------>
 
@@ -277,7 +283,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 ## Dependent types ##
 
-* [**Dependent function types**]{color:DarkBlue} (here together with refinements)
+* [**Dependent function types**]{color:DarkBlue} aka $\Pi$-types
   ```
   val incr : x:int -> y:int{x < y}
   let incr x = x + 1
@@ -299,6 +305,13 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     | Nil        -> Nil
     | Cons hd tl -> Cons (f hd) (map f tl)
   ```
+
+<!--
+* {.fragment} Also [**dependent sum types**]{color:DarkRed} aka $\Sigma$-types 
+  ```
+  type incrementable = a:Type & (a -> a)            (* dfst, dsnd, (|a,f|) *)  
+  ```
+-->
 
 ## Inductive families + refinement types ##
 

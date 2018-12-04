@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=latex 2018.8.31)  23 NOV 2018 04:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=latex 2018.8.31)  4 DEC 2018 04:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -710,15 +710,15 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+stmry on input line 39.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stmaryrd/Ustmry.fd) [1
 
-] [2] [3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 50.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 50.
+] [2] [3] [4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 53.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 53.
 \BKM@file=\write5
 \openout5 = `talk-math-plain.out.ps'.
 
 (out/talk/talk-math-plain.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 50.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 50.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 53.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 53.
  ) 
 Here is how much of TeX's memory you used:
  12276 strings out of 492650
@@ -729,4 +729,4 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  48i,5n,52p,854b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on out/talk/talk-math-plain.dvi (3 pages, 3756 bytes).
+Output written on out/talk/talk-math-plain.dvi (4 pages, 4424 bytes).
