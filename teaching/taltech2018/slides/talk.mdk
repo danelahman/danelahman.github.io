@@ -45,13 +45,13 @@ Tallinn, 12 December, 2018
 
 * **2011 - 2012, [University of Cambridge]{color:DarkBlue}, MPhil**
 
-  * [**Algebraic Effects + Normalisation by Evaluation**]{color:Gray}
+  * [**Algebraic Computational Effects + Normalisation by Evaluation**]{color:Gray}
 
 * **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD**
 
   * [**Computational Effects + Dependent Types + Fibred Adjunction Models**]{color:Gray} <br/><br/>
 
-* **2011, [IoC at TUT]{color:DarkRed}, Research Intern [(MBT & Comonadic Containers)]{color:Gray}**
+* **2011, [Institute of Cybernetics]{color:DarkRed}, Research Intern [(2 projects)]{color:Gray}**
 
 * **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern [(Big Data)]{color:Gray}**
 
@@ -126,7 +126,7 @@ effectful programming, SMT-based automation
 * **[Functional programming language with effects]{color:Black;}**
   * like F#, OCaml, Haskell, ...
     ```
-    let incr (r:ref a) = r := !r + 1
+    let incr = fun (r:ref a) -> r := !r + 1
     ```
     but with a much richer type system
     
@@ -136,7 +136,7 @@ effectful programming, SMT-based automation
 
 ~Fragment
 * **[Semi-automated verification system using SMT (Z3)]{color:DarkBlue;}**
-  * <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Types, ...
+  * <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Haskell, ...
 ~
 
 ~Fragment
@@ -207,7 +207,7 @@ Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/
 ~
 ~Fragment {.console}
   ```text
-  $ fstar.exe Ackermann.fst --odir out-dir --codegen FSharp
+  $ fstar.exe Ackermann.fst --odir out-dir --codegen OCaml
   ```
 ~
 
@@ -276,9 +276,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 * {.fragment} Different kinds of [**logical connectives**]{color:DarkBlue}
 
-  * ` = `, ` <> `, ` && `, ` || `, ` not `  [(`bool`-valued)]{color:DarkRed}
+  * ` = `, ` <> `, ` && `, ` || `, ` not `  [**(`bool`-valued)**]{color:DarkRed}
   
-  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` [(`prop`-valued)]{color:DarkRed}
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` [**(`prop`-valued)**]{color:DarkRed}
 
 
 ## Dependent types ##
@@ -321,22 +321,22 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
     | Nil  : vec a 0
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
-  let rec lookup #a #n (as:vec a n) (m:nat) (p:m `less_than` n) : a = ...
+  let rec lookup #a #n (as:vec a n) (i:nat) (p:i `less_than` n) : a = ...
   ```
 
 * {.fragment} But can also [**combine `vec` with refinement types**]{color:DarkRed} for more convenience
   ```
-  let rec lookup #a #n (as:vec a n) (m:nat{m `less_than` n}) : a = ...
+  let rec lookup #a #n (as:vec a n) (i:nat{i `less_than` n}) : a = ...
   ```
 
 * {.fragment} Another alternative is to use [**ordinary lists + refinement types**]{color:DarkBlue}
   ```
-  let rec length #a (as:list a) =
+  let rec length #a (as:list a) : nat =
     match as with
     | Nil       -> 0
     | Cons _ tl -> 1 + length tl
     
-  let rec lookup #a (as:list a) (m:nat{m `less_than` (length as)}) : a = ...
+  let rec lookup #a (as:list a) (i:nat{i `less_than` (length as)}) : a = ...
   ```
 
 
@@ -348,7 +348,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 * [**`Tot` effect**]{color:DarkBlue} (default) = no side-effects, terminates on all inputs
 
   ```
-  (*val factorial : nat -> nat*)
+  (* val factorial : nat -> nat *)
   
   val factorial : nat -> Tot nat
 
