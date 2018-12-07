@@ -1,14 +1,51 @@
 module BinarySearchTree
 
-(*** PART 1 ***)
+(*
 
-(* Binary node-labelled trees *)
+  Exercise 7.
+
+  In this exercise you will practice writing and verifying both purely functional and stateful programs. 
+  
+  The goal is to implement mutable binary search trees whose specifications are given by their purely 
+  functional implementation. For simplicity, we only consider creation of empty binary search trees, 
+  insertion into existing binary search trees, and searching from binary search trees. Implementing 
+  other operations, such as deletion, is left as a bonus exercise for the more motivated students.
+
+  If you haven't seen such trees before, see e.g. https://en.wikipedia.org/wiki/Binary_search_tree.
+
+  This exercise is divided into four parts:
+
+   - Part 1: Purely functional implementation of operations on binary trees.
+
+   - Part 2: Purely functional implementation of binary search trees (as a refinement of Part 1).
+
+   - Part 3: Stateful implementation of (mutable) binary search trees (with specifications by Part 2).
+
+   - Part 4: Verify the client code in `BinarySearchTreeClient.fst` that tests whether the code and 
+             specifications you wrote in this exercise work as expected in a composite program. 
+
+*)
+
+(** PART 1 **)
+
+(* Inductive definition of binary trees. For simplicity, containing only natural numbers. *)
 
 private type btree = 
   | Leaf : btree
   | Node : btree -> nat -> btree -> btree
 
-(* Search function / containment predicate for binary (search) trees *)
+(* 
+
+  Task 1.1: Implement a tree search / containment predicate for binary trees. 
+
+            Hint: While at this point we have not made precise that `t:btree` is a **search** tree, implement 
+            `btree_contains` as if it was, i.e., assuming that elements in the left subtree of a node are 
+            strictly smaller than the value stored at that node, and vice versa for right subtrees.    
+
+  Note: The various operations on purely functional search trees below are defined using the GTot effect 
+        (i.e., ghost code) to ensure that we will later use them only in a purely specificational role.
+
+*)
 
 private let rec btree_contains (t:btree) (n:nat) : GTot bool =
   match t with 
@@ -18,11 +55,13 @@ private let rec btree_contains (t:btree) (n:nat) : GTot bool =
       if n < m then t1 `btree_contains` n
                else t2 `btree_contains` n
 
-(* Empty binary tree *)
+(* 
+
+  Task 1.2: Define empty binary trees and insertion into binary (search) trees.
+
+*)
 
 private let empty_btree () : GTot btree = Leaf
-
-(* Insertion into a binary (search) tree *)
 
 private let rec btree_insert (t:btree) (n:nat) : GTot btree =
   match t with 
@@ -32,7 +71,13 @@ private let rec btree_insert (t:btree) (n:nat) : GTot btree =
       if n < m then Node (btree_insert t1 n) m t2
                else Node t1 m (btree_insert t2 n)
 
-(* Sortedness predicate for binary (search) trees *)
+(*
+
+  Task 1.3: Define a sortedness predicate over `btree` that holds when a given tree is sorted in the 
+            sense that for a node storing a value `v`, all values in its left subtree are strictly 
+            smaller than `v`, and all values in its right subtree are strictly greater than `v`.
+
+*)
 
 private let rec sorted_left_of (t:btree) (n:nat) : GTot bool = 
   match t with
@@ -55,9 +100,9 @@ private let rec sorted (t:btree) : GTot bool =
                     t2 `sorted_right_of` n
 
 
-(*** PART 2 ***)
+(** PART 2 **)
 
-(* Binary search trees = binary trees as defined above that are sorted *)
+(* Binary search trees are defined as a refinement of the `btree` type from above. *)
 
 abstract type stree = t:btree{sorted t}
 
@@ -115,7 +160,11 @@ private let lemma_distinct_btree_insert_not_contains (t:btree) (n m:nat)
           (ensures  (not ((btree_insert t n) `btree_contains` m))) = 
   Classical.move_requires (fun _ -> lemma_distinct_btree_insert_contains t n m) ()
 
-(* Binary search tree operations *)
+(*
+
+  Task 2.1: Define search/containment, creation of empty trees, and insertion operations for binary search trees.
+
+*)
 
 let stree_contains (t:stree) (n:nat) : GTot bool =
   btree_contains t n
@@ -126,8 +175,12 @@ let empty_stree () : GTot stree =
 let stree_insert (t:stree) (n:nat) : GTot stree = 
   lemma_btree_insert_is_sorted t n; 
   btree_insert t n
-  
-(* Properties of binary search trees *)
+
+(*
+
+  Task 2.1: Prove correct three expected properties of binary search trees. 
+
+*)
 
 let rec lemma_insert_contains (t:stree) (n:nat) 
   : Lemma ((stree_insert t n) `stree_contains` n) =
@@ -144,13 +197,19 @@ let lemma_distinct_insert_not_contains (t:stree) (n m:nat)
   lemma_distinct_btree_insert_not_contains t n m
 
 
-(*** PART 3 ***)
+(** PART 3 **)
 
 open FStar.Ghost
 open FStar.Heap
 open FStar.ST
 
-(* Mutable binary trees *)
+(*
+
+  Mutable binary trees (`mtree`) are defined as a memory reference to a record that stores the 
+  left subtree, the value stored at a given node of the tree, and the right subtree. As usual, 
+  the definition is given using two mutually recursively defined types (`treeptr` and `node`).  
+
+*)
 
 noeq type node = {
   left  : treeptr;
@@ -161,7 +220,16 @@ and treeptr = ref (option node)
 
 let mtree = treeptr
 
-(* Well-formedness of a mutable binary tree wrt a functional specification *)
+(*
+
+  Task 3.1: Define a predicate that holds when a given mutable binary search tree (`r:mtree`) agrees 
+            with a given purely functional binary search tree (`t:stree`) in some heap `h:heap`. That 
+            is, `is_stree` should return true when the shapes and contents of `r` in `h` matches `t`.
+
+            Hint: You might find it useful to have a look at and use the libraries for (classical) logical 
+            reasoning about specifications in `FStar.Classical.fsti` and `FStar.StrongExcludedMiddle.fst`
+
+*)
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
   match t , StrongExcludedMiddle.strong_excluded_middle (h `contains` r) , sel h r with
@@ -178,11 +246,22 @@ let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases
     )
   | _ -> None
 
-(* Mutable binary search tree is one that is well-formed wrt a functional specification *)
-
 let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 
-(* Search in a mutable binary search tree *)
+(*
+
+  Task 3.2: Define a stateful search function whose behaviour is specified by the search function / containment
+            predicate for the purely functional search trees that we defined in Part 2 of this exercise.
+
+            Hint: You will need to strengthen the specification of `search` to verify `BinarySearchTreeClient`.
+
+  Note: Here we follow a common pattern in verification of threading a ghost state through our programs, where 
+        the ghost state (here, `t:erased stree`) is the purely functional specification of our mutable stateful 
+        code. We have wrapped `stree` in `erased` to ensure that it cannot be used computationally relevantly 
+        in user code (in that sense, `erased` is similar to the `GTot` effect). You can find more about the 
+        `erased` type in the F* standard library in `FStar.Ghost`, including operations that you will need to use.
+
+*)
 
 let rec search (t:erased stree) (r:mtree) (n:nat) 
   : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
@@ -199,7 +278,13 @@ let rec search (t:erased stree) (r:mtree) (n:nat)
                                            | Node _ _ t2 -> t2) in
                             search t2 nd.right n)
 
-(* Create an empty mutable binary search tree *)
+(*
+
+  Task 3.3: Define a stateful function that creates an empty binary search tree. 
+
+            Hint: You will need to strengthen the specification of `empty` to verify `BinarySearchTreeClient`. 
+
+*)
 
 let create () 
   : ST (erased stree * mtree) (requires (fun _ -> True))
@@ -210,7 +295,13 @@ let create ()
                                  wf r (reveal t) h1 == Some (only r))) =
   hide Leaf , alloc None
 
-(* Lemmas showing how well-formedness evolves on heaps *)
+(*
+
+  Task 3.3: Define a stateful insertion function for mutable binary search trees. 
+
+            Hint: You will need to strengthen the specification of `insert` to verify `BinarySearchTreeClient`. 
+
+*)
 
 let rec lemma_disjoint_wf_unchanged (r:mtree) (t:stree) (s:Set.set nat) (h0 h1:heap)
   : Lemma (requires (Some? (wf r t h0) /\ 
@@ -274,50 +365,11 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             let t2' = insert t2 (nd.right) n in 
                             hide (Node (reveal t1) nd.value (reveal t2')))
 
+(** PART 4 **)
 
-(*** PART 4 ***)
+(*
 
-(* Some code to test such mutable binary search trees *)
+  Task 4.1: Verify `BinarySearchTreeClient` to check that the specifications and definitions 
+            that you defined above indeed work as expected in a composite stateful program.
 
-#set-options "--max_ifuel 0"
-
-let test_create_insert_search () : St unit =
-
-  let t1,r = create () in
-  let t2 = insert t1 r 0 in
-  let t3 = insert t2 r 1 in 
-  let t4 = insert t3 r 2 in 
-  let t5 = insert t4 r 0 in 
-    
-  let b1 = search t5 r 0 in
-  let b2 = search t5 r 2 in
-  let b3 = search t5 r 1 in
-  let b4 = search t5 r 3 in
-  
-  let t6 = insert t5 r 3 in 
-  let b5 = search t6 r 3 in
-  
-  let t1',r' = create () in
-  let b6 = search t1' r' 0 in
-  let t2' = insert t1' r' 4 in
-  let b7 = search t2' r' 4 in
-
-  let b8 = search t6 r 5 in
-  let t7 = insert t6 r 6 in 
-  let b9 = search t7 r 5 in
-  let b10 = search t7 r 6 in
-  let b11 = search t7 r 1 in 
-
-  assert (t4 == t5);
-
-  assert b1;
-  assert b2;
-  assert b3;
-  assert (not b4);
-  assert b5;
-  assert (not b6);
-  assert b7;
-  assert (not b8);
-  assert (not b9);
-  assert b10;
-  assert b11
+*)
