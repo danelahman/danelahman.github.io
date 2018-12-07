@@ -8,6 +8,7 @@ open BinarySearchTree
 
 #set-options "--max_ifuel 0"
 
+[@expect_failure]
 let test_create_insert_search () : St unit =
 
   let t1,r = create () in
