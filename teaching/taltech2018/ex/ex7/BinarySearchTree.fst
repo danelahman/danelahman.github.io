@@ -6,25 +6,23 @@ module BinarySearchTree
 
   In this exercise you will practice writing and verifying both purely functional and stateful programs. 
   
-  The goal is to implement mutable binary search trees whose specification is given by their purely 
+  The goal is to implement mutable binary search trees whose specifications are given by their purely 
   functional implementation. For simplicity, we only consider creation of empty binary search trees, 
   insertion into existing binary search trees, and searching from binary search trees. Implementing 
-  other operation on such trees, such as deletion, is left as a bonus exercise for the more motivated.
+  other operations, such as deletion, is left as a bonus exercise for the more motivated students.
 
   If you haven't seen such trees before, see e.g. https://en.wikipedia.org/wiki/Binary_search_tree.
 
-  This exercise is divided into three parts:
+  This exercise is divided into four parts:
 
-  Part 1: Purely functional implementation of operations on binary trees.
+   - Part 1: Purely functional implementation of operations on binary trees.
 
-  Part 2: Purely functional implementation of binary search trees (as a refinement of Part 1).
+   - Part 2: Purely functional implementation of binary search trees (as a refinement of Part 1).
 
-  Part 3: Stateful implementation of (mutable) binary search trees (with specifications by Part 2).
+   - Part 3: Stateful implementation of (mutable) binary search trees (with specifications by Part 2).
 
-  Each of these three parts is split into individual tasks as described below.
-
-  Finally, in BinarySearchTreeClient.fst there is some client code to test that the specifications and 
-  code you wrote in this exercise works as expected. 
+   - Part 4: Verify the client code in `BinarySearchTreeClient.fst` that tests whether the code and 
+             specifications you wrote in this exercise work as expected in a composite program. 
 
 *)
 
@@ -228,6 +226,9 @@ let mtree = treeptr
             with a given purely functional binary search tree (`t:stree`) in some heap `h:heap`. That 
             is, `is_stree` should return true when the shapes and contents of `r` in `h` matches `t`.
 
+            Hint: You might find it useful to have a look at and use the libraries for (classical) logical 
+            reasoning about specifications in `FStar.Classical.fsti` and `FStar.StrongExcludedMiddle.fst`
+
 *)
 
 let rec wf (r:mtree) (t:stree) (h:heap) : GTot (option (Set.set nat)) (decreases t) =
@@ -364,52 +365,11 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
                             let t2' = insert t2 (nd.right) n in 
                             hide (Node (reveal t1) nd.value (reveal t2')))
 
+(** PART 4 **)
 
 (*
-(*** PART 4 ***)
 
-(* Some code to test such mutable binary search trees *)
+  Task 4.1: Verify `BinarySearchTreeClient` to check that the specifications and definitions 
+            that you defined above indeed work as expected in a composite stateful program.
 
-#set-options "--max_ifuel 0"
-
-let test_create_insert_search () : St unit =
-
-  let t1,r = create () in
-  let t2 = insert t1 r 0 in
-  let t3 = insert t2 r 1 in 
-  let t4 = insert t3 r 2 in 
-  let t5 = insert t4 r 0 in 
-    
-  let b1 = search t5 r 0 in
-  let b2 = search t5 r 2 in
-  let b3 = search t5 r 1 in
-  let b4 = search t5 r 3 in
-  
-  let t6 = insert t5 r 3 in 
-  let b5 = search t6 r 3 in
-  
-  let t1',r' = create () in
-  let b6 = search t1' r' 0 in
-  let t2' = insert t1' r' 4 in
-  let b7 = search t2' r' 4 in
-
-  let b8 = search t6 r 5 in
-  let t7 = insert t6 r 6 in 
-  let b9 = search t7 r 5 in
-  let b10 = search t7 r 6 in
-  let b11 = search t7 r 1 in 
-
-  assert (t4 == t5);
-
-  assert b1;
-  assert b2;
-  assert b3;
-  assert (not b4);
-  assert b5;
-  assert (not b6);
-  assert b7;
-  assert (not b8);
-  assert (not b9);
-  assert b10;
-  assert b11
 *)
