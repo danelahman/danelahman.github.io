@@ -227,7 +227,7 @@ let mtree = treeptr
             is, `is_stree` should return true when the shapes and contents of `r` in `h` matches `t`.
 
             Hint: You might find it useful to have a look at and use the libraries for (classical) logical 
-            reasoning about specifications in `FStar.Classical.fsti` and `FStar.StrongExcludedMiddle.fst`
+            reasoning about specifications given in `FStar.Classical` and `FStar.StrongExcludedMiddle`.
 
 *)
 
@@ -259,7 +259,7 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
         the ghost state (here, `t:erased stree`) is the purely functional specification of our mutable stateful 
         code. We have wrapped `stree` in `erased` to ensure that it cannot be used computationally relevantly 
         in user code (in that sense, `erased` is similar to the `GTot` effect). You can find more about the 
-        `erased` type in the F* standard library in `FStar.Ghost`, including operations that you will need to use.
+        `erased` type in the standard library in `FStar.Ghost`, including operations that you will need to use.
 
 *)
 
