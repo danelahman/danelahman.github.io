@@ -1,7 +1,5 @@
 module BinarySearchTreeClient
 
-open FStar.Ghost
-open FStar.Heap
 open FStar.ST
 
 open BinarySearchTree
