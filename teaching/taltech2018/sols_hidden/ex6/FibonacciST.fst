@@ -13,8 +13,7 @@ open FStar.Ref
 
   (If you haven't seen Fibonacci before, see https://en.wikipedia.org/wiki/Fibonacci_number)
 
-  Task 1: Give `fibonacci_st_aux` a more precise type so that you can remove the 
-          [@expect_failure] attribute from `fibonacci_st` and show that it verifies.
+  Task 1: Give `fibonacci_st_aux` a more precise type so that `fibonacci_st` verifies.
 
   Task 2: Provide a definition for the `fibonacci_st_aux` function that verifies against 
           the type you gave it in Task 1, i.e., replace the `admit ()` with code.

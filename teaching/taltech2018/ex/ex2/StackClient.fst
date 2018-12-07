@@ -10,7 +10,6 @@ open Stack
 
 *)
 
-[@expect_failure]
 let main() =
 
   let s0 = empty (* <: stack *) in

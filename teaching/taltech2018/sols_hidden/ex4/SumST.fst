@@ -12,8 +12,7 @@ open FStar.Mul
   The goal is to write and prove correct a stateful variant of the 1 + ... + n function 
   that we saw in Exercise 1, where we gave a purely functional definition of it. 
 
-  Task 1: Give a more precise type to `sum_st_aux` so that you can remove the 
-          [@expect_failure] attribute from `sum_st` and show that it verifies.
+  Task 1: Give a more precise type to `sum_st_aux` so that `sum_st` verifies.
 
   Task 2: Provide a definition for the `sum_st_aux` function that verifies against 
           the type you gave it in Task 1, i.e., replace the `admit ()` with code.

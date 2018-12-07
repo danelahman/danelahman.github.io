@@ -13,8 +13,7 @@ open FStar.Mul
   The goal is to write a stateful variant of the factorial function and show that it 
   agrees with its purely functional definition which we saw on the lecture slides.
 
-  Task 1: Give `factorial_st_aux` a more precise type so that you can remove the 
-          [@expect_failure] attribute from `factorial_st` and show that it verifies.
+  Task 1: Give `factorial_st_aux` a more precise type so that `factorial_st` verifies.
 
   Task 2: Provide a definition for the `factorial_st_aux` function that verifies against 
           the type you gave it in Task 1, i.e., replace the `admit ()` with code.

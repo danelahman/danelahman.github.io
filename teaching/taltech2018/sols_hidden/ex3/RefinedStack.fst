@@ -22,9 +22,8 @@ module RefinedStack
 
           Hint: It will not look too different from what you already did in Exercise 2.
 
-  Task 3: In `RefinedStackClient.fst`, remove the [@expect_failure] attribute and observe that 
-          in its current state the client code does not verify (depending on how much you added 
-          to `RefinedStack.fsti` in Task 1).
+  Task 3: In `RefinedStackClient.fst`, observe that in its current state the client code does not 
+          verify (depending on how much you added to `RefinedStack.fsti` in Task 1).
 
   Task 4: As in Exercise 2, to make `RefinedStackClient.fst` verify, expose additional properties 
           of stacks in `RefinedStack.fsti` and give proofs of these properties in the current file.

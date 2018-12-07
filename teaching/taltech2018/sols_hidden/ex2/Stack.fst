@@ -21,9 +21,8 @@ module Stack
            Thus, to ensure that your implementation of stacks truly reflects the interface, 
            you should run F* from the command line with `fstar.exe` on the current file.
 
-   Task 2: Remove the [@expect_failure] attribute in `StackClient.fst` and try to verify 
-           said file. The verification will fail because `StackClient.fst` cannot see the 
-           implementation details of `Stack.fst` not exposed by its interface `Stack.fsti`. 
+   Task 2: Try to verify `StackClient.fst`. The verification will fail because `StackClient.fst` 
+           cannot see the implementation details of `Stack.fst` not exposed by its interface. 
 
    Task 3: To overcome the failure in Task 2, extend the interface `Stack.fsti` with 
            additional properties (lemmas) about the behaviour of stacks, and of course 
