@@ -37,16 +37,9 @@ type rstate (a:Type) =
           describes how the (ghost) state is allowed to evolve (as per above discussion).
 
 *)
-
-let evolve' (a:Type) (r1 r2:rstate a) =
-  match r1, r2 with
-  | Empty, _
-  | Mutable _, Mutable _
-  | Mutable _, Frozen _  -> True 
-  | Frozen v1, Frozen v2 -> v1 == v2
-  | _, _ -> False
   
-let evolve (a:Type) : Tot (preorder (rstate a)) = evolve' a
+let evolve (a:Type) : Tot (preorder (rstate a)) = 
+  admit ()
 
 (*
 
@@ -65,9 +58,9 @@ let eref (a:Type) : Type = mref (rstate a) (evolve a)
 
 *)
 
-let alloc (a:Type) : ST (eref a) (requires (fun _ -> True))
-                                 (ensures  (fun _ r h1 -> Empty? (sel h1 r))) = 
-  alloc #_ #(evolve a) Empty
+let alloc (a:Type) : ST (eref a) (requires (fun h0 -> True))
+                                 (ensures  (fun h0 r h1 -> True)) = 
+  admit ()
 
 (*
 
@@ -79,11 +72,9 @@ let alloc (a:Type) : ST (eref a) (requires (fun _ -> True))
 *)
 
 let read (#a:Type) (r:eref a) 
-  : ST a (requires (fun h0 -> ~(Empty? (sel h0 r))))
-         (ensures  (fun h0 v h1 -> h0 == h1 /\
-                                  (sel h0 r == Mutable v \/ 
-                                   sel h0 r == Frozen v))) = 
-  match (!r) with | Mutable v | Frozen v -> v
+  : ST a (requires (fun h0 -> True))
+         (ensures  (fun h0 v h1 -> True)) = 
+  admit ()
 
 (*
 
@@ -95,9 +86,9 @@ let read (#a:Type) (r:eref a)
 *)
 
 let write (#a:Type) (r:eref a) (v:a) :
-      ST unit (requires (fun h0 -> ~(Frozen? (sel h0 r))))
-              (ensures  (fun _ _ h1 -> sel h1 r == Mutable v)) = 
-  r := Mutable v
+      ST unit (requires (fun h0 -> True))
+              (ensures  (fun h0 _ h1 -> True)) = 
+  admit ()
 
 (*
 
@@ -109,16 +100,15 @@ let write (#a:Type) (r:eref a) (v:a) :
 *)
 
 let freeze (#a:Type) (r:eref a) :
-      ST unit (requires (fun h0 -> Mutable? (sel h0 r)))
-              (ensures  (fun h0 _ h1 -> Frozen? (sel h1 r) /\
-                                        Mutable?.v (sel h0 r) == Frozen?.v (sel h1 r))) = 
-  r := Frozen (Mutable?.v !r)
+      ST unit (requires (fun h0 -> True))
+              (ensures  (fun h0 _ h1 -> True)) = 
+  admit ()
 
 (*
 
   Task 6: If you have defined the specifications and code above correctly, you will 
-          be able to verify the client code in `main()` below. If you uncomment any 
-          of the four commented out commands, `main()` must fail to verify.
+          be able to verify the client code in `main()` below. But if you uncomment 
+          any of the four commented out commands, `main()` must fail to verify.
 
 *)
 
