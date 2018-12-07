@@ -57,7 +57,9 @@ private let rec btree_contains (t:btree) (n:nat) : GTot bool =
 
 (* 
 
-  Task 1.2: Define empty binary trees and insertion into binary (search) trees.
+  Task 1.2: Define the empty binary tree and insertion into binary trees. For the latter, again assume as 
+            if you were working with binary **search** trees, i.e., insert the given value `n` so that if 
+            the given tree `t` happens to be a binary search tree, so will be the returned binary tree.
 
 *)
 
@@ -178,7 +180,7 @@ let stree_insert (t:stree) (n:nat) : GTot stree =
 
 (*
 
-  Task 2.1: Prove correct three expected properties of binary search trees. 
+  Task 2.2: Prove correct three expected properties of binary search trees. 
 
 *)
 
@@ -198,6 +200,14 @@ let lemma_distinct_insert_not_contains (t:stree) (n m:nat)
 
 
 (** PART 3 **)
+
+(*
+
+  Importing standard library modules to do with erased ghost code (see the note below) and 
+  stateful programming (heaps, the `ST` effect, etc). Hint: You will highly likely need to 
+  have a look at these libraries and use the functionality they provide in your solution.
+
+*)
 
 open FStar.Ghost
 open FStar.Heap

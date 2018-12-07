@@ -99,7 +99,7 @@ let stree_insert (t:stree) (n:nat) : GTot stree =
 
 (*
 
-  Task 2.1: Prove correct three expected properties of binary search trees. 
+  Task 2.2: Prove correct three expected properties of binary search trees. 
 
 *)
 
