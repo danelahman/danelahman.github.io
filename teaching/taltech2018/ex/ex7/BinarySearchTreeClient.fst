@@ -4,7 +4,13 @@ open FStar.ST
 
 open BinarySearchTree
 
-(* Client code to test mutable binary search trees in BinarySearchTree *)
+(*
+
+   Exercise 7.
+
+   See `BinarySearchTree.fst` for details.
+
+*)
 
 #set-options "--max_ifuel 0"
 
