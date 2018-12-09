@@ -315,7 +315,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 ## Inductive families + refinement types ##
 
-* As in e.g. Coq, we can [**type and define the lookup function**]{color:DarkBlue} as
+* As in Coq or Agda, we could [**type and define the lookup function**]{color:DarkBlue} as
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
@@ -325,14 +325,14 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   (* in addition to as and i, you would also need to explicitly work with p*)
   ```
 
-* {.fragment} But can also [**combine `vec` with refinement types**]{color:DarkRed} for more convenience
+* {.fragment} But [**combining `vec` with refinement types**]{color:DarkRed} is much more convenient
   ```
   let rec lookup #a #n (as:vec a n) (i:nat{i < n}) : a =
     match as with
     | Cons hd tl -> if i = 0 then hd else lookup tl (i - 1)
   ```
 
-* {.fragment} Another alternative is to use [**built in lists + refinement types**]{color:DarkBlue}
+* {.fragment} Often even more convenient to use [**simple lists + refinement types**]{color:DarkBlue}
   ```
   let rec length #a (as:list a) : nat =
     match as with
@@ -607,22 +607,22 @@ let rec rev #a (l:list a) : Tot (list a) =
 ```
 ~Fragment
 ```
-val rev_snoc : #a:Type -> l:list a -> h:a ->
+val lemma_rev_snoc : #a:Type -> l:list a -> h:a ->
                                         Lemma (rev (snoc l h) == h::rev l)
 
-let rec rev_snoc (#a:Type) l h =
+let rec lemma_rev_snoc (#a:Type) l h =
   match l with
   | []     -> ()
-  | hd::tl -> rev_snoc tl h
+  | hd::tl -> lemma_rev_snoc tl h
 ```
 ~
 ```
-val rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
+val lemma_rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
 
-let rec rev_involutive (#a:Type) l =
+let rec lemma_rev_involutive (#a:Type) l =
   match l with
   | []     -> ()
-  | hd::tl -> rev_involutive tl; rev_snoc (rev tl) hd
+  | hd::tl -> lemma_rev_involutive tl; lemma_rev_snoc (rev tl) hd
 ```
 
 ## Often lemmas are unavoidable ([but SMT can help]{color:DarkRed}) ##
@@ -641,22 +641,22 @@ let rec rev #a (l:list a) : Tot (list a) =
 ```
 
 ```
-val rev_snoc : #a:Type -> l:list a -> h:a -> 
+val lemma_rev_snoc : #a:Type -> l:list a -> h:a -> 
                                         Lemma (rev (snoc l h) == h::rev l)
                                         [SMTPat (rev (snoc l h))]
-let rec rev_snoc (#a:Type) l h =
+let rec lemma_rev_snoc (#a:Type) l h =
   match l with
   | []     -> ()
-  | hd::tl -> rev_snoc tl h
+  | hd::tl -> lemma_rev_snoc tl h
 ```
 
 ```
-val rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
+val lemma_rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
 
-let rec rev_involutive (#a:Type) l =
+let rec lemma_rev_involutive (#a:Type) l =
   match l with
   | []     -> ()
-  | hd::tl -> rev_involutive tl (*; rev_snoc (rev tl) hd*)
+  | hd::tl -> lemma_rev_involutive tl (*; lemma_rev_snoc (rev tl) hd*)
 ```
 
 <!------------------------------------------------------------------------------>
@@ -729,7 +729,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
   - **Refined [computation types]{color:DarkRed}**:
     - `Pure t pre post`
     - `Div t pre post`
-  - computationally and proof irrelevant, discharged by SMT
+  - refinements computationally and proof irrelevant, discharged by SMT
 
 * **[Subtyping and sub-effecting]{color:DarkBlue}** (`<:`)
 
@@ -906,6 +906,12 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 ## But you don't escape having to come up with [invariants]{color:DarkRed} ##
 
 ### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
+~Fragment
+```
+[INCLUDE=../../../code/state/CountST.fst:count_st_aux]
+```
+~
+
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
@@ -950,17 +956,20 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   ```
   val recall_contains #a (r:ref a) 
     : ST unit (requires (fun _       -> True))
-              (ensures  (fun h0 _ h1 -> h0 == h1 /\ h1 `contains` r))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\
+                                        h1 `contains` r))
   ```
 * {.fragment}
   ```
   val (!) : #a:Type -> r:ref a -> 
     ST a (requires (fun _       -> True))
-         (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
+         (ensures  (fun h0 x h1 -> h0 == h1 /\
+                                   x == sel h0 r))
 
   val (:=) : #a:Type -> r:ref a -> v:a -> 
     ST unit (requires (fun _      -> True))
-            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\
+                                      sel h1 r == v))
   ```
 
 * {.fragment} Moreover, [` ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
@@ -974,18 +983,20 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 ## Monotonic References [` mref a rel `]{color:DarkRed} ##
 
-* Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
+* {.fragment} Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
   ```
   val token #a #rel (r:mref a rel) : (a -> Type0) -> Type0
   ```
 
-* And corresponding [**introduction**]{color:DarkRed} and [**elimination**]{color:DarkRed} rules
+* {.fragment} And corresponding [**introduction**]{color:DarkRed} and [**elimination**]{color:DarkRed} rules (stateful progs.)
   ```
-  val witness_token #a #rel (r:mref a rel) (p:(a -> Type0)) 
+  val witness_token #a #rel (r:mref a rel) (p:(a -> Type0))
+  
     : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
 
-  val recall_token #a #rel (r:mref a rel) (p:(a -> Type0)) 
+  val recall_token #a #rel (r:mref a rel) (p:(a -> Type0))
+  
     : ST unit (requires (fun _       -> token r p))
               (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
   ```
@@ -997,9 +1008,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
     r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
 
-  * {.fragment} [**monotonic counters**]{color:DarkBlue}, [**monotonic logs**]{color:DarkRed}, [**network traffic history**]{color:DarkBlue}, ...
+* {.fragment} **Examples:** [**counters**]{color:DarkBlue}, [**logs**]{color:DarkRed}, [**network traffic history**]{color:DarkBlue}, [**state continuity**]{color:DarkRed}, ...
 
-  * {.fragment} also crucial for, e.g., verifying the [**Ariadne state continuity protocol**]{color:DarkRed}
+<!--  * {.fragment} also crucial for, e.g., verifying the [**Ariadne state continuity protocol**]{color:DarkRed} -->
 
 <!------------------------------------------------------------------------------>
 
@@ -1019,7 +1030,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * In addition to `St`, ...,  users can define their own (monadic) effects
   
-  * Given a mon. definition, F\* derives the effect and the spec. calculus<br/><br/>
+  * Given a mon. definition, F\* derives the effect and the spec. calculus
+
+  * Also comes with monadic reification for extrinsic reasoning<br/><br/>
 
 * {.fragment} Meta-F\* - a [**tactics and metaprogramming framework**]{color:DarkBlue} for F\*
 
