@@ -11,8 +11,8 @@ open FStar.Mul
   Task 1: Define a recursive total function `sum` that sums up natural numbers from 1 to n.
           That is, replace the 1st `admit ()` with an appropriate recursive definition.
 
-  Task 2: Prove that `sum` is equal to the nth triangual number (as computed by the function `triangular`).
-          That is, replace the 2nd `admit ()` with a proof of `sum n = triangular n`.
+  Task 2: Prove that `sum` is equal to the nth triangual number (as computed by `nth_triangular`).
+          That is, replace the 2nd `admit ()` with a proof of `sum n = nth_triangular n`.
          
 *)
 

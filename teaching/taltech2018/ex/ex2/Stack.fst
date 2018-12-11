@@ -6,9 +6,10 @@ module Stack
 
    In this exercise you will practice writing purely functional programs against interfaces.
 
-   The goal is for you to define a small library of integer-valued stacks (if you haven't 
-   seen stacks before, see e.g. https://en.wikipedia.org/wiki/Stack_(abstract_data_type)), 
-   and use it in the client code in `StackClient.fst`, including verifying simple properties.
+   The goal is for you to define a small library of integer-valued stacks and use it in the 
+   client code in `StackClient.fst`, including verifying simple properties of such stacks.
+
+   If you haven't seen stacks before, see e.g. https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
 
    Task 1: In the space below, define all the types, functions, and lemmas required by the  
            interface `Stack.fsti` so that the current file (`Stack.fst`) verifies.
