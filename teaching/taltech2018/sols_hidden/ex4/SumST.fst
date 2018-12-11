@@ -21,7 +21,7 @@ open FStar.Mul
           to act as a loop invariant for the recursive calls. So you might need to 
           revisit Task 1 and give `sum_st_aux` a stronger, invariant-like type.
 
-          Hint 2: For inspiration, see the `count_st` example the lecture slides.
+          Hint 2: For inspiration, see the `count_st` example on the lecture slides.
           
 *)
 
