@@ -781,11 +781,11 @@ module Heap
   val ref : Type -> Type
 
   val sel : #a:Type -> heap -> ref a -> GTot a
-  val addr_of: #a:Type -> ref a -> GTot nat
+  val addr_of : #a:Type -> ref a -> GTot nat
   val contains : #a:Type -> heap -> ref a -> Type0
 
   let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) = 
-    forall a (r:ref a). (~(addr_of r `mem` s) /\ h0 `contains` r)
+    forall a (r:ref a) . (~(addr_of r `mem` s) /\ h0 `contains` r)
                                                   ==> sel h1 r == sel h0 r
 ```
 
@@ -856,12 +856,12 @@ val (:=) : #a:Type -> r:ref a -> v:a ->
 G |- e1 : ST t1 (requires (fun h0 -> pre))
                 (ensures  (fun h0 x1 h1 -> post))
                   
-G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0. post))
+G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0 . post))
                        (ensures  (fun h1 x2 h2 -> post'))
---------------------------------------------------------------------------
+---------------------------------------------------------------------------
 G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
                                (ensures  (fun h x2 h2 ->
-                                             exists x1 h1. post /\ post'))
+                                             exists x1 h1 . post /\ post'))
 ```
 
 <!------------------------------------------------------------------------------>

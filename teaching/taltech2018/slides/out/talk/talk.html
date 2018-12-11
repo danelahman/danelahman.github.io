@@ -6790,11 +6790,11 @@ e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h
   <span style="color:blue">val</span> ref : <span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> <span style="color:blue">Type</span>
 
   <span style="color:blue">val</span> sel : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> a
-  <span style="color:blue">val</span> addr_of: #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat
+  <span style="color:blue">val</span> addr_of : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">GTot</span> nat
   <span style="color:blue">val</span> contains : #a:<span style="color:blue">Type</span> <span style="color:blue">-&gt;</span> heap <span style="color:blue">-&gt;</span> ref a <span style="color:blue">-&gt;</span> <span style="color:blue">Type0</span>
 
   <span style="color:blue">let</span> modifies (s:FStar.TSet.set nat) (h0 h1 : heap) = 
-    <span style="color:blue">forall</span> a (r:ref a). (~(addr_of r `mem` s) /\ h0 `contains` r)
+    <span style="color:blue">forall</span> a (r:ref a) . (~(addr_of r `mem` s) /\ h0 `contains` r)
                                                   ==&gt; sel h1 r == sel h0 r</code></pre>
 <div class="fragment" data-line="792">
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="793" data-line-first="794" style="display:block"><code data-line="794"><span style="color:blue">module</span> <span style="color:blue">ST</span>
@@ -6868,12 +6868,12 @@ let modifies_trans (#a:Type) (s01 s12 : set nat) (h0 h1 h2 : heap) :
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="855" data-line-first="856" style="display:block"><code data-line="856">G |- e1 : <span style="color:blue">ST</span> t1 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
                 (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h0 x1 h1 <span style="color:blue">-&gt;</span> post))
                   
-G, x1:t1 |- e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h1 <span style="color:blue">-&gt;</span> <span style="color:blue">exists</span> h0. post))
+G, x1:t1 |- e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h1 <span style="color:blue">-&gt;</span> <span style="color:blue">exists</span> h0 . post))
                        (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h1 x2 h2 <span style="color:blue">-&gt;</span> post&#39;))
---------------------------------------------------------------------------
+---------------------------------------------------------------------------
 G |- <span style="color:blue">let</span> x1 = e1 <span style="color:blue">in</span> e2 : <span style="color:blue">ST</span> t2 (<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> pre))
                                (<span style="color:blue">ensures</span>  (<span style="color:blue">fun</span> h x2 h2 <span style="color:blue">-&gt;</span>
-                                             <span style="color:blue">exists</span> x1 h1. post /\ post&#39;))</code></pre><!------------------------------------------------------------------------------>
+                                             <span style="color:blue">exists</span> x1 h1 . post /\ post&#39;))</code></pre><!------------------------------------------------------------------------------>
 
 
 </section>
