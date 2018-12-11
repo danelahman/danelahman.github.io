@@ -1034,7 +1034,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Also comes with monadic reification for extrinsic reasoning<br/><br/>
 
-* {.fragment} Meta-F\* - a [**tactics and metaprogramming framework**]{color:DarkBlue} for F\*
+* {.fragment} Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework for F\*
 
   * Tactics are just another F\* effect (proof state + exceptions)
 
@@ -1122,11 +1122,11 @@ uint64_t f()
 
 ## F\* ## {#conclusion}
 
-* An ML-style effectful [**functional programming language**]{color:DarkBlue}
+* An ML-style [**effectful functional programming language**]{color:DarkBlue}
 
-* A semi-automated [**SMT-based program verifier**]{color:DarkRed}
+* A [**semi-automated SMT-based program verifier**]{color:DarkRed}
 
-* An interactive [**dependently typed proof assistant**]{color:DarkBlue}<br/><br/>
+* An [**interactive dependently typed proof assistant**]{color:DarkBlue}<br/><br/>
 
 * Used successfully in [**security and crypto verification**]{color:DarkRed}
 
