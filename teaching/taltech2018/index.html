@@ -9,15 +9,78 @@
 
 <p>Guest lecture and accompanying lab sessions for the <a href="https://courses.cs.ttu.ee/pages/Advanced_programming" target="_blank">Advanced Programming Course (ITT8060)</a> at the <a href="https://www.taltech.ee/en/" target="_blank">Tallinn University of Technology</a>.</p>
 
-<h2 id="slides">Lecture slides (12.12.2018)</h2>
+<h2 id="slides" style="margin-top:30px">Lecture slides (12.12.2018)</h2>
 
-<ul><li>TBA</li></ul>
+<ul>
+<li><a href="slides/out/talk/talk.html" target="_blank">HTML version of the slides</a></li>
+</ul>
 
-<h2 id="exercises">Lab exercises (12-14.12.2018)</h2>
 
-<ul><li>TBA</li></ul>
+<h2 id="exercises" style="margin-top:30px">Lab exercises (12-14.12.2018)</h2>
 
-<h2 id="setup">Setup instructions</h2>
+<ul>
+<li><a href="ex.zip" target="_blank">ZIP archive</a> with all the exercises</li>
+</ul>
+
+<p>These exercises are mostly independent of each other, so you do not need to do them in the given order, but the earlier ones are generally more basic.</p>
+
+<p>Out of all of them, Exercise 7 is probably the most involved. It lets you simultaneously practice the verification of both pure and stateful programs.</p>
+
+<h3>Verifying purely functional programs</h3>
+
+<ul>
+<li><b>Exercise 1:</b> Summing 1 + 2 + 3 + ...</li>
+<li><b>Exercise 2:</b> Simply typed stacks</li>
+<li><b>Exercise 3:</b> Refined stacks</li>
+</ul>
+
+<h3>Verifying stateful programs</h3>
+
+<ul>
+<li><b>Exercise 4:</b> Stateful summing 1 + 2 + 3 + ...</li>
+<li><b>Exercise 5:</b> Stateful factorial 1 * 2 * 3 * ...</li>
+<li><b>Exercise 6:</b> Stateful Fibonacci 1 , 1 , 2 , 3 , 5 , 8 , ...</li>
+</ul>
+
+<h3>Verifying purely functional and stateful programs</h3>
+
+<ul>
+<li><b>Exercise 7:</b> Functional and mutable binary search trees</li>
+</ul>
+
+<h3>Verifying monotonic stateful programs</h3>
+
+<ul>
+<li><b>Exercise 8:</b> Initializable and freezable references</li>
+</ul>
+
+<h2 id="snippets" style="margin-top:30px">Useful code snippets</h2>
+
+<ul>
+<li>Ackermann function, interfaces, and decreases metrics: <a href="code/talk/Ackermann.fsti" target="_blank">Ackermann.fsti</a>, <a href="code/talk/Ackermann.fst" target="_blank">Ackermann.fst</a></li>
+<li>List reversal: <a href="code/pure-fun/Rev.fst" target="_blank">Rev.fst</a></li>
+<li style="margin-bottom:10px">Potential divergence:<a href="code/pure-fun/Divergence.fst" target="_blank">Divergence.fst</a></li>
+
+<li>F*'s ML-style garbage-collected memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Heap.fst" target="_blank">FStar.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a></li>
+<li style="margin-bottom:10px">F*'s low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.fst" target="_blank">FStar.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
+
+<li>Stateful increment function: <a href="code/state/IncrST.fst" target="_blank">IncrST.fst</a>, <a href="code/state/Incr2ST.fst" target="_blank">Incr2ST.fst</a></li>
+<li>Reference swapping: <a href="code/state/SwapRefsST.fst" target="_blank">SwapRefsST.fst</a></li>
+<li>Stateful counting: <a href="code/state/CountST.fst" target="_blank">CountST.fst</a>
+<li style="margin-bottom:10px">Low-level code example: <a href="code/state/BufferAlloc.fst" target="_blank">BufferAlloc.fst</a>, <a href="code/state/BufferAlloc.c" target="_blank">BufferAlloc.c</a></li>
+
+<li>F*'s witnessed modality: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fsti" target="_blank">FStar.Monotonic.Witnessed.fsti</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Witnessed.fst" target="_blank">FStar.Monotonic.Witnessed.fst</a></li>
+<li>F*'s monotonic ML-style memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.Heap.fst" target="_blank">FStar.Monotonic.Heap.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.ST.fst" target="_blank">FStar.ST.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Ref.fst" target="_blank">FStar.Ref.fst</a></li>
+<li style="margin-bottom:10px">F*'s monotonic low-level memory model: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Monotonic.HyperStack.fst" target="_blank">FStar.Monotonic.HyperStack.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.HyperStack.ST.fst" target="_blank">FStar.HyperStack.ST.fst</a></li>
+
+<li style="margin-bottom:10px">Classical logic in F*: <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Classical.fsti" target="_blank">FStar.Classical.fsti</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.Classical.fst" target="_blank">FStar.Classical.fst</a>, <a href="https://github.com/FStarLang/FStar/blob/master/ulib/FStar.StrongExcludedMiddle.fst" target="_blank">FStar.StrongExcludedMiddle.fst</a></li>
+
+<li>Monotonic counters: <a href="code/monotonic/CounterMST.fst" target="_blank">CounterMST.fst</a></li>
+<li>Monotonic logs: <a href="code/monotonic/SimpleLogMST.fst" target="_blank">SimpleLogMST.fst</a></li>
+<li>Temporarily violating monotonicity with snapshots: <a href="code/monotonic/Snapshots.fst" target="_blank">Snapshots.fst</a></li>
+</ul>
+
+<h2 id="setup" style="margin-top:30px">Setup instructions</h2>
 
 <h3>Using F* in your browser</h3>
 
@@ -33,7 +96,7 @@ that's part of the <a href="https://www.fstar-lang.org/tutorial/" target="_blank
 
 <ul>
 <li style="margin-bottom:10px">
-For people who want to get F* installed on their computer with little fuzz there are many easy options:
+For people who want to get F* installed on their computer with little fuzz there are 3 easy options:
 <ol>
 <li style="margin-bottom:5px; margin-top:10px;"> Using the <a href="https://fstar-lang.org/#download">binary releases</a>
 (<a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#binary-releases">documentation on this</a>)
@@ -102,7 +165,7 @@ If you are familiar with the <a href="https://www.gnu.org/software/emacs/" targe
 </li>
 </ul>
 
-<h2 style="margin-bottom:-5px">More references</h2>
+<h2 style="margin-top:30px">More references</h2>
 <ul>
 <li style="margin-bottom:5px;"><a href="https://www.fstar-lang.org" target="_blank">F* website</a></li>
 <li style="margin-bottom:5px;"><a href="https://www.fstar-lang.org/tutorial/" target="_blank">F* tutorial</a></li>
