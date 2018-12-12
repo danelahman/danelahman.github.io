@@ -24,7 +24,7 @@ open FStar.Mul
 
 *)
 
-let rec factorial_tot (x:nat) : Tot nat = 
+let rec factorial_tot (x:nat) : GTot nat = 
   if x = 0 then 1 else x * factorial_tot (x - 1)
 
 let rec factorial_st_aux (r1 r2:ref nat) 

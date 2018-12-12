@@ -25,7 +25,7 @@ open FStar.Mul
           
 *)
 
-let nth_triangular (n:nat) = ((n+1) * n) / 2
+let nth_triangular (n:nat) : GTot nat = ((n+1) * n) / 2
 
 let rec sum_st_aux (r:ref nat) (n:nat) 
   : ST unit (requires (fun _ -> True))

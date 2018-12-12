@@ -32,7 +32,7 @@ open FStar.Ref
 
 *)
 
-let rec fibonacci_tot (n:nat) : Tot nat 
+let rec fibonacci_tot (n:nat) : GTot nat 
   = if n <= 1 then 1 else fibonacci_tot (n - 1) + fibonacci_tot (n - 2)
 
 let rec fibonacci_st_aux (i:pos) (n:nat) (r1 r2:ref nat) 
