@@ -1,5 +1,5 @@
 [INCLUDE=presentation]
-Title         : Program Verification in F*
+Title         : Program Verification with F*
 Author        : Danel Ahman
 Affiliation   : University of Ljubljana
 Reveal Url    : ../reveal.js
@@ -17,7 +17,7 @@ HTML Meta     : clear
 [INCLUDE=../../stuff/latex.tex]
 ~
 
-# <br/>Program Verification in F\* #
+# <br/>Program Verification with F\* #
 
 ~Center
 
