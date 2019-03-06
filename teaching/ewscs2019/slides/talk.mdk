@@ -48,14 +48,13 @@ Estonian Winter School in Computer Science
 
 * **Verifying [Purely Functional Programs]{color:DarkBlue} in F\***
 
-* **Verifying [Effectful Programs]{color:DarkRed} in F\* (State, IO, ...)**
+* **Verifying [Effectful Programs]{color:DarkRed} in F\* (Div, State, IO, ...)**
 
 * **Highlights of [Other F\* Features]{color:DarkBlue}**<br/><br/>
 
 ~Fragment
 Tutorials, research papers, past courses and talks, setup instructions <br/>**@**<br/>
-[https://www.fstar-lang.org/](https://www.fstar-lang.org/) <br/>e.g.<br/>
-[https://danelahman.github.io/teaching/taltech2018/index.html](https://danelahman.github.io/teaching/taltech2018/index.html)
+[https://www.fstar-lang.org/](https://www.fstar-lang.org/)
 
 
 <br/>
@@ -857,8 +856,11 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
 
-* {.fragment} See past F\* courses for examples with more involved invariants
+~Fragment
+* See past F\* courses for examples with more involved invariants
 
+[https://www.fstar-lang.org/](https://www.fstar-lang.org/)
+~
 
 <!------------------------------------------------------------------------------>
 
@@ -900,26 +902,28 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * **Dijkstra Monads for Free** ([POPL 2017](https://arxiv.org/abs/1608.06499))
 
-  * F\* has a [**user-extensible type system**]{color:DarkBlue}
-
   * Given a [**mon. definition**]{color:DarkRed}, F\* derives the [**effect**]{color:DarkRed} and the [**spec. calculus**]{color:DarkRed}
 
-  * Supports effects such as [**Reading**]{color:DarkBlue}, [**Writing**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}
+    * The spec. calc. is a <u>monad of (Dijkstra's) predicate transformers</u>
 
-  * [**Does not (!)**]{color:DarkRed} support [**nondeterminism**]{color:DarkRed} and [**IO**]{color:DarkRed}<br/><br/>
+    * The pre- and postcondition style effects are defined on top of this
+
+  * Supports [**Reader**]{color:DarkBlue}, [**Writer**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}, but no [**nondet.**]{color:DarkRed} and [**IO**]{color:DarkRed}
+    ```
+    val throw : #a:Type -> e:exn -> 
+      Exc a (requires (True)) (ensures (fun (r:either a exn) -> r = inr e))
+    ```
 
   ~Fragment
   * Also comes with [**monadic reification**]{color:DarkBlue} for extrinsic reasoning
     ```
-    (* non-interference for nat-valued low state & booleans as high values *)
-
-    val reify : St a -> state -> a * state    (* much simplified signature *)
+    val reify : St a -> state -> a * state      (* much simplified signature *)
 
     let incr (n:N) : St unit = put (get() + n)
     
-    let incr2 (h:bool) : St unit = if h then incr 2 else (incr 1; incr 1)
+    let incr2 (h:bool) : St unit = if h then (incr 2) else (incr 1; incr 1)
     
-    assert (forall h0 h1 l. reify (incr2 h0) l = reify (incr2 h1) l)
+    assert (forall h0 h1 l. reify (incr2 h0) l = reify (incr2 h1) l)   (* NI *)
     ```
   ~
 
@@ -927,7 +931,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 ## [Other Effects]{color:DarkBlue} in F\* ctd ##
 
-* **Dijkstra Monads for All** ([Under review 2019](https://arxiv.org/abs/1903.01237))
+* **Dijkstra Monads for All** ([Under review, 2019](https://arxiv.org/abs/1903.01237))
 
   * [**No more (!)**]{color:DarkBlue} attempting to pair [**a comp. monad**]{color:DarkBlue} with [**a single spec.**]{color:DarkBlue}
 
@@ -944,7 +948,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
       : IOST unit (requires (fun s h -> True))          (* state + IO effect *)
                   (ensures  (fun s h r s' l ->
                                s = s' /\
-                               (exists i . l = [In i;Out (s + i + 1)]))) =
+                               (exists i . l = [In i; Out (s + i + 1)]))) =
       let s = get () in 
       let i = read () in
       put (s + i);
@@ -962,29 +966,29 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-## Highlights of [Other F\* Features](#conclusion) ##
+## Highlights of [Other F\* Features]{color:DarkBlue} ##
 
 * {.fragment} Low\*: programming and verifying [**low-level C code**]{color:DarkBlue} ([ICFP 2017](https://arxiv.org/abs/1703.00053))
 
-  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not*
+  * <u>Idea:</u> *The code (Low\*) is low-level but the verification (F\*) is not*
 
-  * Uses a hierarchical region-based heap-and-stack memory model<br/><br/>
+  * Uses a <u>hierarchical</u> <u>region-based</u> <u>heap-and-stack</u> memory model<br/><br/>
 
 * {.fragment} F\* has good support for [**monotonic state**]{color:DarkRed} ([POPL 2018](https://arxiv.org/abs/1707.02466))
 
-  * Global state where writes have to follow a preorder (an upd. monad)
+  * Global state where writes have to <u>follow a preorder</u> (an upd. monad)
 
-  * Combines pre-postcondition based verification with modal logic
+  * Combines <u>pre-postconditions</u> based verification with <u>modal logic</u>
 
   * Basis of F\* memory models (GCd refs, GCd mrefs, Low*, ...)<br/><br/>
 
 * {.fragment} Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework ([ESOP 2019](https://arxiv.org/abs/1803.06547))
 
-  * Tactics are just another F\* effect (proof state + exceptions)
+  * Tactics are just another F\* <u>effect</u> (proof state + exceptions)
 
-  * Run using the normalizer (slow) or compiled to native OCaml plugins
+  * Run using the <u>normalizer</u> (slow) or compiled to <u>native OCaml plugins</u>
 
-  * For: discharging VCs, massaging VCs, synthesizing terms, typeclasses
+  * <u>Uses:</u> discharging VCs, massaging VCs, synthesizing terms, typeclasses
 
 <!------------------------------------------------------------------------------>
 
@@ -998,11 +1002,11 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * Used successfully in [**security and crypto verification**]{color:DarkRed}
 
-  * miTLS: F\*-verified reference implementation of TLS
+  * miTLS: F\*-verified reference implementation of <u>TLS</u>
 
-  * HACL*: F\*-verified crypto (used in Firefox and Wireguard)
+  * HACL*: F\*-verified crypto (used in <u>Firefox</u> and <u>Wireguard</u>)
 
-  * Vale: F\*-verified assembly language<br/><br/>
+  * Vale: F\*-verified <u>assembly</u> language ([POPL 2019](https://github.com/project-everest/project-everest.github.io/raw/master/assets/vale-popl.pdf))<br/><br/>
 
 [https://www.fstar-lang.org/](https://www.fstar-lang.org/)
 
