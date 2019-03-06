@@ -1,0 +1,1126 @@
+[INCLUDE=presentation]
+Title         : Program Verification with F*
+Author        : Danel Ahman
+Affiliation   : University of Ljubljana
+Reveal Url    : ../reveal.js
+Reveal Theme  : white
+Colorizer     : ../../stuff/fstarlang
+Logo          : False
+Html Header   :
+    <script src="../../stuff/script.js"></script>
+    <link rel="stylesheet" href="../../stuff/style.css" id="custom_style">
+Package       : xypic
+HTML Meta     : clear
+~Pre,~Code: language=fstarlang
+
+~ MathDefs
+[INCLUDE=../../stuff/latex.tex]
+~
+
+# <br/>Program Verification with F\* #
+
+~Center
+
+[![fstar-logo]](https://www.fstar-lang.org)
+
+<br/>
+
+##[Danel Ahman](https://danelahman.github.io/)##
+
+
+###University of Ljubljana###
+
+<br/>
+<br/>
+
+Estonian Winter School in Computer Science 
+
+2019
+~
+
+[fstar-logo]: ../../stuff/fstar-new.png { width=200px }
+
+<!-------------------------------------------------------------------------------->
+
+## Overview ##
+
+* **What is [F\*]{color:DarkRed}?**
+
+* **Verifying [Purely Functional Programs]{color:DarkBlue} in F\***
+
+* **Verifying [Effectful Programs]{color:DarkRed} in F\* (State, IO, ...)**
+
+* **Highlights of [Other F\* Features]{color:DarkBlue}**<br/><br/>
+
+~Fragment
+Tutorials, research papers, past courses and talks, setup instructions <br/>**@**<br/>
+[https://www.fstar-lang.org/](https://www.fstar-lang.org/)
+
+<br/>
+~
+
+~Fragment
+**Do ask questions!**
+~
+
+<!-------------------------------------------------------------------------------->
+
+# What is F\*? #
+
+
+<!-------------------------------------------------------------------------------->
+
+## Program verification: Shall the twain ever meet? ##
+
+<!-- Two, mostly disjoint sides of program verification research -->
+
+\ 
+
+| [Interactive proof assistants]{color:DarkRed;} ||                                 | [Semi-automated verifiers of<br/> imperative programs]{color:DarkBlue;} ||
+|:----------------------:|:-----------------------+:~{background-color:LightBlue}~~:+:--------------------------------:|:---------------------------------|
+| &nbsp;&nbsp;&nbsp; **Coq**,                   |               | \ \ *air* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Dafny**,                           |                            |
+| &nbsp;&nbsp;&nbsp; **Agda**,              |                   |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **FramaC**,                          |                         |
+| &nbsp;&nbsp;&nbsp; **Lean**,                  |                | \ \ *gap* \                     | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Why3**,                              |                              |
+| &nbsp;&nbsp;&nbsp; **Isabelle**                  |               |                                 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Liquid Haskell**                                 |                              |
+
+* **[Left side]{color:DarkRed;}**:
+very expressive logics, interactive proving, tactics
+
+  * but mostly only <u>purely functional programming</u><br/><br/>
+
+* **[Right side]{color:DarkBlue;}**:
+effectful programming, SMT-based automation
+
+  * but only <u>very weak logics</u>
+
+<!------------------------------------------------------------------------------>
+
+## Bridging the air gap: [F\*]{color:DarkRed} ##
+
+<!-- General-purpose -->
+* **[Functional programming language with effects]{color:Black;}**
+  * like F#, OCaml, Haskell, ...
+    ```
+    let incr = fun (r:ref a) -> r := !r + 1
+    ```
+    but with a much richer type system
+    
+  * by default <u>extracted to OCaml or F\#</u>
+  
+  * subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
+
+~Fragment
+* **[Semi-automated verification system using SMT (Z3)]{color:DarkBlue;}**
+  * <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Haskell, ...
+~
+
+~Fragment
+* **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
+  <!-- - full dependency, inductive types, universe polymorphism -->
+  * <u>interactive proving and tactics</u> like in Coq, Agda, Lean, ...
+~
+
+<!-- * {.fragment} Other tools in this space: -->
+<!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
+  <!-- - But F\* is the closest to bridging the gap by nicely integrating these three things -->
+
+
+<!-------------------------------------------------------------------------------->
+
+## F\* in action, at scale ##
+
+* **[Functional programming language with effects]{color:Black;}**
+  * F\* is programmed in F\*, but not (yet) verified
+
+*  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
+  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
+      * [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of <u>TLS</u> (1.2 and 1.3)
+      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in <u>Firefox</u> and <u>Wireguard</u>)
+      * [Vale](https://github.com/project-everest/vale): Verified <u>Assembly</u> Language for Everest
+
+*  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
+  * Fallback when SMT fails; also for mechanized metatheory
+    * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
+    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
+    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
+  * **Meta-F\*** (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
+
+# The current F\* team #
+
+~Center
+[**Microsoft Research (US, UK, India), Inria Paris, MIT, Rosario, ...**]{color:DarkGreen;}
+~
+
+  |   |  
+--- | --- |
+Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
+
+<!------------------------------------------------------------------------------>
+
+## How to use F* ##
+
+* **Two kinds of F\* files**
+
+  * A.fsti - <u>interface</u> file for module called A (can be omitted)
+
+  * A.fst - <u>source code</u> file for module called A
+
+~Fragment
+* **Command line: [typechecking/verification]{color:DarkBlue}**
+~
+~Fragment {.console}
+  ```text
+  $ fstar.exe Ackermann.fst
+  
+  Verified module: Ackermann (429 milliseconds)
+  All verification conditions discharged successfully
+  ```
+~
+
+~Fragment
+* **Command line: [typechecking/verification]{color:DarkBlue} + [program extraction]{color:DarkRed}**
+~
+~Fragment {.console}
+  ```text
+  $ fstar.exe Ackermann.fst --odir out-dir --codegen OCaml
+  ```
+~
+
+~Fragment
+* **Interactive: [development]{color:DarkRed} + [verification]{color:DarkBlue} (Emacs with [fstar-mode](https://github.com/FStarLang/fstar-mode.el/))**
+~
+
+<!------------------------------------------------------------------------------>
+
+## Verifying [Purely Functional Programs]{color:DarkBlue} in F\* ##
+
+<!------------------------------------------------------------------------------>
+
+## The functional core of F\* ##
+
+* {.fragment} Recursive functions
+  ```
+  val factorial : nat -> nat
+  
+  let rec factorial n =
+    if n = 0 then 1 else n * (factorial (n - 1))
+  ```
+
+* {.fragment} (Simple) inductive datatypes and pattern matching
+  ```
+  type list (a:Type) =
+    | Nil  : list a
+    | Cons : hd:a -> tl:list a -> list a
+
+  let rec map (f:'a -> 'b) (x:list 'a) : list 'b = (* combines val and let *)
+    match x with
+    | Nil      -> Nil
+    | Cons h t -> Cons (f h) (map f t)
+  ```
+
+* {.fragment} Lambdas
+  ```
+  map (fun x -> x + 42) [1;2;3]
+  ```
+
+<!------------------------------------------------------------------------------>
+
+<!-- ## Beyond ML types ## -->
+
+## Refinement types ##
+
+```
+type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
+```
+* {.fragment} Refinements [**introduced by type annotations**]{color:DarkBlue} (code unchanged)
+  ```
+  val factorial : nat -> nat
+  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
+  ```
+
+* {.fragment} Logical obligations [**discharged by SMT**]{color:DarkRed} (for else branch, simplified)
+  ```text
+  n >= 0, n <> 0 |= n - 1 >= 0
+  n >= 0, n <> 0, (factorial (n - 1)) >= 0 |= n * (factorial (n - 1)) >= 0
+  ```
+
+* {.fragment} Refinements [**eliminated by subtyping**]{color:DarkBlue}: ` nat <: int`
+  ```
+  let i : int = factorial 42         let f : x:nat{x > 0} -> int = factorial
+  ```
+
+* {.fragment} Different kinds of [**logical connectives**]{color:DarkBlue}
+
+  * ` = `, ` <> `, ` && `, ` || `, ` not `  [**(`bool`-valued)**]{color:DarkRed}
+  
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` [**(`prop`-valued)**]{color:DarkRed}
+
+
+## Dependent types ##
+
+* [**Dependent function types**]{color:DarkBlue} aka $\Pi$-types
+  ```
+  val incr : x:int -> y:int{x < y}
+  let incr x = x + 1
+  ```
+
+* {.fragment} Can express [**pre- and postconditions**]{color:DarkRed} of pure functions
+  ```
+  val incr' : x:nat{odd x} -> y:nat{even y}
+  ```
+
+* {.fragment} ([**Parameterised**]{color:DarkBlue} and [**indexed**]{color:DarkBlue}) inductive datatypes; [**implicit arguments**]{color:DarkBlue}
+  ```
+  type vec (a:Type) : nat -> Type =
+    | Nil  : vec a 0
+    | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
+
+  let rec map (#n:nat) (#a #b:Type) (f:a -> b) (as:vec a n) : vec b n =
+    match as with
+    | Nil        -> Nil
+    | Cons hd tl -> Cons (f hd) (map f tl)
+  ```
+
+<!--
+* {.fragment} Also [**dependent sum types**]{color:DarkRed} aka $\Sigma$-types 
+  ```
+  type incrementable = a:Type & (a -> a)            (* dfst, dsnd, (|a,f|) *)  
+  ```
+-->
+
+## Inductive families + refinement types ##
+
+* As in Coq or Agda, we could [**type and define the lookup function**]{color:DarkBlue} as
+  ```
+  type vec (a:Type) : nat -> Type =
+    | Nil  : vec a 0
+    | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
+
+  let rec lookup #a #n (as:vec a n) (i:nat) (p:i `less_than` n) : a = ...
+  (* in addition to as and i, you would also need to explicitly work with p*)
+  ```
+
+* {.fragment} But [**combining `vec` with refinement types**]{color:DarkRed} is much more convenient
+  ```
+  let rec lookup #a #n (as:vec a n) (i:nat{i < n}) : a =
+    match as with
+    | Cons hd tl -> if i = 0 then hd else lookup tl (i - 1)
+  ```
+
+* {.fragment} Often even more convenient to use [**simple lists + refinement types**]{color:DarkBlue}
+  ```
+  let rec length #a (as:list a) : nat =
+    match as with
+    | []       -> 0
+    | hd :: tl -> 1 + length tl
+    
+  let rec lookup #a (as:list a) (i:nat{i < (length as)}) : a =
+    match as with
+    | hd :: tl -> if i = 0 then hd else lookup tl (i - 1)
+  ```
+
+
+
+## Total functions in F\* ##
+
+* The F\* functions we saw so far were all [**total**]{color:DarkRed}
+
+* [**`Tot` effect**]{color:DarkBlue} (default) = no side-effects, terminates on all inputs
+
+  ```
+  (* val factorial : nat -> nat *)
+  
+  val factorial : nat -> Tot nat
+
+  let rec factorial n =
+    if n = 0 then 1 else n * (factorial (n - 1))
+  ```
+
+* {.fragment} [**Quiz:**]{color:DarkRed} How about giving this weaker type to factorial?
+  ```
+  val factorial : int -> Tot int
+  ```
+
+~Fragment {.console}
+  ```text
+  let rec factorial n = if n = 0 then 1 else n * (factorial (n - 1))
+                                                             ^^^^^
+  Subtyping check failed; expected type (x:int{(x << n)}); got type int
+  ```
+  `factorial (-1)` loops! &nbsp;&nbsp; (`int` type in F\* is unbounded)
+~
+
+<!------------------------------------------------------------------------------>
+
+<!--
+## Semantic termination checking ##
+
+* based on [**well-founded ordering on expressions**]{color:DarkBlue} (`<<`)
+  - naturals related by `<` (negative integers unrelated)
+  - inductives related by subterm ordering
+  - lex tuples `%[a;b;c]` with lexicographic ordering
+* {.fragment} order constraints discharged by the SMT solver
+* {.fragment} arbitrary total expression as [**decreases metric**]{color:DarkBlue}
+  ```
+  val ackermann: m:nat -> n:nat -> Tot nat (decreases %[m;n])
+  let rec ackermann m n =
+    if m = 0 then n + 1
+    else if n = 0 then ackermann (m - 1) 1
+    else ackermann (m - 1) (ackermann m (n - 1))
+  ```
+* {.fragment} default metric is lex ordering of all (non-function) args
+  ```
+  val ackermann: m:nat -> n:nat -> Tot nat
+  ```
+-->
+
+## The divergence effect (`Dv`) ##
+
+* We [**might not want to prove all code terminating**]{color:DarkBlue}
+  ```
+  val factorial : int -> Dv int
+  ```
+
+* {.fragment} Some useful code really is [**not always terminating**]{color:DarkRed}
+
+  * {.fragment} evaluator for lambda terms
+    ```
+    val eval : exp -> Dv exp
+    let rec eval e = 
+      match e with
+      | App (Lam x e1) e2 -> eval (subst x e2 e1)
+      | App e1 e2         -> eval (App (eval e1) e2)
+      | Lam x e1          -> Lam x (eval e1)
+      | _                 -> e
+    
+    let main () = eval (App (Lam 0 (App (Var 0) (Var 0)))
+                            (Lam 0 (App (Var 0) (Var 0))))
+    ```
+    ~Fragment {.console}
+    ```text
+    ./Divergence.exe
+    ```
+    ~
+  * {.fragment} servers
+  * {.fragment} ...
+
+<!------------------------------------------------------------------------------>
+
+## Effect encapsulation (`Tot` and `Dv`) ##
+
+* Pure code [**cannot call**]{color:DarkRed} potentially divergent code
+
+* {.fragment} [**Only (!)**]{color:DarkBlue} pure code [**can appear**]{color:DarkBlue} in specifications
+  ```
+  val factorial : int -> Dv int
+
+  type tau = x:int{x = factorial (-1)}
+  ```
+~Fragment {.console}
+  ```text
+  type tau = x:int{x = factorial (-1)}
+                   ^^^^^^^^^^^^^^^^^^
+  Expected a pure expression; got an expression ... with effect "DIV"
+  ```
+~
+<!-- Cheating quite badly above since I don't want to tell them about ghost -->
+
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Tot t <: Dv t`
+
+* {.fragment} So, divergent code [**can include**]{color:DarkBlue} pure code
+  ```
+  incr 2 + factorial (-1) : Dv int
+  ```
+
+<!------------------------------------------------------------------------------>
+
+## Effect encapsulation (`Tot` and `GTot`) ##
+
+* {.fragment} **[Ghost effect]{color:DarkBlue}** for code used only in specifications
+  ```
+  val sel : #a:Type -> heap -> ref a -> GTot a
+
+  val incr : r:ref int -> 
+    ST unit (requires (fun h0      -> True))                        
+            (ensures  (fun h0 _ h2 -> sel h2 r == sel h0 r + 1))
+  ```
+
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Tot t <: GTot t`
+
+* {.fragment} **[BUT NOT (!):]{color:DarkRed}** ` GTot t <: Tot t   ` [(holds for non-informative types)]{color:Gray}
+
+
+
+<!------------------------------------------------------------------------------>
+
+## Verifying [pure]{color:DarkRed} programs ## {#pure1}
+### Variant #1: [intrinsically]{color:DarkBlue} (at definition time) ###
+
+* Using [**refinement types**]{color:DarkBlue} (saw this already)
+```
+val factorial : nat -> Tot nat              (* type nat = x:int{x >= 0} *)
+```
+* {.fragment}Can equivalently use [**pre- and postconditions**]{color:DarkRed} for this
+```
+val factorial : x:int -> Pure int (requires (x >= 0))
+                                    (ensures  (fun y -> y >= 0))
+```
+* {.fragment} Each F\* [**computation type**]{color:DarkBlue} is of the form
+  * <u>effect</u> (e.g. `Pure`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>result type</u> (e.g. `int`) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <u>spec.</u> (e.g. pre and post)<br/><br/>
+* {.fragment}`Tot` is just an abbreviation
+```
+Tot t = Pure t (requires True) (ensures (fun _ -> True))
+```
+
+<!------------------------------------------------------------------------------->
+
+<!--
+## Another way to look at this ##
+
+* **Two classes of types**
+  - [Value types (`t`):]{color:DarkBlue} `int`, `list int`, ...
+  - [Computation types (`C`):]{color:DarkRed} ` Tot t`, ` Dv t`, ` GTot t`<br/>
+
+
+* {.fragment} **Dependent (effectful) function types** of the form: ` x:t -> C`
+  - argument can't have side-effects, so a value type<br/><br/>
+
+* {.fragment} **Two forms of refinement types**
+  - [Refined value types:]{color:DarkBlue}
+    - ` x:t{p}`
+  - [Refined computation types:]{color:DarkRed}
+    - `Pure t pre post`
+    - `Div t pre post`
+    - `Ghost t pre post`
+    - these will get more interesting for more interesting effects
+-->
+
+<!------------------------------------------------------------------------------>
+
+## Verifying [pure]{color:DarkRed} programs ## {#pure2}
+### Variant #2: [extrinsically]{color:DarkBlue} using SMT-backed lemmas ###
+
+```
+[INCLUDE=../../../code/pure-fun/AppendLength.fst:append]
+```
+~Fragment
+```
+[INCLUDE=../../../code/pure-fun/AppendLength.fst:append_length]
+```
+~
+* {.fragment} Convenient syntactic sugar: [**the `Lemma` effect**]{color:DarkBlue}
+```
+Lemma property = Pure unit (requires True) (ensures (fun _ -> property))
+```
+
+<!--
+* {.fragment} F\* also provides a `requires`-`ensures` variant of the `Lemma` effect
+-->
+
+<!------------------------------------------------------------------------------>
+
+<!-- ## Exercise 4c from F\* tutorial ## -->
+
+<!-- Prove that `mem` satisfies the following property: -->
+
+<!-- ``` -->
+<!-- let rec append (#a:Type) (xs : list a) (ys : list a) : Tot (list a) = -->
+<!--   match xs with -->
+<!--   | [] -> ys -->
+<!--   | x :: xs' -> x :: append xs' ys -->
+<!-- let rec mem (#a:eqtype) (x:a) (xs:list a) : Tot bool = -->
+<!--   match xs with -->
+<!--   | [] -> false -->
+<!--   | hd :: tl -> hd = x || mem x tl -->
+<!-- ``` -->
+<!-- ``` -->
+<!-- val append_mem:  #a:eqtype -> l1:list a -> l2:list a -> x:a -->
+<!--         -> Lemma (mem x (append l1 l2) <==> mem x l1 || mem x l2) -->
+
+<!-- let rec append_mem #a l1 l2 x = -->
+<!-- ``` -->
+<!-- ~Fragment -->
+<!-- ``` -->
+<!--   match l1 with -->
+<!--   | [] -> () -->
+<!--   | hd1::tl1 -> append_mem tl1 l2 x -->
+<!-- ``` -->
+<!-- ~ -->
+
+<!-- This code (uselessly) exposes eqtype which is not nice -->
+
+
+<!------------------------------------------------------------------------------>
+
+## Often lemmas are unavoidable ##
+<!-- need lemma for 3 reasons:
+- as before, this property is rather arbitrary
+- this property is "relational" (2 calls to reverse)
+- proof doesn't follow the structure of the program
+-->
+```
+let snoc l h = append l [h]
+
+let rec rev #a (l:list a) : Tot (list a) =
+  match l with
+  | []     -> []
+  | hd::tl -> snoc (rev tl) hd
+```
+~Fragment
+```
+val lemma_rev_snoc : #a:Type -> l:list a -> h:a ->
+                                        Lemma (rev (snoc l h) == h::rev l)
+
+let rec lemma_rev_snoc (#a:Type) l h =
+  match l with
+  | []     -> ()
+  | hd::tl -> lemma_rev_snoc tl h
+```
+~
+```
+val lemma_rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
+
+let rec lemma_rev_involutive (#a:Type) l =
+  match l with
+  | []     -> ()
+  | hd::tl -> lemma_rev_involutive tl; lemma_rev_snoc (rev tl) hd
+```
+
+## Often lemmas are unavoidable ([but SMT can help]{color:DarkRed}) ##
+<!-- need lemma for 3 reasons:
+- as before, this property is rather arbitrary
+- this property is "relational" (2 calls to reverse)
+- proof doesn't follow the structure of the program
+-->
+```
+let snoc l h = append l [h]
+
+let rec rev #a (l:list a) : Tot (list a) =
+  match l with
+  | []     -> []
+  | hd::tl -> snoc (rev tl) hd
+```
+
+```
+val lemma_rev_snoc : #a:Type -> l:list a -> h:a -> 
+                                        Lemma (rev (snoc l h) == h::rev l)
+                                        [SMTPat (rev (snoc l h))]
+let rec lemma_rev_snoc (#a:Type) l h =
+  match l with
+  | []     -> ()
+  | hd::tl -> lemma_rev_snoc tl h
+```
+
+```
+val lemma_rev_involutive : #a:Type -> l:list a -> Lemma (rev (rev l) == l)
+
+let rec lemma_rev_involutive (#a:Type) l =
+  match l with
+  | []     -> ()
+  | hd::tl -> lemma_rev_involutive tl (*; lemma_rev_snoc (rev tl) hd*)
+```
+
+<!------------------------------------------------------------------------------>
+
+<!--
+## Verifying pure programs ## {#pure3}
+### Variant #3: using [proof terms]{color:DarkGreen} ###
+
+<br/>
+
+~Fragment
+```
+val progress : #e:exp -> #t:typ -> h:typing empty e t ->
+                         Pure (cexists (fun e' -> step e e'))
+                              (requires (~ (is_value e)))
+                              (ensures  (fun _ -> True)) (decreases h)
+let rec progress #e #t h =
+  match h with
+  | TyApp #g #e1 #e2 #t11 #t12 h1 h2 ->
+     match e1 with
+     | ELam t e1' -> ExIntro (subst (sub_beta e2) e1') (SBeta t e1' e2)
+     | _          -> let ExIntro e1' h1' = progress h1 in
+                     ExIntro (EApp e1' e2) (SApp1 e2 h1')
+```
+~
+
+* {.fragment} **Note:** match exhaustiveness check also semantic (via SMT)
+-->
+
+<!------------------------------------------------------------------------------>
+
+## Verifying [potentially divergent]{color:DarkRed} programs ##
+### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (partial correctness) ###
+
+* Using [**refinement types**]{color:DarkBlue}
+```
+val factorial : nat -> Dv nat
+```
+* {.fragment}Or the `Div` computation type ([**pre- and postconditions**]{color:DarkRed})
+  ```
+  val eval_closed : e:exp -> Div exp
+                                 (requires (closed e))
+                                 (ensures  (fun e' -> Lam? e' /\ closed e'))
+  let rec eval_closed e =
+    match e with           (* notice there is no match case for variables *)
+    | App e1 e2 ->
+        let Lam e1' = eval_closed e1 in
+        below_subst_beta 0 e1' e2;
+        eval_closed (subst (sub_beta e2) e1')
+    | Lam e1 -> Lam e1
+  ```
+* {.fragment}`Dv` is also just an abbreviation
+```
+Dv t = Div t (requires True) (ensures (fun _ -> True))
+```
+
+<!------------------------------------------------------------------------------>
+
+## Recap: [Functional core]{color:DarkRed} of F\* ## {#fcore}
+
+* **[Variant of dependent type theory]{color:DarkBlue}**
+  - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
+
+* **[General recursion and semantic termination check]{color:DarkBlue}**
+  - potential non-termination is an effect
+
+* **[Refinements]{color:DarkBlue}**
+  - **Refined [value types]{color:DarkRed}**:
+    - `x:t{p}`
+  - **Refined [computation types]{color:DarkRed}**:
+    - `Pure t pre post`
+    - `Div t pre post`
+  - refinements computationally and proof irrelevant, discharged by SMT
+
+* **[Subtyping and sub-effecting]{color:DarkBlue}** (`<:`)
+
+* **[Different kinds of logical connectives]{color:DarkBlue}** (`=`, `&&`, `||`, ...) [**vs**]{color:DarkRed} (`==`, `/\`, `\/`, ...)
+
+<!------------------------------------------------------------------------------>
+
+# Verifying [Stateful Programs]{color:DarkBlue} in F\* #
+
+<!------------------------------------------------------------------------------>
+
+## Verifying stateful programs ## {#stateful1}
+<!-- ### Variant #1: intrinsically (at definition time) ### -->
+
+* The `St` effect---programming with [**garbage-collected references**]{color:DarkBlue}
+  ```
+  val incr : r:ref int -> St unit
+  
+  let incr r = r := !r + 1
+  ```
+
+* {.fragment} Hoare logic-style **[preconditions]{color:DarkBlue}** and **[postconditions]{color:DarkRed}** with `ST`
+  ```
+  val incr : r:ref int -> 
+    ST unit (requires (fun h0      -> True))                        
+            (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
+                                      sel h2 r == sel h0 r + 1))
+  ```
+  - {.fragment} **[precondition]{color:DarkBlue}** ([requires]{color:Blue}) is a predicate on **[initial states]{color:DarkBlue}**
+  - {.fragment} **[postcondition]{color:DarkRed}** ([ensures]{color:Blue}) relates [**initial states**]{color:DarkRed}, [**results**]{color:DarkRed}, and [**final states**]{color:DarkRed}
+<!--  - {.fragment}
+    ```
+    e : ST t (requires pre) (ensures post) /\ pre h0 /\ (h0,e) ~>* (h1,v) ==> post h0 v h1
+    ```-->
+
+* {.fragment} `St` is again just an abbreviation
+```
+St t = ST t (requires True) (ensures (fun _ -> True))
+```
+
+* {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Pure <: ST ` and ` Div <: ST ` ([**partial correctness**]{color:DarkRed})
+
+<!------------------------------------------------------------------------------>
+
+## `Heap` and `ST` interfaces (much simplified) ##
+```
+module Heap
+  val heap : Type
+  val ref : Type -> Type
+
+  val sel : #a:Type -> heap -> ref a -> GTot a
+  val upd : #a:Type -> heap -> ref a -> a -> GTot heap
+  
+  val contains : #a:Type -> heap -> ref a -> Type0
+
+  let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) = 
+    forall a (r:ref a) . (~(addr_of r `mem` s) /\ h0 `contains` r)
+                                                  ==> sel h1 r == sel h0 r
+```
+
+~Fragment
+```
+module ST
+  val alloc : #a:Type -> init:a -> 
+    ST (ref a) (requires (fun _ -> True))
+               (ensures  (fun h0 r h1 -> 
+                  modifies !{} h0 h1 /\ sel h1 r == init /\ fresh r h0 h1))
+
+  val (!) : #a:Type -> r:ref a -> 
+    ST a (requires (fun _       -> True))
+         (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
+
+  val (:=) : #a:Type -> r:ref a -> v:a -> 
+    ST unit (requires (fun _      -> True))
+            (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+```
+~
+
+<!------------------------------------------------------------------------------>
+
+## Verifying `incr` (intuition) ##
+
+```
+let incr r = r := !r + 1
+```
+~Fragment
+```
+[INCLUDE=../../../code/state/IncrST.fst:incr_type]
+```
+~
+~Fragment
+```
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
+```
+```
+val (!) : #a:Type -> r:ref a -> 
+  ST a (requires (fun _       -> True))
+       (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
+
+val (:=) : #a:Type -> r:ref a -> v:a -> 
+  ST unit (requires (fun _       -> True))
+          (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+```
+~
+<!--~Fragment
+```
+[INCLUDE=../../../code/state/IncrST.fst:modifies_trans]
+```
+~-->
+
+<!-- modifies !{} h0 h1 /\ modifies !{r} h1 h2 ==> modifies !{r} h0 h2 -->
+
+<!------------------------------------------------------------------------------>
+
+## Typing rule for let / sequencing (intuition) ##
+
+```
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
+```
+
+<br/>
+
+```
+G |- e1 : ST t1 (requires (fun h0 -> pre))
+                (ensures  (fun h0 x1 h1 -> post))
+                  
+G, x1:t1 |- e2 : ST t2 (requires (fun h1 -> exists h0 . post))
+                       (ensures  (fun h1 x2 h2 -> post'))
+---------------------------------------------------------------------------
+G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
+                               (ensures  (fun h x2 h2 ->
+                                             exists x1 h1 . post /\ post'))
+```
+
+<!------------------------------------------------------------------------------>
+
+## Reference swapping (two ways)
+```
+[INCLUDE=../../../code/state/SwapRefsST.fst:swap]
+```
+
+~Fragment
+```
+[INCLUDE=../../../code/state/SwapIntRefsST.fst:swap_add_sub]
+```
+~
+
+<!------------------------------------------------------------------------------>
+
+
+## But you don't escape having to come up with [invariants]{color:DarkRed} ##
+
+### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
+~Fragment
+```
+[INCLUDE=../../../code/state/CountST.fst:count_st_aux]
+```
+~
+
+```
+[INCLUDE=../../../code/state/CountST.fst:count_st]
+```
+
+* {.fragment} See past F\* courses for examples with more involved invariants
+
+
+<!------------------------------------------------------------------------------>
+
+## Summary: Verifying Stateful Programs ##
+
+* ML-style [**garbage-collected references**]{color:DarkBlue}
+  ```
+  val heap : Type
+  val ref  : Type -> Type
+
+  val sel : #a:Type -> heap -> ref a -> GTot a
+  val upd : #a:Type -> heap -> ref a -> a -> GTot heap
+
+  val modifies : s:set nat -> h0:heap -> h1:heap -> Type0
+  ```
+
+* `St` effect for simple [**ML-style programming**]{color:DarkRed}
+  ```
+  let incr (r:ref int) : St unit = r := !r + 1
+  ```
+
+* `ST` effect for [**pre- and postcondition based (intrinsic) reasoning**]{color:DarkBlue}
+  ```
+  ST unit (requires (fun h0      -> True))                        
+          (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ sel h2 r == n))
+  ```
+
+* {.fragment} But **that's not all** there is to F*'s memory models!
+
+  * [**monotonicity**]{color:DarkRed}, [**regions**]{color:DarkBlue}, [**heaps-and-stacks**]{color:DarkRed} (for low-level programming)
+
+<!------------------------------------------------------------------------------>
+
+# Verifying Programs with [Other Effects]{color:DarkBlue} in F\* #
+
+<!------------------------------------------------------------------------------>
+
+## [Other Effects]{color:DarkBlue} in F\* ##
+
+* **Dijkstra Monads for Free** ([POPL 2017](https://arxiv.org/abs/1608.06499))
+
+  * F\* has a [**user-extensible type system**]{color:DarkBlue}
+
+  * Given a [**mon. definition**]{color:DarkRed}, F\* derives the [**effect**]{color:DarkRed} and the [**spec. calculus**]{color:DarkRed}
+
+  * Supports effects such as [**Reading**]{color:DarkBlue}, [**Writing**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}
+
+  * [**Does not (!)**]{color:DarkRed} support [**nondeterminism**]{color:DarkRed} and [**IO**]{color:DarkRed}<br/><br/>
+
+  ~Fragment
+  * Also comes with [**monadic reification**]{color:DarkBlue} for extrinsic reasoning
+    ```
+    (* non-interference for nat-valued low state & booleans as high values *)
+
+    val reify : St a -> state -> a * state    (* much simplified signature *)
+
+    let incr (n:N) : St unit = put (get() + n)
+    
+    let incr2 (h:bool) : St unit = if h then incr 2 else (incr 1; incr 1)
+    
+    assert (forall h0 h1 l. reify (incr2 h0) l = reify (incr2 h1) l)
+    ```
+  ~
+
+<!------------------------------------------------------------------------------>
+
+## [Other Effects]{color:DarkBlue} in F\* ctd ##
+
+* **Dijkstra Monads for All** ([Under review 2019](https://arxiv.org/abs/1903.01237))
+
+  * [**No more (!)**]{color:DarkBlue} attempting to pair [**a comp. monad**]{color:DarkBlue} with [**a single spec.**]{color:DarkBlue}
+
+  * Dijksta monads (e.g., `ST`) now flexibly defined from
+
+    * [**computational monad**]{color:DarkRed} `(M)` and [**specification monad**]{color:DarkRed} `(W)`
+
+    * [**monad morphism**]{color:DarkBlue} / [**monadic relation**]{color:DarkBlue} `(M -> W)`
+
+  * As a result, F\* [**now also**]{color:DarkRed} supports [**nondeterminism**]{color:DarkRed} and [**IO**]{color:DarkRed}
+  ~Fragment
+    ```
+    let do_io_then_roll_back_state () 
+      : IOST unit (requires (fun s h -> True))          (* state + IO effect *)
+                  (ensures  (fun s h r s' l ->
+                               s = s' /\
+                               (exists i . l = [In i;Out (s + i + 1)]))) =
+      let s = get () in 
+      let i = read () in
+      put (s + i);
+      (* some other observably pure computation *)
+      let s' = get () in 
+      write (s' + 1);
+      put s
+    ```
+  ~
+
+
+<!------------------------------------------------------------------------------>
+
+# Highlights of [Other F\* Features]{color:DarkBlue} #
+
+<!------------------------------------------------------------------------------>
+
+## Highlights of [Other F\* Features](#conclusion) ##
+
+* {.fragment} Low\*: programming and verifying [**low-level C code**]{color:DarkBlue} ([ICFP 2017](https://arxiv.org/abs/1703.00053))
+
+  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not*
+
+  * Uses a hierarchical region-based heap-and-stack memory model<br/><br/>
+
+* {.fragment} F\* has good support for [**monotonic state**]{color:DarkRed} ([POPL 2018](https://arxiv.org/abs/1707.02466))
+
+  * Global state where writes have to follow a preorder (an upd. monad)
+
+  * Combines pre-postcondition based verification with modal logic
+
+  * Basis of F\* memory models (GCd refs, GCd mrefs, Low*, ...)<br/><br/>
+
+* {.fragment} Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework ([ESOP 2019](https://arxiv.org/abs/1803.06547))
+
+  * Tactics are just another F\* effect (proof state + exceptions)
+
+  * Run using the normalizer (slow) or compiled to native OCaml plugins
+
+  * For: discharging VCs, massaging VCs, synthesizing terms, typeclasses
+
+<!------------------------------------------------------------------------------>
+
+## F\* ## {#conclusion}
+
+* An ML-style [**effectful functional programming language**]{color:DarkBlue}
+
+* A [**semi-automated SMT-based program verifier**]{color:DarkRed}
+
+* An [**interactive dependently typed proof assistant**]{color:DarkBlue}<br/><br/>
+
+* Used successfully in [**security and crypto verification**]{color:DarkRed}
+
+  * miTLS: F\*-verified reference implementation of TLS
+
+  * HACL*: F\*-verified crypto (used in Firefox and Wireguard)
+
+  * Vale: F\*-verified assembly language<br/><br/>
+
+[https://www.fstar-lang.org/](https://www.fstar-lang.org/)
+
+<!------------------------------------------------------------------------------>
+
+## Low*: a small example ##
+
+```
+let f (): Stack UInt64.t (requires (fun _     -> True))
+                         (ensures  (fun _ _ _ -> True))
+                         
+  = push_frame ();                         (* pushing a new stack frame *)
+    
+    let b = LowStar.Buffer.alloca 1UL 64ul in
+    assert (b.(42ul) = 1UL);      (* high-level reasoning in F*'s logic *)
+
+    b.(42ul) <- b.(42ul) +^ 42UL;
+    let r = b.(42ul) in
+      
+    pop_frame ();           (* popping the stack frame we pushed above, *)
+                          (* necessary for establishing Stack invariant *)
+    assert (r = 43UL);                    
+    r
+```
+```
+uint64_t f()
+{
+  uint64_t b[64U];
+    
+  for (uint32_t _i = 0U; _i < (uint32_t)64U; ++_i)
+    b[_i] = (uint64_t)1U;
+      
+  b[42U] = b[42U] + (uint64_t)42U;
+  uint64_t r = b[42U];
+  return r;
+}
+```
+
+<!------------------------------------------------------------------------------>
+
+## Tactics can [discharge]{color:DarkBlue} verification conditions (replacing SMT) ##
+
+~Center
+<img src="../../stuff/tactics-assert_by_tactic.png" width="80%">
+~
+
+<!-- [tactics-assert_by_tactic]: ../../stuff/tactics-assert_by_tactic.png { heigth=50% } -->
+
+<!------------------------------------------------------------------------------>
+
+
+## Tactics can [massage]{color:DarkGreen} verification conditions (complementing SMT) ##
+
+~Center
+<img src="../../stuff/tactics-canon.png" width="90%">
+~
+
+<!-- [tactics-canon]: ../../stuff/tactics-canon.png { heigth=50% } -->
+
+<!------------------------------------------------------------------------------>
+
+## Tactics can [synthesize]{color:DarkRed} F\* terms (metaprogramming) ##
+
+~Center
+<img src="../../stuff/tactics-synth_by_tactic.png" width="90%">
+~
+
+<!-- [tactics-synth_by_tactic]: ../../stuff/tactics-synth_by_tactic.png { heigth=50% } -->
+
+<!------------------------------------------------------------------------------>
+
+## Tactics have also been used to extend F\* with [typeclasses]{color:DarkOrange} ##
+
+~Center
+<img src="../../stuff/tactics-typeclasses.png" width="100%">
+~
+
+
+
+
+<!--
+# Exercises #
+
+## Exercise 1: Summing: 0 + 1 + 2 + 3 + ... ##
+```
+[INCLUDE=../../../ex/Sum.fst]
+```
+
+## Exercise2: Simply typed stacks (the interface) ##
+`Stack.fsti`
+```
+[INCLUDE=../../../ex/Stack.fsti:stack_types]
+```
+```
+[INCLUDE=../../../ex/Stack.fsti:stack_lemmas]
+```
+
+## Exercise 2: Simply typed stacks (the implementation) ##
+`Stack.fst`
+```
+[INCLUDE=../../../ex/Stack.fst]
+```
+
+## Exercise 2: Simply typed stacks (the client) ##
+`StackClient.fst`
+```
+[INCLUDE=../../../ex/StackClient.fst]
+```
+
+## Exercise 3: Refinement-typed stacks ##
+`RefinedStack.fsti`
+```
+[INCLUDE=../../../ex/RefinedStack.fsti]
+```
+
+* {.fragment} **Goal:** type a variant of `StackClient.fst` (now without `Some?.v`'s)
+```
+let main () =
+    ...
+    let s3 = pop s2 (* <: stack *) in
+    assert (s3 == s1)
+```
+-->
