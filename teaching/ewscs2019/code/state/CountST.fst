@@ -16,8 +16,7 @@ let rec count_st_aux (r:ref nat) (n:nat)
 // BEGIN: count_st
 let rec count_st (n:nat) 
   : ST nat (requires (fun _       -> True))
-           (ensures  (fun h0 x h1 -> modifies !{} h0 h1 /\
-                                     x == n)) =
+           (ensures  (fun h0 x h1 -> modifies !{} h0 h1 /\ x == n)) =
   let r = alloc 0 in 
   count_st_aux r n; 
   !r

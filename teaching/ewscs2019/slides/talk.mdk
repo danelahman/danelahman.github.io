@@ -730,7 +730,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 * {.fragment} `St` is again just an abbreviation
 ```
-St t = ST t (requires True) (ensures (fun _ -> True))
+St t = ST t (requires (fun _ -> True)) (ensures (fun _ _ _ -> True))
 ```
 
 * {.fragment} [**Sub-effecting:**]{color:DarkBlue} ` Pure <: ST ` and ` Div <: ST ` ([**partial correctness**]{color:DarkRed})
@@ -842,7 +842,6 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-
 ## But you don't escape having to come up with [invariants]{color:DarkRed} ##
 
 ### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
@@ -851,6 +850,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 [INCLUDE=../../../code/state/CountST.fst:count_st_aux]
 ```
 ~
+
 
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st]
@@ -861,6 +861,28 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 [https://www.fstar-lang.org/](https://www.fstar-lang.org/)
 ~
+
+<!------------------------------------------------------------------------------>
+
+
+## But you don't escape having to come up with [invariants]{color:DarkRed} ctd ##
+
+### Stateful Fibonacci: 1 , 1 , 2 , 3 , 5 , 8 , ... ###
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci]
+```
+
+~Fragment
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_stprime]
+```
+~
+
+
+```
+[INCLUDE=../../../code/state/FibonacciST.fst:fibonacci_st]
+```
+
 
 <!------------------------------------------------------------------------------>
 
@@ -904,11 +926,11 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Given a [**mon. definition**]{color:DarkRed}, F\* derives the [**effect**]{color:DarkRed} and the [**spec. calculus**]{color:DarkRed}
 
-    * The spec. calc. is a <u>monad of (Dijkstra's) predicate transformers</u>
+    * Spec. calc. is a <u>monad of (Dijkstra's) predicate transformers</u>
 
-    * The pre- and postcondition style effects are defined on top of this
+    * `ST a pre post = STATE a (wp_pre_post : st_spec a)`
 
-  * Supports [**Reader**]{color:DarkBlue}, [**Writer**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}, but no [**nondet.**]{color:DarkRed} and [**IO**]{color:DarkRed}
+  * Supports [**Reader**]{color:DarkBlue}, [**Writer**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}, but no (!) [**nondet.**]{color:DarkRed} and [**IO**]{color:DarkRed}
     ```
     val throw : #a:Type -> e:exn -> 
       Exc a (requires (True)) (ensures (fun (r:either a exn) -> r = inr e))
@@ -986,7 +1008,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
   * Tactics are just another F\* <u>effect</u> (proof state + exceptions)
 
-  * Run using the <u>normalizer</u> (slow) or compiled to <u>native OCaml plugins</u>
+  * Ran using the <u>normalizer</u> (slow) or compiled to <u>native OCaml plugins</u>
 
   * <u>Uses:</u> discharging VCs, massaging VCs, synthesizing terms, typeclasses
 
@@ -1031,6 +1053,7 @@ let f (): Stack UInt64.t (requires (fun _     -> True))
     assert (r = 43UL);                    
     r
 ```
+~Fragment
 ```
 uint64_t f()
 {
@@ -1044,6 +1067,7 @@ uint64_t f()
   return r;
 }
 ```
+~
 
 <!------------------------------------------------------------------------------>
 
