@@ -739,10 +739,10 @@ St t = ST t (requires (fun _ -> True)) (ensures (fun _ _ _ -> True))
 
 ## `Heap` and `ST` interfaces (much simplified) ##
 ```
-val heap : Type
+val heap : Type     (* heap = c:nat & h:(nat -> option (a:Type & a)){...}*)
 val ref : Type -> Type
 
-val sel : #a:Type -> heap -> ref a -> GTot a
+val sel : #a:Type -> heap -> ref a -> GTot a           (* plus eq lemmas *)
 val upd : #a:Type -> heap -> ref a -> a -> GTot heap
   
 val contains : #a:Type -> heap -> ref a -> Type
@@ -932,7 +932,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
     * `ST a pre post = STATE a (wp_pre_post : st_spec a)`
 
-  * Supports [**Reader**]{color:DarkBlue}, [**Writer**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}, but no (!) [**nondet.**]{color:DarkRed} and [**IO**]{color:DarkRed}
+  * Supports [**Reader**]{color:DarkBlue}, [**Writer**]{color:DarkBlue}, [**State**]{color:DarkBlue}, [**Exceptions**]{color:DarkBlue}, but not (!) [**nondet.**]{color:DarkRed} and [**IO**]{color:DarkRed}
     ```
     val throw : #a:Type -> e:exn -> 
       Exc a (requires (True)) (ensures (fun (r:either a exn) -> r = inr e))
@@ -941,7 +941,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
   ~Fragment
   * Also comes with [**monadic reification**]{color:DarkBlue} for extrinsic reasoning
     ```
-    val reify : St a -> (state -> a * state)    (* much simplified signature *)
+    val reify : St a -> (int -> a * int)        (* much simplified signature *)
 
     let incr (n:N) : St unit = put (get() + n)
     
@@ -950,6 +950,9 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
     assert (forall h0 h1 l. reify (incr2 h0) l = reify (incr2 h1) l)   (* NI *)
     ```
   ~
+    ~Fragment
+    * [CPP 2018](https://arxiv.org/pdf/1703.00055.pdf): [**Relational reasoning**]{color:DarkRed} in F\* (IFC & NI, crypto proofs, ...)
+    ~
 
 <!------------------------------------------------------------------------------>
 
@@ -1000,7 +1003,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} F\* has good support for [**monotonic state**]{color:DarkRed} ([POPL 2018](https://arxiv.org/abs/1707.02466))
 
-  * Global state where writes have to <u>follow a preorder</u> (an upd. monad)
+  * Global state where writes have to <u>follow a preorder</u> (an **upd. monad**)
 
   * Combines <u>pre-postconditions</u> based verification with <u>modal logic</u>
 
@@ -1008,7 +1011,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework ([ESOP 2019](https://arxiv.org/abs/1803.06547))
 
-  * Tactics are just another F\* <u>effect</u> (proof state + exceptions)
+  * Tactics are just another F\* <u>effect</u> (**proof state** + **exceptions**)
 
   * Ran using the <u>normalizer</u> (slow) or compiled to <u>native OCaml plugins</u>
 
