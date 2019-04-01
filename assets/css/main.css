@@ -1797,6 +1797,12 @@ input, select, textarea {
 			margin-top: -0.75em;
 		}
 
+        #titleBar a:hover {
+	    border-bottom-color: transparent;
+	    color: #cee8fd !important;
+	}
+
+
 /* Form */
 
 	form {
@@ -2180,7 +2186,7 @@ input, select, textarea {
 
 		.image.main {
 	                display: block;
-			height: 20em;
+			height: 22.1em;
 			border-radius: 0;
 		}
 
@@ -2748,7 +2754,7 @@ input, select, textarea {
 			}
 
 				#header > footer .icons li a {
-					color: #ffffff;
+					color: #cee8fd;
 				}
 
 		#header > nav {
@@ -2776,7 +2782,7 @@ input, select, textarea {
 						-ms-transition: none;
 						transition: none;
 						border: 0;
-						color: #ffffff !important;
+						color: #cee8fd !important;
 						display: block;
 						padding: 0.85em 0;
 						text-decoration: none;
