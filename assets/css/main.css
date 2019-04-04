@@ -1760,9 +1760,10 @@ input, select, textarea {
 	}
 
 	header p {
-		color: #aaa;
+		color: #ffffff;
 		position: relative;
 		margin: 0 0 1.6875em 0;
+                line-height: 130%;
 	}
 
 	header h2 + p {
@@ -2186,7 +2187,7 @@ input, select, textarea {
 
 		.image.main {
 	                display: block;
-			height: 22.1em;
+			height: 20.85em;
 			border-radius: 0;
 		}
 
@@ -2825,7 +2826,8 @@ input, select, textarea {
 		border-top: 0;
 		color: #c0c0c0;
 		overflow: hidden;
-		padding: 4em 0 2em 0;
+		padding: 2em 0 0 0;
+                font-size: 110%
 	}
 
 		#footer .copyright {
