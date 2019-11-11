@@ -145,7 +145,7 @@ Run the container and log into it: <code class="one-liner">docker run -i -t --mo
 In the container, you might need to change the hard-coded <a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> include paths in <tt style="font-size:11px">~/.emacs</tt> to match the user you are logged into the container with<sup>&dagger;</sup>.
 </li>
 <li style="margin-bottom:5px">
-Also in the container, change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to build: <code class="one-liner">sudo chown -R build:build /fstar-vol</code>
+Also in the container, change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to <tt style="font-size:11px">build</tt>: <code class="one-liner">sudo chown -R build:build /fstar-vol</code>
 </li>
 <li style="margin-bottom:5px">
 And you are all set to write and verify programs in F*: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/Hello.fst . ; emacs Hello.fst</code>
