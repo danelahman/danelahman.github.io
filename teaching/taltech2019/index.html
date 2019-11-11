@@ -9,14 +9,14 @@
 
 <p>Guest lecture and accompanying lab sessions for the <a href="https://courses.cs.ttu.ee/pages/Advanced_programming" target="_blank">Advanced Programming Course (ITT8060)</a> at the <a href="https://www.taltech.ee/en/" target="_blank">Tallinn University of Technology</a>.</p>
 
-<h2 id="slides" style="margin-top:30px">Lecture slides (12.12.2018)</h2>
+<h2 id="slides" style="margin-top:30px">Lecture slides (20.11.2019)</h2>
 
 <ul>
 <li><a href="slides/out/talk/talk.html" target="_blank">HTML version of the slides</a></li>
 </ul>
 
 
-<h2 id="exercises" style="margin-top:30px">Lab exercises (12-14.12.2018)</h2>
+<h2 id="exercises" style="margin-top:30px">Lab exercises (20-21.11.2019)</h2>
 
 <ul>
 <li><a href="ex.zip" target="_blank">ZIP archive</a> with all the exercises</li>
@@ -105,50 +105,50 @@ that's part of the <a href="https://www.fstar-lang.org/tutorial/" target="_blank
 For people who want to get F* installed on their computer with little fuzz there are 3 easy options:
 <ol>
 <li style="margin-bottom:5px; margin-top:10px;"> Using the <a href="https://fstar-lang.org/#download">binary releases</a>
-(<a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#binary-releases">documentation on this</a>)
+(<a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#binary-releases">documentation on this</a>):
 </li>
 <ul>
-<li style="margin-bottom:5px;">WARNING: The most recent (development) version of F* and its libraries are often not compatible with these binary releases<sup>&dagger;</sup>.</li>
+<li style="margin-bottom:5px;">WARNING: The most recent (development) version of F* and its libraries are often not compatible with these binary releases.</li>
 <li style="margin-bottom:10px;">In order to get more recent, but also more experimental binary builds please look at the automatically generated <a href="https://github.com/FStarLang/binaries/tree/master/weekly" target="_blank">weekly builds</a> (Linux and Windows only).</li>
 </ul>
 <li style="margin-bottom:5px; margin-top:10px;">Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package">OPAM package</a>
-(especially for people already using OCaml)
+(especially for people already using OCaml):
 </li>
 <ul>
-<li style="margin-bottom:5px;">WARNING: As with the binary releases, the stable version of F* on OPAM is often not compatible with with the most recent (develoment) version of F* and its libraries<sup>&dagger;</sup>.</li>
+<li style="margin-bottom:5px;">WARNING: As with the binary releases, the stable version of F* on OPAM is often not compatible with with the most recent (develoment) version of F* and its libraries.</li>
 <li style="margin-bottom:5px;">In order to install the recent (development) version of F* through OPAM, please follow the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#opam-package"  target="_blank">instructions</a>.</li>
 <li style="margin-bottom:10px;">IMPORTANT: You need to additionally download and add to your PATH a supported version of the Z3 SMT-solver, see the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#runtime-dependency-z3-smt-solver" target="_blank">instructions</a>.</li>
 </ul>
 <li style="margin-bottom:5px; margin-top:10px;">
-Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#homebrew-formula-for-mac-os-x" target="_blank">Homebrew formula</a> (if you are a macOS user)
+Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#homebrew-formula-for-mac-os-x" target="_blank">Homebrew formula</a> (if you are a macOS user):
 </li>
 <ul>
-<li style="margin-bottom:5px;">WARNING: As with the binary releases, the stable version of F* on Homebrew is often not compatible with with the most recent (develoment) version of F* and its libraries<sup>&dagger;</sup>.</li>
+<li style="margin-bottom:5px;">WARNING: As with the binary releases, the stable version of F* on Homebrew is often not compatible with with the most recent (develoment) version of F* and its libraries.</li>
 <li style="margin-bottom:10px;">In order to install the recent (development) version of F* through Homebrew, please follow the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#homebrew-formula-for-mac-os-x" target="_blank">instructions</a>.</li>
 </ul>
 <li>
-Using the <a href="https://store.docker.com/community/images/fstarlang/fstar-emacs" target="_blank">Docker container</a> (especially for people who already  have <a href="https://www.docker.com/get-started" target="_blank">Docker</a> on their computer)
+Using the <a href="https://store.docker.com/community/images/fstarlang/fstar-emacs" target="_blank">Docker container</a> (especially for people who already  have <a href="https://www.docker.com/get-started" target="_blank">Docker</a> on their computer):
 <ul>
 <li style="margin-bottom:5px;margin-top:10px">
-Get the F* Docker container: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>
+Get the F* Docker container: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>.
 </li>
 <li style="margin-bottom:5px">
-NOTE: This gets you both the most recent F* build, the supported version of Z3, and also the Emacs fstar-mode.
+NOTE: This gets you the most recent F* build, the supported version of Z3, and also the Emacs fstar-mode (to use Emacs in GUI mode, follow these <a href="https://github.com/FStarLang/FStar/wiki/Running-F%2A-from-a-docker-image" target="_blank">instructions</a>).
 </li>
 <li style="margin-bottom:5px">
-To persist your work between subsequent container runs, create a volume: <code class="one-liner">docker volume create fstar-vol</code>
+Run the container and log into it: <code class="one-liner">docker run -it fstarlang/fstar-emacs</code>.
 </li>
 <li style="margin-bottom:5px">
-Run the container and log into it: <code class="one-liner">docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs:latest /bin/bash</code>
+When IN the container (for the first time), you might need to change the hard-coded <a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> include paths in <tt style="font-size:11px">~/.emacs</tt> to match the user you are logged into the container with<sup>&dagger;</sup>. <br/>
 </li>
 <li style="margin-bottom:5px">
-When IN the container (for the first time), change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to FStar: <code class="one-liner">sudo chown -R FStar:FStar /fstar-vol</code>
+And you are all set to write and verify programs in F*: <code class="one-liner">emacs ~/FStar/examples/hello/Hello.fst</code>.
 </li>
 <li style="margin-bottom:5px">
-And you are ready to work on the exercises in <tt style="font-size:11px">/fstar-vol</tt>: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/hello.fst . ; emacs hello.fst</code>
+If needed for exercises, you can find the F* standard library in <tt style="font-size:11px">~/FStar/ulib</tt> and various examples in <tt style="font-size:11px">~/FStar/examples</tt>.
 </li>
 <li style="margin-bottom:5px">
-If needed for exercises, you can find the F* standard library in <tt style="font-size:11px">/home/FStar/FStar/ulib</tt> and various examples in <tt style="font-size:11px">/home/FStar/FStar/examples</tt>
+To persist the state of your container, after you <code class="one-liner">exit</code> the container, look up its ID using <code class="one-liner">docker ps -a</code> and restart it with <code class="one-liner">docker start -i CONTAINER_ID</code>.
 </li>
 </ul>
 </li>
@@ -158,8 +158,11 @@ If needed for exercises, you can find the F* standard library in <tt style="font
 People who are more motivated and more adventurous can of course also build F* directly from its sources, see the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#building-f-from-sources">documentation</a>.
 </li>
 </ul>
+
 <p style="margin-bottom:20px;margin-left:10px">
-<sup>&dagger;</sup><i><b>Note:</b> E.g., recent versions of F* use the [@expect_failure] attribute to denote the expectation of failing typechecking, while the v0.9.6.0 binary release uses the [@fail] attribute for the same purpose. 
+<sup>&dagger;</sup>At the time of writing these instructions, this meant replacing the hard-coded user name <tt style="font-size:11px">FStar</tt> with the user name <tt style="font-size:11px">build</tt> in the following line in <tt style="font-size:11px">~/.emacs</tt>:
+<br/>
+<code class="one-liner">(setq fstar-subp-prover-args '("--include" "/home/FStar/FStar/ucontrib/Platform/fst" "--include" "/home/FStar/FStar/ucontrib/CoreCrypto/fst"))</code>
 </p>
 
 <h3>Using F* interactively</h3>
