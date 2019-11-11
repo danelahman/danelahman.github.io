@@ -130,25 +130,31 @@ Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#hom
 Using the <a href="https://store.docker.com/community/images/fstarlang/fstar-emacs" target="_blank">Docker container</a> (especially for people who already  have <a href="https://www.docker.com/get-started" target="_blank">Docker</a> on their computer):
 <ul>
 <li style="margin-bottom:5px;margin-top:10px">
-Get the F* Docker container: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>.
+Get the F* Docker container: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>
 </li>
 <li style="margin-bottom:5px">
 NOTE: This gets you the most recent F* build, the supported version of Z3, and also the Emacs fstar-mode (to use Emacs in GUI mode, follow these <a href="https://github.com/FStarLang/FStar/wiki/Running-F%2A-from-a-docker-image" target="_blank">instructions</a>).
 </li>
 <li style="margin-bottom:5px">
-Run the container and log into it: <code class="one-liner">docker run -it fstarlang/fstar-emacs</code>.
+In order to persist your work between subsequent docker and container runs, create a volume to keep your exercises and code: <code class="one-liner">docker volume create fstar-vol</code>
 </li>
 <li style="margin-bottom:5px">
-When IN the container (for the first time), you might need to change the hard-coded <a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> include paths in <tt style="font-size:11px">~/.emacs</tt> to match the user you are logged into the container with<sup>&dagger;</sup>. <br/>
+Run the container and log into it: <code class="one-liner">docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs</code>
 </li>
 <li style="margin-bottom:5px">
-And you are all set to write and verify programs in F*: <code class="one-liner">emacs ~/FStar/examples/hello/Hello.fst</code>.
+In the container, you might need to change the hard-coded <a href="https://github.com/FStarLang/fstar-mode.el">fstar-mode</a> include paths in <tt style="font-size:11px">~/.emacs</tt> to match the user you are logged into the container with<sup>&dagger;</sup>.
+</li>
+<li style="margin-bottom:5px">
+Also in the container, change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to build: <code class="one-liner">sudo chown -R build:build /fstar-vol</code>
+</li>
+<li style="margin-bottom:5px">
+And you are all set to write and verify programs in F*: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/Hello.fst . ; emacs Hello.fst</code>
 </li>
 <li style="margin-bottom:5px">
 If needed for exercises, you can find the F* standard library in <tt style="font-size:11px">~/FStar/ulib</tt> and various examples in <tt style="font-size:11px">~/FStar/examples</tt>.
 </li>
 <li style="margin-bottom:5px">
-To persist the state of your container, after you <code class="one-liner">exit</code> the container, look up its ID using <code class="one-liner">docker ps -a</code> and restart it with <code class="one-liner">docker start -i CONTAINER_ID</code>.
+After you <code class="one-liner">exit</code> the container, you can restart it by looking up its ID using <code class="one-liner">docker ps -a</code> and running <code class="one-liner">docker start -i CONTAINER_ID</code>.
 </li>
 </ul>
 </li>
