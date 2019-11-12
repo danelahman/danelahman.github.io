@@ -41,7 +41,7 @@ Tallinn, 20 November, 2019
 
 ## Bio ##
 
-* **2007 - 2011, [Tallinn University of Technology]{color:DarkBlue}, BSc**
+* **2007 - 2010, [Tallinn University of Technology]{color:DarkBlue}, BSc**
 
 * **2011 - 2012, [University of Cambridge]{color:DarkBlue}, MPhil**
 
@@ -63,7 +63,7 @@ Tallinn, 20 November, 2019
 
 ## Today's plan ##
 
-* **[Program specification]{color:DarkBlue} and [program verification]{color:DarkBlue}**
+* **[Specification]{color:DarkBlue} and [Verification]{color:DarkBlue} of Programs**
 
 * **What is [F\*]{color:DarkRed}?**
 
@@ -125,14 +125,14 @@ Slides, code, exercises, and setup instructions <br/>
 
 * Consider a simple [**stateful list reversal**]{color:DarkRed}
 ```
-  let rec rev #a (l:ref (list a)) : unit =
+  let rec srev #a (l:ref (list a)) : unit =
     match !l with
     | []     -> ()
-    | hd::tl -> l := tl; rev tl; l := (append !l [hd])
+    | hd::tl -> l := tl; srev tl; l := (append !l [hd])
 ```
 
 ~Fragment
-* The [**specification**]{color:DarkBlue} of `rev` could comprise a variety of properties, e.g., 
+* The [**specification**]{color:DarkBlue} of `srev` could comprise a variety of properties, e.g., 
 
   * previous functional properties &nbsp; **+** &nbsp; [**memory safety**]{color:DarkBlue}
 
@@ -143,7 +143,7 @@ Slides, code, exercises, and setup instructions <br/>
 
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
-  rev l
+  srev l
 {ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\
                          modifies !{l} h0 h1)}
 ```

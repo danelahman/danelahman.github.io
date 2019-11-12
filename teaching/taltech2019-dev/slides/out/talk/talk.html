@@ -5956,7 +5956,7 @@
 <section id="sec-bio" class="section section2" data-section-depth="2" data-line="42"><h3 id="heading-sec-bio" class="h2" data-heading-depth="2" style="display:block">Bio</h3>
 <ul class="ul list-star loose" data-line="44">
 <li class="li ul-li list-star-li loose-li" data-line="44">
-<p data-line="44"><span data-line="44"></span><strong class="strong-star2">2007 - 2011, <span style="color:DarkBlue">Tallinn University of Technology</span>, BSc</strong><span data-line="44"></span>
+<p data-line="44"><span data-line="44"></span><strong class="strong-star2">2007 - 2010, <span style="color:DarkBlue">Tallinn University of Technology</span>, BSc</strong><span data-line="44"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="46">
 <p data-line="46"><span data-line="46"></span><strong class="strong-star2">2011 - 2012, <span style="color:DarkBlue">University of Cambridge</span>, MPhil</strong><span data-line="46"></span>
@@ -5989,7 +5989,7 @@
 <section id="sec-todays-plan" class="section section2" data-section-depth="2" data-line="64"><h3 id="heading-sec-todays-plan" class="h2" data-heading-depth="2" style="display:block">Today&#39;s plan</h3>
 <ul class="ul list-star loose" data-line="66">
 <li class="li ul-li list-star-li loose-li" data-line="66">
-<p data-line="66"><span data-line="66"></span><strong class="strong-star2"><span style="color:DarkBlue">Program specification</span> and <span style="color:DarkBlue">program verification</span></strong><span data-line="66"></span>
+<p data-line="66"><span data-line="66"></span><strong class="strong-star2"><span style="color:DarkBlue">Specification</span> and <span style="color:DarkBlue">Verification</span> of Programs</strong><span data-line="66"></span>
 </p></li>
 <li class="li ul-li list-star-li loose-li" data-line="68">
 <p data-line="68"><span data-line="68"></span><strong class="strong-star2">What is <span style="color:DarkRed">F*</span>?</strong><span data-line="68"></span>
@@ -6057,15 +6057,15 @@
 <ul class="ul list-star compact" data-line="126">
 <li class="li ul-li list-star-li compact-li" data-line="126"><span data-line="126"></span>Consider a simple<span data-line="126"></span> <span style="color:DarkRed"><strong class="strong-star2">stateful list reversal</strong></span><span data-line="126"></span>
 
-<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="127" data-line-first="128" style="display:block"><code data-line="128"><span style="color:blue">let</span> <span style="color:blue">rec</span> rev #a (l:ref (list a)) : unit =
+<pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="127" data-line-first="128" style="display:block"><code data-line="128"><span style="color:blue">let</span> <span style="color:blue">rec</span> srev #a (l:ref (list a)) : unit =
   <span style="color:blue">match</span> !l <span style="color:blue">with</span>
   | []     <span style="color:blue">-&gt;</span> ()
-  | hd::tl <span style="color:blue">-&gt;</span> l := tl; rev tl; l := (append !l [hd])</code></pre></li></ul>
+  | hd::tl <span style="color:blue">-&gt;</span> l := tl; srev tl; l := (append !l [hd])</code></pre></li></ul>
 
 <div class="fragment" data-line="134">
 <ul class="ul list-star loose" data-line="135">
 <li class="li ul-li list-star-li loose-li" data-line="135">
-<p data-line="135"><span data-line="135"></span>The<span data-line="135"></span> <span style="color:DarkBlue"><strong class="strong-star2">specification</strong></span><span data-line="135"></span> of <span data-line="135"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">rev</code><span data-line="135"></span> could comprise a variety of properties, e.g., 
+<p data-line="135"><span data-line="135"></span>The<span data-line="135"></span> <span style="color:DarkBlue"><strong class="strong-star2">specification</strong></span><span data-line="135"></span> of <span data-line="135"></span><code class="code code1 language-fstarlang lang-fstarlang fstarlang colorized">srev</code><span data-line="135"></span> could comprise a variety of properties, e.g., 
 </p>
 <ul class="ul list-star compact" data-line="137">
 <li class="li ul-li list-star-li compact-li" data-line="137"><span data-line="137"></span>previous functional properties <span data-line="137"></span>&#160;<span data-line="137"></span> <span data-line="137"></span><strong class="strong-star2">+</strong><span data-line="137"></span> <span data-line="137"></span>&#160;<span data-line="137"></span> <span style="color:DarkBlue"><strong class="strong-star2">memory safety</strong></span><span data-line="137"></span>
@@ -6077,7 +6077,7 @@
 </li></ul>
 
 <pre class="para-block pre-fenced pre-fenced3 language-fstarlang lang-fstarlang fstarlang colorized" data-line="144" data-line-first="145" style="display:block"><code data-line="145">{<span style="color:blue">requires</span> (<span style="color:blue">fun</span> h0 <span style="color:blue">-&gt;</span> sorted (&gt;=) (sel h0 l))}
-  rev l
+  srev l
 {<span style="color:blue">ensures</span> (<span style="color:blue">fun</span> h0 _ h1 <span style="color:blue">-&gt;</span> sorted (&lt;=) (sel h1 l) /\
                          modifies !{l} h0 h1)}</code></pre></div>
 <div class="fragment" data-line="152">

@@ -130,28 +130,28 @@ Using the <a href="https://github.com/FStarLang/FStar/blob/master/INSTALL.md#hom
 Using a <a href="https://store.docker.com/community/images/fstarlang/fstar-emacs" target="_blank">Docker container</a> (especially for people who already  have <a href="https://www.docker.com/get-started" target="_blank">Docker</a> on their computer):
 <ul>
 <li style="margin-bottom:5px;margin-top:10px">
-Get the F* Docker container: <code class="one-liner">docker pull fstarlang/fstar-emacs</code>
+Get the F* Docker container: <code class="one-liner">$ docker pull fstarlang/fstar-emacs</code>
 </li>
 <li style="margin-bottom:5px">
 NOTE: This gets you the most recent F* build, the supported version of Z3, and also the Emacs fstar-mode (to use Emacs with GUI, follow these <a href="https://github.com/FStarLang/FStar/wiki/Running-F%2A-from-a-docker-image" target="_blank">instructions</a>).
 </li>
 <li style="margin-bottom:5px">
-In order to persist your work between subsequent docker and container runs, create a volume to keep your exercises and code: <code class="one-liner">docker volume create fstar-vol</code>
+In order to persist your work between subsequent docker and container runs, create a volume to keep your exercises and code: <code class="one-liner">$ docker volume create fstar-vol</code>
 </li>
 <li style="margin-bottom:5px">
-Run the container and log into it: <code class="one-liner">docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs</code>
+Run the container and log into it: <code class="one-liner">$ docker run -i -t --mount source=fstar-vol,target=/fstar-vol fstarlang/fstar-emacs</code>
 </li>
 <li style="margin-bottom:5px">
-When logged into the container, change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to <tt style="font-size:11px">build:build</tt>: <code class="one-liner">sudo chown -R build:build /fstar-vol</code>
+When logged into the container, change the owner of the <tt style="font-size:11px">/fstar-vol</tt> volume to <tt style="font-size:11px">build:build</tt>: <code class="one-liner">$ sudo chown -R build:build /fstar-vol</code>
 </li>
 <li style="margin-bottom:5px">
-And you should be all set to start writing and veirfying programs in F*: <code class="one-liner">cd /fstar-vol ; cp ~/FStar/examples/hello/Hello.fst . ; emacs Hello.fst</code>
+And you should be all set to start writing and veirfying programs in F*: <code class="one-liner">$ cd /fstar-vol ; cp ~/FStar/examples/hello/Hello.fst . ; emacs Hello.fst</code>
 </li>
 <li style="margin-bottom:5px">
 If needed for the exercises, you can find the F* standard library in <tt style="font-size:11px">~/FStar/ulib</tt> and various examples in <tt style="font-size:11px">~/FStar/examples</tt>.
 </li>
 <li style="margin-bottom:5px">
-After you <code class="one-liner">exit</code> the container, you can restart it by looking up its ID using <code class="one-liner">docker ps -a</code> and running <code class="one-liner">docker start -i CONTAINER_ID</code>.
+After you exit the container, you can restart it by looking up its ID using <code class="one-liner">$ docker ps -a</code> and running <code class="one-liner">$ docker start -i CONTAINER_ID</code>.
 </li>
 </ul>
 </li>
