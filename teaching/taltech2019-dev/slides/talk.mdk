@@ -161,26 +161,33 @@ Slides, code, exercises, and setup instructions <br/>
 ~
 
 ~Fragment
-* [**Testing**]{color:DarkBlue}
-  * Unit testing, randomised testing, model-based testing, ...
+* [**Testing**]{color:DarkBlue} (unit testing, randomised testing, model-based testing, ...)
 ~
 
 ~Fragment
-* [**Runtime verification**]{color:DarkBlue}
-  * Monitors, ...
+* [**Runtime verification**]{color:DarkBlue} (monitors, ...)
 ~
 
 ~Fragment
-* [**Program logics**]{color:DarkRed}
-  * Hoare logic, separation logic, ...
-```
-{requires (sorted (>=) l)}  rev l  {ensures (fun l' -> sorted (<=) l')}
-```
+* [**Program logics**]{color:DarkRed} (Hoare logic, separation logic, ...)
+  
+  ```
+  {fun h0 -> sorted (>=) (sel h0 l)} srev l {fun h0 _ h1 -> sorted (<=) (sel h1 l)}
+  
+  {fun h1-> sorted (<=) (sel h1 l)} srev l {fun h1 _ h2 -> sorted (>=) (sel h2 l)}
+  ---------------------------------------------------------------------------------
+  {fun h0 -> sorted (>=) (sel h0 l)}
+    srev l; srev l
+  {fun h1 _ h2 -> sorted (>=) (sel h2 l)}
+  ```
 ~
 
 ~Fragment
-* [**Expressive type systems**]{color:DarkRed}
-  * Dependent types, refinement types, ...
+* [**Expressive type systems**]{color:DarkRed} (dependent types, refinement types, ...)
+
+  ```
+  rev : l:list a -> (l':list a & (length l = length l'))
+  ```
 ~
 
 
