@@ -559,7 +559,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 <!------------------------------------------------------------------------------>
 
-## `Tot` and `Dv` are just two effects amongst many
+## `Tot` and `Dv` are just [**two effects amongst many**]{color:DarkBlue} ##
 
 ~Center
 <img src="../../stuff/effects.png" width="50%">
@@ -827,14 +827,14 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 ## Recap: [Functional core]{color:DarkRed} of F\* ## {#fcore}
 
 * **[Variant of dependent type theory]{color:DarkBlue}**
-  - $\lambda$, $\Pi$, inductives, matches, universe polymorphism
+  - $\lambda$, $\Pi$, inductives, matches, universe polymorphism, ...
 
 * **[General recursion and semantic termination check]{color:DarkBlue}**
-  - potential non-termination is an effect
+  - potential non-termination is an effect!
 
 * **[Refinements]{color:DarkBlue}**
   - **Refined [value types]{color:DarkRed}**:
-    - `x:t{p}`
+    - `x:t{phi x}`
   - **Refined [computation types]{color:DarkRed}**:
     - `Pure t pre post`
     - `Div t pre post`
@@ -842,7 +842,7 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
 
 * **[Subtyping and sub-effecting]{color:DarkBlue}** (`<:`)
 
-* **[Different kinds of logical connectives]{color:DarkBlue}** (`=`, `&&`, `||`, ...) [**vs**]{color:DarkRed} (`==`, `/\`, `\/`, ...)
+* **[Standard logical connectives]{color:DarkBlue}** (`==`, `/\`, `\/`, `forall` , `exists` , `...`)
 
 <!------------------------------------------------------------------------------>
 
@@ -913,7 +913,7 @@ module ST
 
   val (:=) : #a:Type -> r:ref a -> v:a -> 
     ST unit (requires (fun _      -> True))
-            (ensures (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
 ```
 ~
 
@@ -1014,7 +1014,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 ## But you don't escape having to come up with [invariants]{color:DarkRed} ##
 
-### Stateful Count: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
+### Stateful Counting: 1 + 1 + 1 + 1 + 1 + 1 + ... ###
 ~Fragment
 ```
 [INCLUDE=../../../code/state/CountST.fst:count_st_aux]
@@ -1055,7 +1055,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} But **that's not all** there is to F*'s memory models!
 
-  * [**monotonicity**]{color:DarkRed}, [**regions**]{color:DarkBlue}, [**heaps-and-stacks**]{color:DarkRed} (for low-level programming)
+  * [**monotonicity**]{color:DarkRed}, [**regions**]{color:DarkBlue}, [**heaps-and-stacks**]{color:DarkRed}, [**resources and sep. logic**]{color:DarkBlue}
 
 <!------------------------------------------------------------------------------>
 
@@ -1112,7 +1112,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 * {.fragment} Enabling the following [**useful verification pattern**]{color:DarkBlue}
   ```
-    let p (x:nat) = x > 0 in   (* assuming (r:mref nat less_than_equal_to) *)       
+    let p (x:nat) = x > 0 in                       (* assuming (r : mref nat `<=`) *)       
 
     r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
   ```
@@ -1127,39 +1127,13 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-## Highlights of [Other F\* Features](#conclusion) ##
+## Low*: verifying low-level C code ##
 
-* {.fragment} Low\*: programming and verifying [**low-level C code**]{color:DarkBlue}
-
-  * Moto: *The code (Low\*) is low-level but the verification (F\*) is not*
-
-  * Uses a hierarchical region-based stack-and-heap memory model<br/><br/>
-
-* {.fragment} F\* has an [**extensible effect system**]{color:DarkBlue} (aka [**Dijkstra Monads For Free**]{color:DarkRed})
-
-  * In addition to `St`, ...,  users can define their own (monadic) effects
-  
-  * Given a mon. definition, F\* derives the effect and the spec. calculus
-
-  * Also comes with monadic reification for extrinsic reasoning<br/><br/>
-
-* {.fragment} Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework for F\*
-
-  * Tactics are just another F\* effect (proof state + exceptions)
-
-  * Can access the proof state, can introspect and synthesise F\* terms
-
-  * Run using the normalizer (slow) or compiled to native OCaml plugins
-
-<!--  * Uses: discharging VCs, massaging VCs, synthesizing terms, typeclasses -->
-
-<!------------------------------------------------------------------------------>
-
-## Low*: a small example ##
+### Moto: *The [code (Low\*) is low-level]{color:DarkBlue} but the [verification (F\*) is not]{color:DarkRed}* ###
 
 ```
-let f (): Stack UInt64.t (requires (fun _     -> True))
-                         (ensures  (fun _ _ _ -> True))
+let f (): Stack UInt64.t (requires (fun h0      -> True))
+                         (ensures  (fun h0 r h1 -> r = 43UL))
                          
   = push_frame ();                         (* pushing a new stack frame *)
     
@@ -1187,6 +1161,44 @@ uint64_t f()
   return r;
 }
 ```
+
+<!------------------------------------------------------------------------------>
+
+## F\* has an [**extensible effect system**]{color:DarkBlue} ##
+
+* In addition to `Tot`, `St`, ...,  [**users can define their own (monadic) effects**]{color:DarkRed}
+
+* {.fragment} [**Axiomatically**]{color:DarkBlue} ([PLDI 2013](https://www.microsoft.com/en-us/research/publication/verifying-higher-order-programs-with-the-dijkstra-monad/))
+
+  * Only signatures of effect operations.
+  * Implementation in code extraction.
+
+* {.fragment} [**Dijkstra Monads For Free**]{color:DarkBlue} ([POPL 2017](http://dx.doi.org/10.1145/3009837.3009878))
+
+  * User provides a monadic effect definition
+  * F\* then derives the effect and the specification calculus
+
+* {.fragment} [**Dijkstra Monads For All**]{color:DarkBlue} ([ICFP 2019](https://doi.org/10.1145/3341708))
+
+  * User defines both the computational and specification monads.
+  * Comp. and spec. monads are related by effect observations.
+
+* {.fragment} [**Layered Effects**]{color:DarkBlue} (landed in `master` just a few weeks ago)
+
+  * New effects on top of existing ones (like with monads in Haskell).
+
+<!------------------------------------------------------------------------------>
+
+## Meta-F\* - a [**tactics and metaprogramming**]{color:DarkBlue} framework for F\* ##
+
+* Tactics are just another F\* effect (proof state + exceptions)
+
+* Can access the proof state, can introspect and synthesise F\* terms
+
+* Run using the normalizer (slow) or compiled to native OCaml plugins
+
+* Uses: discharging VCs, massaging VCs, synthesizing terms, typeclasses
+
 
 <!------------------------------------------------------------------------------>
 
@@ -1249,7 +1261,7 @@ uint64_t f()
 
   * verifying pure and stateful programs, using monotonicity, ...
 
-[https://danelahman.github.io/teaching/taltech2018/](https://danelahman.github.io/teaching/taltech2018/)
+[https://danel.ahman.ee/teaching/taltech2019/](https://danel.ahman.ee/teaching/taltech2019/)
 
 
 
