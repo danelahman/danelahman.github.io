@@ -86,11 +86,11 @@ Slides, code, exercises, and setup instructions <br/>
 
 <!-------------------------------------------------------------------------------->
 
-# Specification and verification #
+# Specification and Verification #
 
 <!-------------------------------------------------------------------------------->
 
-## Program [specification]{color:DarkBlue} (pure programs)##
+## Program [specification]{color:DarkBlue}##
 
 * Consider a simple [**purely functional list reversal**]{color:DarkRed}
 ```
@@ -111,19 +111,18 @@ Slides, code, exercises, and setup instructions <br/>
 
 ~Fragment
 * [**Formally**]{color:DarkRed}, specifications are often written as Hoare triples
-
 ```
-{requires (sorted (>=) l)}
-  rev l
-{ensures (fun l' -> sorted (<=) l')}
+{requires (sorted (>=) l)}                   |        {requires (True)}
+    rev l                                      |          rev (rev l)
+{ensures (fun l' -> sorted (<=) l')}         |        {ensures (fun l' -> l = l')}
 ```
 ~
 
 <!-------------------------------------------------------------------------------->
 
-## Program [specification]{color:DarkBlue} (effectful programs)##
+## Program [specification]{color:DarkBlue}##
 
-* Consider a simple [**stateful list reversal**]{color:DarkRed}
+* Now consider a simple [**stateful list reversal**]{color:DarkRed}
 ```
   let rec srev #a (l:ref (list a)) : unit =
     match !l with
@@ -140,17 +139,48 @@ Slides, code, exercises, and setup instructions <br/>
 
 ~Fragment
 * [**Formally**]{color:DarkRed}, specifications are still written as Hoare triples
-
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
   srev l
-{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\
-                         modifies !{l} h0 h1)}
+{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\ modifies !{l} h0 h1)}
 ```
 ~
 
 ~Fragment
 * What about [**other effects**]{color:DarkBlue} such as exceptions, input-output, ...?
+~
+
+<!-------------------------------------------------------------------------------->
+
+## Program [verification]{color:DarkBlue}##
+
+### [**Verifying a program**]{color:DarkBlue} is to show that it [**satisfies its specification**]{color:DarkRed}, e.g.,  ###
+
+~Fragment
+* [**Code reviews**]{color:DarkBlue}
+~
+
+~Fragment
+* [**Testing**]{color:DarkBlue}
+  * Unit testing, randomised testing, model-based testing, ...
+~
+
+~Fragment
+* [**Runtime verification**]{color:DarkBlue}
+  * Monitors, ...
+~
+
+~Fragment
+* [**Program logics**]{color:DarkRed}
+  * Hoare logic, separation logic, ...
+```
+{requires (sorted (>=) l)}  rev l  {ensures (fun l' -> sorted (<=) l')}
+```
+~
+
+~Fragment
+* [**Expressive type systems**]{color:DarkRed}
+  * Dependent types, refinement types, ...
 ~
 
 
@@ -303,7 +333,7 @@ Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/
     | Nil  : list a
     | Cons : hd:a -> tl:list a -> list a
 
-  let rec map (f:'a -> 'b) (x:list 'a) : list 'b = (* combines val and let *)
+  let rec map (f:'a -> 'b) (x:list 'a) : list 'b = 
     match x with
     | Nil      -> Nil
     | Cons h t -> Cons (f h) (map f t)
