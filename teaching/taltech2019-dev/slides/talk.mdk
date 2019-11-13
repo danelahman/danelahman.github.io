@@ -103,8 +103,8 @@ Slides, code, exercises, and setup instructions <br/>
 ~Fragment
 * The [**specification**]{color:DarkBlue} of `rev` could comprise a variety of properties, e.g., 
 
-  1. `rev (rev l) = l`
-  2. `length (rev l) = length l`
+  1. `rev (rev l) == l`
+  2. `length (rev l) == length l`
   3. `rev l ` contains the same elements as ` l`
   4. if ` sorted (>=) l ` then ` sorted (<=) (rev l) `
 ~
@@ -114,13 +114,13 @@ Slides, code, exercises, and setup instructions <br/>
 ```
 {requires (sorted (>=) l)}                   |        {requires (True)}
     rev l                                      |          rev (rev l)
-{ensures (fun l' -> sorted (<=) l')}         |        {ensures (fun l' -> l = l')}
+{ensures (fun l' -> sorted (<=) l')}         |        {ensures (fun l' -> l == l')}
 ```
 ~
 
 <!-------------------------------------------------------------------------------->
 
-## Program [specification]{color:DarkBlue}##
+## Program [specification]{color:DarkBlue} ctd.##
 
 * Now consider a simple [**stateful list reversal**]{color:DarkRed}
 ```
@@ -141,7 +141,7 @@ Slides, code, exercises, and setup instructions <br/>
 * [**Formally**]{color:DarkRed}, specifications are still written as Hoare triples
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
-  srev l
+    srev l
 {ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\ modifies !{l} h0 h1)}
 ```
 ~
@@ -186,7 +186,7 @@ Slides, code, exercises, and setup instructions <br/>
 * [**Expressive type systems**]{color:DarkRed} (dependent types, refinement types, ...)
 
   ```
-  rev : l:list a -> (l':list a & (length l = length l'))
+  rev : l:list a -> (l':list a & (length l == length l'))
   ```
 ~
 
@@ -271,7 +271,7 @@ effectful programming, SMT-based automation
     * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
     * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
     * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
-  * **Meta-F\*** (metaprogramming and tactics) increasingly used in **[Everest](https://project-everest.github.io/)**
+  * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 # The current F\* team #
 
@@ -377,11 +377,9 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   let i : int = factorial 42         let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Different kinds of [**logical connectives**]{color:DarkBlue}
-
-  * ` = `, ` <> `, ` && `, ` || `, ` not `  [**(`bool`-valued)**]{color:DarkRed}
+* {.fragment} Refinement formulae built from [**standard logical connectives**]{color:DarkBlue}
   
-  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` [**(`prop`-valued)**]{color:DarkRed}
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...`
 
 
 ## Dependent types ##
@@ -418,17 +416,16 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 ## Inductive families + refinement types ##
 
-* As in Coq or Agda, we could [**type and define the lookup function**]{color:DarkBlue} as
+* In Coq or Agda, we have to [**carry around explicit proofs**]{color:DarkBlue}, e.g., 
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
     | Cons : #n:nat -> hd:a -> tl:vec a n -> vec a (n + 1)
 
   let rec lookup #a #n (as:vec a n) (i:nat) (p:i `less_than` n) : a = ...
-  (* in addition to as and i, you would also need to explicitly work with p*)
   ```
 
-* {.fragment} But [**combining `vec` with refinement types**]{color:DarkRed} is much more convenient
+* {.fragment} [**Combining `vec` with refinement types**]{color:DarkRed} is much more convenient
   ```
   let rec lookup #a #n (as:vec a n) (i:nat{i < n}) : a =
     match as with
@@ -559,6 +556,15 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   ```
   incr 2 + factorial (-1) : Dv int
   ```
+
+<!------------------------------------------------------------------------------>
+
+## `Tot` and `Dv` are just two effects amongst many
+
+~Center
+<img src="../../stuff/effects.png" width="50%">
+~
+
 
 <!------------------------------------------------------------------------------>
 
