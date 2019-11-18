@@ -1,9 +1,9 @@
 module FileSystem
 
-(* Task1: Define the type of well-formed paths as lists of strings 
-          (i.e., raw paths) that do not contain nodes with empty 
-          names. In other words, replace the proposition `True`
-          with a predicate on `p` that ensures this property. *)
+(* Question 1: Define the type of well-formed paths as lists of strings 
+               (i.e., raw paths) that do not contain nodes with empty 
+               names. In other words, replace the proposition `True`
+               with a predicate on `p` that ensures this property. *)
 
 type path = p:list string{True}
 
@@ -38,9 +38,9 @@ total new_effect {
      ; write    = write_st
 }
 
-(* Task2: Define a well-formedness predicate for file systems. As in your regular 
-          coursework, a file system is well-formed when identical paths cannot 
-          lead to different nodes in the tree. *)
+(* Question 2: Define a well-formedness predicate for file systems. As in your regular 
+               coursework, a file system is well-formed when identical paths cannot 
+               lead to different nodes in the tree. *)
 
 let fs_tree_wf (fs:fs_tree) : bool = 
   admit ()
@@ -63,24 +63,39 @@ effect FS (a:Type)
 
 let read (_:unit) : FS wf_fs_tree
                        (requires (fun _ -> True)) 
-                       (ensures (fun fs0 fs fs1 -> fs0 == fs /\ fs == fs1)) = 
+                       (ensures  (fun fs0 fs fs1 -> fs0 == fs /\ fs == fs1)) = 
   FileSystem?.read ()
 
 let write (fs:wf_fs_tree) : FS unit 
                                (requires (fun _ -> True)) 
-                               (ensures (fun _ _ fs1 -> fs1 == fs)) = 
+                               (ensures  (fun _ _ fs1 -> fs1 == fs)) = 
   FileSystem?.write fs
 
-(* Task3: Define a function in the `FS` effect that creates a new directory in the file system. 
+
+(* Question 3: Define a function in the `FS` effect that returns all the paths currently in the file system. 
+
+   Question 3 (Bonus): What additional properties could one prove about the `show` function?
+                       Try extending the (currently trivial) specification of `show` with these
+                       properties and prove that your implementation indeed satisfies them.
+
+   Hint: The list of paths you get back is not any arbitrary list of paths.
+*)
+
+let show () : FS (list path)
+                 (requires (fun fs0 -> True)) 
+                 (ensures  (fun fs0 ps fs1 -> True)) =
+  admit ()
+
+(* Question 4: Define a function in the `FS` effect that creates a new directory in the file system. 
 
    Hint: As part of defining `create_dir`, you also need to prove that creating a well-formed 
          path in a well-formed tree results in a well-formed tree. 
 
-   Task3.Bonus: What additional properties could one prove about the `create_dir` function?
-                Try extending the (currently trivial) specification of `create_dir` with 
-                these properties and prove that your implementation indeed satisfies them.
+   Question 4 (Bonus): What additional properties could one prove about the `create_dir` function?
+                       Try extending the (currently trivial) specification of `create_dir` with 
+                       these properties and prove that your implementation indeed satisfies them.
 
-   Hint: Think about the shape of the file system after a new path has been created.
+   Hint: Think about the resulting shape of the file system after a new path has been created.
          
 *)
 
