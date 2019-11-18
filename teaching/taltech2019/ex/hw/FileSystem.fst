@@ -1,9 +1,33 @@
 module FileSystem
 
-(* Task 1: Define the type of well-formed paths as lists of strings 
-           (i.e., raw paths) that do not contain nodes with empty 
-           names. In other words, replace the proposition `True`
-           with a predicate on `p` that ensures this property. *)
+(* 
+
+  Homework exercise.
+
+  In this exercise you are asked to implement an FStar-version of the 
+  small file system from your regular coursework. This exercise differs 
+  from your regular coursework in that we will not use randomised testing 
+  to check the correctness of your implementation, but instead you are 
+  asked to equip the `show`, `create_dir`, and `delete` functions with 
+  strong specifications and prove that your implementations satisfy them.
+
+  The exercise is divided into 6 tasks---see below for further details.
+
+  When solving the tasks below, do not be afraid of defining additional 
+  auxiliary (pure) recursive functions and use them in the specifications.
+
+*)
+
+open FStar.List.Tot // FStar's lists library which could be useful below
+
+(* 
+
+  Task 1: Define the type of well-formed paths as lists of strings 
+          (i.e., raw paths) that do not contain nodes with empty 
+          names. In other words, replace the proposition `True`
+          with a predicate on path `p` that ensures this property. 
+          
+*)
 
 type path = p:list string{True}
 
@@ -38,9 +62,13 @@ total new_effect {
      ; write    = write_st
 }
 
-(* Task 2: Define a well-formedness predicate for file systems. As in your regular 
-           coursework, a file system is well-formed when identical paths cannot 
-           lead to different nodes in the tree. *)
+(* 
+
+  Task 2: Define a well-formedness predicate for file systems. As in your regular 
+          coursework, a file system is well-formed when identical paths cannot 
+          lead to different nodes in the tree. 
+          
+*)
 
 let fs_tree_wf (fs:fs_tree) : bool = 
   admit ()
@@ -49,14 +77,14 @@ let wf_fs_tree = fs:fs_tree{fs_tree_wf fs}
 
 (* Pre- and postcondition variant of the `FileSystem` effect, which additionally 
    assumes that the initial file system (`fs0`) is well-formed and additionally 
-   requires one to prove that the final file system (`fs1`) is still well-formed.*)
+   requires one to prove that the final file system (`fs1`) is still well-formed. *)
 
 effect FS (a:Type) 
-          (pre:fs_tree -> Type0) 
-          (post:fs_tree -> a -> fs_tree -> Type0) = 
+          (pre:wf_fs_tree -> Type0) 
+          (post:wf_fs_tree -> a -> wf_fs_tree -> Type0) = 
   FileSystem a (fun fs0 p -> 
-                 pre fs0 /\ 
                  fs_tree_wf fs0 /\ 
+                 pre fs0 /\ 
                  (forall x fs1 . (post fs0 x fs1 /\ fs_tree_wf fs1) ==> p (x,fs1)))
 
 (* Effectful actions to read and update the file system in your code below. *)
@@ -72,16 +100,14 @@ let write (fs:wf_fs_tree) : FS unit
   FileSystem?.write fs
 
 
-(* Task 3: Define both a pure function and a function in the `FS` effect that return all 
-           the paths in a given (resp. current) file system. 
+(* 
 
-   Task 3 (Bonus): What additional properties could one prove about the `show` function?
-                   Try extending the (currently trivial) specification of `show` with these
-                   properties and prove that your implementation indeed satisfies them.
+  Task 3: Define both a pure function and a function in the `FS` effect that return all 
+          the paths in a given (resp. current) file system. 
 
-   Hint: The list of paths you get back is not any arbitrary list of paths. *)
-
-let show_fs (fs:wf_fs_tree) : list path =
+*)
+           
+let show_fs (fs:fs_tree) : list path =
   admit ()
 
 let show () : FS (list path)
@@ -89,29 +115,42 @@ let show () : FS (list path)
                  (ensures  (fun fs0 ps fs1 -> True)) =
   admit ()
 
-(* Task 4: Define a function in the `FS` effect that creates a new directory in the file system. 
+(* 
 
-   Hint: As part of defining `create_dir`, you also need to prove that creating a well-formed 
-         path in a well-formed tree results in a well-formed tree. *)
+  Task 4: Define a function in the `FS` effect that creates a new directory in the file system. 
+
+  Hint: As part of defining `create_dir`, you also need to prove that creating a well-formed 
+        path in a well-formed tree results in a well-formed tree. 
+        
+*)
 
 let create_dir (p:path) : FS unit 
                              (requires (fun fs0 -> True)) 
                              (ensures  (fun fs0 _ fs1 -> True)) = 
   admit ()
 
-(* Task 5: Define a function in the `FS` effect that deletes a given path from the file system. 
+(* 
 
-   Hint: As part of defining `delete`, you also need to prove that deleting a well-formed path 
-         from a well-formed tree results in a well-formed tree. *)
+  Task 5: Define a function in the `FS` effect that deletes a given path from the file system. 
+
+  Hint: As part of defining `delete`, you also need to prove that deleting a well-formed path 
+        from a well-formed tree results in a well-formed tree. 
+
+*)
 
 let delete (p:path) : FS unit
                          (requires (fun fs0 -> True))
                          (ensures  (fun fs0 _ fs1 -> True)) =
   admit ()
 
-(* Task 6: Strengthen the specifications of `create_dir` and `delete` so that the test programs 
-           in `FileSystemClient.fst` successfully typechecks. 
+(* 
+
+  Task 6: Strengthen the (currently trivial) specifications of `show`, `create_dir`, and
+          `delete` so that the test code in `FileSystemClient.fst` successfully typechecks. 
                
-   Hint: Think about the resulting shape of the file system after creating a new path in it or 
-         removing an already existing path. You can draw inspiration from the `deleteDeletes`
-         and `createAndDelete` FSCheck properties you defined in your regular coursework. *)
+  Hint: Think about the resulting shape of the file system after creating a new path in it or 
+        removing an already existing path. You can draw inspiration from the `deleteDeletes`
+        and `createAndDelete` FSCheck properties you defined in your regular coursework. 
+        Similarly, the list of paths returned by `show` is not any old list of paths. 
+        
+*)
