@@ -64,9 +64,10 @@ total new_effect {
 
 (* 
 
-  Task 2: Define a well-formedness predicate for file systems. As in your regular 
-          coursework, a file system is well-formed when identical paths cannot 
-          lead to different nodes in the tree. 
+  Task 2: Define a well-formedness predicate for file systems (replace the admit with 
+          actual code). As in your regular coursework, a file system is well-formed 
+          when identical paths cannot lead to different nodes in the tree, and a 
+          well-formed file system also should not have nodes with empty names.
           
 *)
 
@@ -102,8 +103,9 @@ let write (fs:wf_fs_tree) : FS unit
 
 (* 
 
-  Task 3: Define both a pure function and a function in the `FS` effect that return all 
-          the paths in a given (resp. current) file system. 
+  Task 3: Define a pure function that returns all the paths in a given file system. 
+          Also, define a function in the the `FS` effect that returns all paths in 
+          the current state of the file system.
 
 *)
            
