@@ -1,9 +1,9 @@
 module FileSystem
 
-(* Question 1: Define the type of well-formed paths as lists of strings 
-               (i.e., raw paths) that do not contain nodes with empty 
-               names. In other words, replace the proposition `True`
-               with a predicate on `p` that ensures this property. *)
+(* Task 1: Define the type of well-formed paths as lists of strings 
+           (i.e., raw paths) that do not contain nodes with empty 
+           names. In other words, replace the proposition `True`
+           with a predicate on `p` that ensures this property. *)
 
 type path = p:list string{True}
 
@@ -38,9 +38,9 @@ total new_effect {
      ; write    = write_st
 }
 
-(* Question 2: Define a well-formedness predicate for file systems. As in your regular 
-               coursework, a file system is well-formed when identical paths cannot 
-               lead to different nodes in the tree. *)
+(* Task 2: Define a well-formedness predicate for file systems. As in your regular 
+           coursework, a file system is well-formed when identical paths cannot 
+           lead to different nodes in the tree. *)
 
 let fs_tree_wf (fs:fs_tree) : bool = 
   admit ()
@@ -72,91 +72,46 @@ let write (fs:wf_fs_tree) : FS unit
   FileSystem?.write fs
 
 
-(* Question 3: Define a function in the `FS` effect that returns all the paths currently in the file system. 
+(* Task 3: Define both a pure function and a function in the `FS` effect that return all 
+           the paths in a given (resp. current) file system. 
 
-   Question 3 (Bonus): What additional properties could one prove about the `show` function?
-                       Try extending the (currently trivial) specification of `show` with these
-                       properties and prove that your implementation indeed satisfies them.
+   Task 3 (Bonus): What additional properties could one prove about the `show` function?
+                   Try extending the (currently trivial) specification of `show` with these
+                   properties and prove that your implementation indeed satisfies them.
 
-   Hint: The list of paths you get back is not any arbitrary list of paths.
-*)
+   Hint: The list of paths you get back is not any arbitrary list of paths. *)
+
+let show_fs (fs:wf_fs_tree) : list path =
+  admit ()
 
 let show () : FS (list path)
                  (requires (fun fs0 -> True)) 
                  (ensures  (fun fs0 ps fs1 -> True)) =
   admit ()
 
-(* Question 4: Define a function in the `FS` effect that creates a new directory in the file system. 
+(* Task 4: Define a function in the `FS` effect that creates a new directory in the file system. 
 
    Hint: As part of defining `create_dir`, you also need to prove that creating a well-formed 
-         path in a well-formed tree results in a well-formed tree. 
-
-   Question 4 (Bonus): What additional properties could one prove about the `create_dir` function?
-                       Try extending the (currently trivial) specification of `create_dir` with 
-                       these properties and prove that your implementation indeed satisfies them.
-
-   Hint: Think about the resulting shape of the file system after a new path has been created.
-         
-*)
+         path in a well-formed tree results in a well-formed tree. *)
 
 let create_dir (p:path) : FS unit 
                              (requires (fun fs0 -> True)) 
                              (ensures  (fun fs0 _ fs1 -> True)) = 
   admit ()
 
-(*  *)
+(* Task 5: Define a function in the `FS` effect that deletes a given path from the file system. 
 
+   Hint: As part of defining `delete`, you also need to prove that deleting a well-formed path 
+         from a well-formed tree results in a well-formed tree. *)
 
-(*
-let state = int
+let delete (p:path) : FS unit
+                         (requires (fun fs0 -> True))
+                         (ensures  (fun fs0 _ fs1 -> True)) =
+  admit ()
 
-let st (a:Type) = state -> M (a * state)
-
-let return_st (a:Type) (x:a) : st a 
-  = fun s0 -> (x,s0)
-
-let bind_st (a:Type) (b:Type) (f:st a) (g:a -> st b) : st b
-  = fun s0 -> let (x,s) = f s0 in 
-              g x s
-
-let get () : st state 
-  = fun s0 -> (s0,s0)
-
-let put (x:state) : st unit 
-  = fun s0 -> ((), x)
-
-total reifiable reflectable new_effect {
-  STATE : a:Type -> Effect
-  with repr     = st
-     ; bind     = bind_st
-     ; return   = return_st
-     ; get      = get
-     ; put      = put
-}
-
-#reset-options
-
-effect St (a:Type) = STATE a (fun _ p -> forall x s1 . p (x,s1))
-
-(**********************************************************
- *                                                        *
- * Proof of stateful summing using reification            *
- *                                                        *
- **********************************************************)
-
-open FStar.Mul
-
-let sum_tot (n:nat) = ((n+1) * n) / 2
-
-(* Exercise1: give a definition of sum_st using the St effect defined above *)
-
-let rec sum_st (n:nat) : St unit
-= admit()
-
-(* Exercise2: prove that sum_st agrees with sum_tot by using monadic reification *)
-
-let lemma_sum_st (n:nat) (s:state) 
-  : Lemma (True)
-= admit()
-
-*)
+(* Task 6: Strengthen the specifications of `create_dir` and `delete` so that the test programs 
+           in `FileSystemClient.fst` successfully typechecks. 
+               
+   Hint: Think about the resulting shape of the file system after creating a new path in it or 
+         removing an already existing path. You can draw inspiration from the `deleteDeletes`
+         and `createAndDelete` FSCheck properties you defined in your regular coursework. *)
