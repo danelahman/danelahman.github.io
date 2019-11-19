@@ -32,14 +32,14 @@ let test2 (p:path) : FS unit
 
 //[@expect_failure]
 let test3 (p:path) : FS unit
-                         (requires (fun fs0 -> True))
-                         (ensures  (fun fs0 _ fs1 -> in_fs p fs1)) =
+                        (requires (fun fs0 -> True))
+                        (ensures  (fun fs0 _ fs1 -> in_fs p fs1)) =
   create_dir p
 
 //[@expect_failure]
 let test4 (p:path) : FS unit
-                         (requires (fun fs0 -> True))
-                         (ensures  (fun fs0 _ fs1 -> ~(in_fs p fs1))) =
+                        (requires (fun fs0 -> True))
+                        (ensures  (fun fs0 _ fs1 -> ~(in_fs p fs1))) =
   delete p
 
 //[@expect_failure]

@@ -26,12 +26,13 @@ module FileSystem
 *)
 
 open FStar.List.Tot // FStar's lists library which could be useful below
+open FStar.Classical // FStar's classical logic library which could also be useful below
 
 (* 
 
   Task 1: Define the type of well-formed paths as lists of strings 
           (i.e., raw paths) that do not contain nodes with empty 
-          names. In other words, replace the proposition `True`
+          names. In other words, replace the proposition `true`
           with a predicate on path `p` that ensures this property. 
           
 *)
@@ -113,7 +114,7 @@ let write (fs:wf_fs_tree) : FS unit
 
 *)
 
-let in_fs (p:path) (fs:wf_fs_tree) : Type = 
+let in_fs (p:path) (fs:wf_fs_tree) : Type0 = 
   admit ()
 
 (* 
