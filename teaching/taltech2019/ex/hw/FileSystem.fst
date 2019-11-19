@@ -32,12 +32,12 @@ open FStar.Classical // FStar's classical logic library which could also be usef
 
   Task 1: Define the type of well-formed paths as lists of strings 
           (i.e., raw paths) that do not contain nodes with empty 
-          names. In other words, replace the proposition `true`
-          with a predicate on path `p` that ensures this property. 
+          names. In other words, replace `admit` below with a
+          predicate on path `p` that ensures its well-formedness. 
           
 *)
 
-type path = p:list string{True}
+type path = p:list string{admit ()}
 
 (* Type of file systems *)
 
