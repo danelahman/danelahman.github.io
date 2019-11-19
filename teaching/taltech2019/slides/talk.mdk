@@ -74,7 +74,7 @@ Tallinn, 20 November, 2019
 * **Highlights of [Other F\* Features]{color:DarkBlue}**<br/><br/>
 
 ~Fragment
-Slides, code, exercises, and setup instructions <br/>
+Slides, code, exercises, **homework**, and setup instructions <br/>
 [https://danel.ahman.ee/teaching/taltech2019/](https://danel.ahman.ee/teaching/taltech2019/)
 
 <br/>
@@ -110,7 +110,7 @@ Slides, code, exercises, and setup instructions <br/>
 ~
 
 ~Fragment
-* [**Formally**]{color:DarkRed}, specifications are often written as Hoare triples
+* Formally, specifications are often written as [**Hoare triples**]{color:DarkRed}
 ```
 {requires (sorted (>=) l)}                   |        {requires (True)}
     rev l                                      |          rev (rev l)
@@ -138,7 +138,7 @@ Slides, code, exercises, and setup instructions <br/>
 ~
 
 ~Fragment
-* [**Formally**]{color:DarkRed}, specifications are still written as Hoare triples
+* Formally, specifications are still written as [**Hoare triples**]{color:DarkRed}
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
     srev l
@@ -262,13 +262,14 @@ effectful programming, SMT-based automation
 
 *  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
   * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
-      * [miTLS\*](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS (1.2 and 1.3)
-      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library (used in <u>Firefox</u> and <u>Wireguard</u>)
+      * [miTLS](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS
+      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library 
+        [(used in <u>Firefox</u>, <u>Wireguard VPN</u>, <u>Zinc kernel crypto library</u>, <u>Tezos</u> and <u>Concordium</u> blockchains)]{color:Gray}
       * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
 
 *  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
   * Fallback when SMT fails; also for mechanized metatheory
-    * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\*
+    <!-- * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\* -->
     * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
     * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
   * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
@@ -1145,7 +1146,6 @@ let f (): Stack UInt64.t (requires (fun h0      -> True))
       
     pop_frame ();           (* popping the stack frame we pushed above, *)
                           (* necessary for establishing Stack invariant *)
-    assert (r = 43UL);                    
     r
 ```
 ```
