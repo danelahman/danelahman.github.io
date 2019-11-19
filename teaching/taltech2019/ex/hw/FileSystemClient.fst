@@ -31,19 +31,19 @@ let test2 (p:path) : FS unit
   delete p
 
 //[@expect_failure]
-let test2' (p:path) : FS unit
+let test3 (p:path) : FS unit
                          (requires (fun fs0 -> True))
                          (ensures  (fun fs0 _ fs1 -> in_fs p fs1)) =
   create_dir p
 
 //[@expect_failure]
-let test2'' (p:path) : FS unit
+let test4 (p:path) : FS unit
                          (requires (fun fs0 -> True))
                          (ensures  (fun fs0 _ fs1 -> ~(in_fs p fs1))) =
   delete p
 
 //[@expect_failure]
-let test3 (p:path) : FS (list path)
+let test5 (p:path) : FS (list path)
                         (requires (fun fs0 -> fs0 == Node []))
                         (ensures  (fun fs0 ps fs1 -> mem p ps /\ fs0 == fs1)) =
   create_dir p;
@@ -52,7 +52,7 @@ let test3 (p:path) : FS (list path)
   ps
 
 //[@expect_failure]
-let test4 (p1 p2 p3:path) : FS unit 
+let test6 (p1 p2 p3:path) : FS unit 
                                (requires (fun fs0 -> fs0 == Node []))
                                (ensures  (fun fs0 _ fs1 -> fs0 == fs1)) =
   create_dir p1;
@@ -63,14 +63,14 @@ let test4 (p1 p2 p3:path) : FS unit
   delete p3
 
 //[@expect_failure]
-let test5 (p1 p2:path) : FS unit
+let test7 (p1 p2:path) : FS unit
                         (requires (fun fs0 -> True))
                         (ensures  (fun _ _ fs1 -> in_fs p1 fs1 /\ in_fs p2 fs1)) =
   create_dir p1;
   create_dir p2
 
 //[@expect_failure]
-let test6 (p1 p2:path) : FS unit
+let test8 (p1 p2:path) : FS unit
                             (requires (fun fs0 -> True))
                             (ensures  (fun _ _ fs1 -> ~(in_fs p1 fs1) /\ ~(in_fs p2 fs1))) =
   delete p1;
