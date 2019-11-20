@@ -174,7 +174,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
   ```
   {fun h0 -> sorted (>=) (sel h0 l)} srev l {fun h0 _ h1 -> sorted (<=) (sel h1 l)}
   
-  {fun h1-> sorted (<=) (sel h1 l)} srev l {fun h1 _ h2 -> sorted (>=) (sel h2 l)}
+  {fun h1 -> sorted (<=) (sel h1 l)} srev l {fun h1 _ h2 -> sorted (>=) (sel h2 l)}
   ---------------------------------------------------------------------------------
   {fun h0 -> sorted (>=) (sel h0 l)}
     srev l; srev l
