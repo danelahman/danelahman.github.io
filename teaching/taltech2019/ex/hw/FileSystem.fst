@@ -39,7 +39,7 @@ open FStar.Classical // FStar's classical logic library which could also be usef
           
 *)
 
-let path_wf (p:list string) = 
+let path_wf (p:list string) : Type0 = 
   admit ()
 
 type path = p:list string{path_wf p}
