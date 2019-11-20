@@ -30,19 +30,57 @@ open FStar.Classical // FStar's classical logic library which could also be usef
 
 (* 
 
-  Task 1: Define the type of well-formed paths as lists of strings 
-          (i.e., raw paths) that do not contain nodes with empty 
-          names. In other words, replace `admit` below with a
-          predicate on path `p` that ensures its well-formedness. 
+  Task 1: Define the type of well-formed paths as lists of strings (i.e., 
+          raw paths) that do not contain nodes with empty names. In other 
+          words, replace `admit` in the definition of `path_wf` with a 
+          predicate on path `p` that ensures its well-formedness. That 
+          you got well-formedness right will be tested with the auxiliary 
+          lemmas `test_wf_path` and `test_not_wf_path` on example paths.
           
 *)
 
-type path = p:list string{admit ()}
+let path_wf (p:list string) = 
+  admit ()
+
+type path = p:list string{path_wf p}
+
+let test_wf_path () : Lemma (path_wf ("home" :: "username" :: [])) = 
+  ()
+
+let test_not_wf_path () : Lemma (~(path_wf ("home" :: "" :: "username" :: []))) = 
+  ()
 
 (* Type of file systems *)
 
 type fs_tree =
   | Node : list (string * fs_tree) -> fs_tree
+
+(* 
+
+  Task 2: Define a well-formedness predicate for file systems (replace the admit 
+          with in `fs_tree_wf` actual code). As in your regular coursework, a 
+          file system is well-formed when identical paths cannot lead to different 
+          nodes in the tree, and a well-formed file system also should not have 
+          nodes with empty names. That you got well-formedness right will be tested 
+          below with the auxiliary lemmas `test_wf_fs` and `test_not_wf_fs`.
+          
+*)
+
+assume val sub_dir_smaller (s:string) (fs:fs_tree) (ns:list (string * fs_tree))
+  : Lemma (Node ns << Node ((s,fs) :: ns))
+    [SMTPat (Node ((s,fs) :: ns))]
+
+let rec fs_tree_wf (fs:fs_tree) : Type0 = 
+  admit ()
+
+let wf_fs_tree = fs:fs_tree{fs_tree_wf fs}
+
+let test_wf_fs () : Lemma (fs_tree_wf (Node (("home",Node (("username",Node []) :: [])) :: []))) = 
+  ()
+
+let test_not_wf_fs () : Lemma (~(fs_tree_wf (Node (("home",Node (("",Node (("username",Node []) :: [])) :: [])) :: 
+                                                   ("home",Node []) :: [])))) = 
+  ()
 
 (* A (monadic) effect that characterises programs that use a file system. *)
 
@@ -69,20 +107,6 @@ total new_effect {
      ; read     = read_st
      ; write    = write_st
 }
-
-(* 
-
-  Task 2: Define a well-formedness predicate for file systems (replace the admit with 
-          actual code). As in your regular coursework, a file system is well-formed 
-          when identical paths cannot lead to different nodes in the tree, and a 
-          well-formed file system also should not have nodes with empty names.
-          
-*)
-
-let fs_tree_wf (fs:fs_tree) : Type0 = 
-  admit ()
-
-let wf_fs_tree = fs:fs_tree{fs_tree_wf fs}
 
 (* Pre- and postcondition variant of the `FileSystem` effect, which additionally 
    assumes that the initial file system (`fs0`) is well-formed and additionally 
