@@ -66,8 +66,8 @@ type fs_tree =
           
 *)
 
-assume val sub_dir_smaller (s:string) (fs:fs_tree) (ns:list (string * fs_tree))
-  : Lemma (Node ns << Node ((s,fs) :: ns))
+assume val sub_dir_smaller (s:string) (fs:fs_tree) (ns:list (string * fs_tree)) // This is to help the typechecker know that
+  : Lemma (Node ns << Node ((s,fs) :: ns))                                      // subdirectories in the tree have smaller size
     [SMTPat (Node ((s,fs) :: ns))]
 
 let rec fs_tree_wf (fs:fs_tree) : Type0 = 
