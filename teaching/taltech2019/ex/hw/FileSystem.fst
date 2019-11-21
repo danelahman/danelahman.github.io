@@ -79,6 +79,7 @@ let test_wf_fs () : Lemma (fs_tree_wf (Node (("home",Node (("username",Node []) 
   ()
 
 let test_not_wf_fs () : Lemma (~(fs_tree_wf (Node (("home",Node (("",Node (("username",Node []) :: [])) :: [])) :: 
+                                                   ("home",Node []) :: 
                                                    ("home",Node []) :: [])))) = 
   ()
 
