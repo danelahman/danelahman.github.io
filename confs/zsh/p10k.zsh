@@ -32,8 +32,8 @@
     local LC_ALL=${${(@M)$(locale -a):#*.(utf|UTF)(-|)8}[1]:-en_US.UTF-8}
   fi
 
-  POWERLEVEL9K_CUSTOM_USER_HOST="echo '@'"
-  POWERLEVEL9K_CUSTOM_USER_HOST_FOREGROUND=039
+  POWERLEVEL9K_CUSTOM_USER_HOST="echo ''"
+  POWERLEVEL9K_CUSTOM_USER_HOST_FOREGROUND=038
 
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
