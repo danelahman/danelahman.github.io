@@ -1,0 +1,64 @@
+;; ____________________________________________________________________________
+;; Aquamacs custom-file warning:
+;; Warning: After loading this .emacs file, Aquamacs will also load
+;; customizations from `custom-file' (customizations.el). Any settings there
+;; will override those made here.
+;; Consider moving your startup settings to the Preferences.el file, which
+;; is loaded after `custom-file':
+;; ~/Library/Preferences/Aquamacs Emacs/Preferences
+;; _____________________________________________________________________________
+
+(fringe-mode 0)
+
+(global-linum-mode 1)
+(setq linum-format "%3d ")
+
+(setq-default left-margin-width 1 right-margin-width 1)
+(set-window-buffer nil (current-buffer))
+
+(require 'gnutls)
+(add-to-list 'gnutls-trustfiles "/usr/local/etc/openssl/cert.pem")
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+(setq-default indent-tabs-mode nil)
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+
+(setq mac-option-modifier nil)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+               (shell-command-to-string "agda-mode locate")))
+
+(auto-fill-mode -1)
+(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+(remove-hook 'text-mode-hook 'auto-detect-wrap)
+
+(defun my-fstar-compute-prover-args-using-make ()
+ "Construct arguments to pass to F* by calling make."
+ (with-demoted-errors "Error when constructing arg string: %S"
+   (let* ((fname (file-name-nondirectory buffer-file-name))
+          (target (concat fname "-in"))
+          (argstr (condition-case nil
+                      (car (process-lines "make" "--quiet" target))
+                    (error "--use_hints"))))
+     (split-string argstr))))
+
+(setq fstar-subp-prover-args #'my-fstar-compute-prover-args-using-make)
+
+;;(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ ;;'(default ((t (:stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 130 :width normal :family "Inconsolata")))))
+
+(when window-system
+  (setq initial-frame-alist nil)   ;; Undo Aquamacs forced defaults
+  (setq default-frame-alist nil)   ;; Undo Aquamacs forced defaults
+  (aquamacs-autoface-mode -1)      ;; Use one face (font) everywhere
+  (set-frame-font "Hack-13")       ;; Set the default font to Hack size 12
+)
+
