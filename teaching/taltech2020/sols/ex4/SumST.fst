@@ -34,7 +34,7 @@ let rec sum_st_aux (r:ref nat) (n:nat)
   if n > 0 then (r := !r + n; 
                  sum_st_aux r (n-1))
 
-let rec sum_st (n:nat) 
+let sum_st (n:nat) 
   : ST nat (requires (fun _ -> True))
            (ensures  (fun h0 x h1 -> x = nth_triangular n /\ 
                                      modifies !{} h0 h1)) =

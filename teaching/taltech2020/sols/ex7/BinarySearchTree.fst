@@ -106,7 +106,7 @@ private let rec sorted (t:btree) : GTot bool =
 
 (* Binary search trees are defined as a refinement of the `btree` type from above. *)
 
-abstract type stree = t:btree{sorted t}
+type stree = t:btree{sorted t}
 
 (* Useful lemmas about sortedness and the tree operations defined above *)
 
@@ -184,11 +184,11 @@ let stree_insert (t:stree) (n:nat) : GTot stree =
 
 *)
 
-let rec lemma_insert_contains (t:stree) (n:nat) 
+let lemma_insert_contains (t:stree) (n:nat) 
   : Lemma ((stree_insert t n) `stree_contains` n) =
   lemma_btree_insert_contains t n
 
-let rec lemma_contains_insert_equal (t:stree) (n:nat) 
+let lemma_contains_insert_equal (t:stree) (n:nat) 
   : Lemma (requires (t `stree_contains` n))
           (ensures  (stree_insert t n = t)) = 
   lemma_contains_btree_insert_equal t n

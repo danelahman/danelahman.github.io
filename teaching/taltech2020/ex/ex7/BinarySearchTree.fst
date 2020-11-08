@@ -80,7 +80,7 @@ private let rec sorted (t:btree) : GTot bool =
 
 (* Binary search trees are defined as a refinement of the `btree` type from above. *)
 
-abstract type stree = t:btree{sorted t}
+type stree = t:btree{sorted t}
 
 (*
 
