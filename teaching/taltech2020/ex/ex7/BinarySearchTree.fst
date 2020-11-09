@@ -180,8 +180,8 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool =
 *)
 
 let rec search (t:erased stree) (r:mtree) (n:nat) 
-  : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
-            (ensures  (fun h0 b h1 -> b = (reveal t) `stree_contains` n)) =
+  : ST bool (requires (fun h0 -> is_stree r t h0))
+            (ensures  (fun h0 b h1 -> b = t `stree_contains` n)) =
   admit ()
 
 (*
@@ -209,9 +209,9 @@ let create ()
 (* Insertion into a mutable binary search tree *)
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
-  : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
+  : ST (erased stree) (requires (fun h0 -> is_stree r t h0))
                       (ensures  (fun h0 t' h1 -> 
-                         reveal t' = stree_insert (reveal t) n)) = 
+                         reveal t' = stree_insert t n)) = 
   admit ()
   
 (** PART 4 **)

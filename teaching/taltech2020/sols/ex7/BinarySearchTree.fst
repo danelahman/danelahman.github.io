@@ -275,9 +275,9 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
 *)
 
 let rec search (t:erased stree) (r:mtree) (n:nat) 
-  : ST bool (requires (fun h0 -> is_stree r (reveal t) h0))
+  : ST bool (requires (fun h0 -> is_stree r t h0))
             (ensures  (fun h0 b h1 -> h0 == h1 /\ 
-                                      b = (reveal t) `stree_contains` n)) =
+                                   b = t `stree_contains` n)) =
   match !r with 
   | None -> false
   | Some nd -> 
@@ -299,7 +299,7 @@ let create ()
                                  reveal t = empty_stree () /\
                                  fresh r h0 h1 /\
                                  modifies !{} h0 h1 /\
-                                 wf r (reveal t) h1 == Some (only r))) =
+                                 wf r t h1 == Some (only r))) =
   hide Leaf , alloc None
 
 (*
@@ -344,12 +344,12 @@ let fresh_extension (s0 s1:Set.set nat) (h:heap) =
 #set-options "--z3rlimit_factor 10"
 
 let rec insert (t:erased stree) (r:mtree) (n:nat) 
-  : ST (erased stree) (requires (fun h0 -> is_stree r (reveal t) h0))
+  : ST (erased stree) (requires (fun h0 -> is_stree r t h0))
                       (ensures  (fun h0 t' h1 -> 
-                         reveal t' = stree_insert (reveal t) n /\
-                         is_stree r (reveal t') h1 /\ (
-                         let (Some s0) = wf r (reveal t) h0 in 
-                         let (Some s1) = wf r (reveal t') h1 in
+                         reveal t' = stree_insert t n /\
+                         is_stree r t' h1 /\ (
+                         let (Some s0) = wf r t h0 in 
+                         let (Some s1) = wf r t' h1 in
                          modifies s0 h0 h1 /\
                          fresh_extension s0 s1 h0))) = 
   recall r;
@@ -358,13 +358,13 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       let t1,r1 = create () in
       let t2,r2 = create () in  
       r := Some ({left = r1; value = n; right = r2});
-      hide (Node (reveal t1) n (reveal t2)))
+      Node t1 n t2)
   | Some nd -> 
       if n = nd.value then t else
       if n < nd.value then (let t1' = insert (Node?.left t) (nd.left) n in 
-                            hide (Node (reveal t1') nd.value (Node?.right t)))
+                            Node t1' nd.value (Node?.right t))
                       else (let t2' = insert (Node?.right t) (nd.right) n in 
-                            hide (Node (Node?.left t) nd.value (reveal t2')))
+                            Node (Node?.left t) nd.value t2')
 
 (** PART 4 **)
 
