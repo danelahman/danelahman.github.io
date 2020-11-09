@@ -32,7 +32,7 @@ module BinarySearchTree
 
 private type btree = 
   | Leaf : btree
-  | Node : btree -> nat -> btree -> btree
+  | Node : (left:btree) -> (value:nat) -> (right:btree) -> btree
 
 (* 
 
@@ -95,7 +95,7 @@ and sorted_right_of (t:btree) (n:nat) : GTot bool =
                     m > n && 
                     t2 `sorted_right_of` m
 
-private let rec sorted (t:btree) : GTot bool =
+private let sorted (t:btree) : GTot bool =
   match t with
   | Leaf -> true
   | Node t1 n t2 -> t1 `sorted_left_of` n && 
@@ -266,10 +266,11 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool = Some? (wf r t h)
             Hint: You will need to strengthen the specification of `search` to verify `BinarySearchTreeClient`.
 
   Note: Here we follow a common pattern in verification of threading a ghost state through our programs, where 
-        the ghost state (here, `t:erased stree`) is the purely functional specification of our mutable stateful 
-        code. We have wrapped `stree` in `erased` to ensure that it cannot be used computationally relevantly 
-        in user code (in that sense, `erased` is similar to the `GTot` effect). You can find more about the 
-        `erased` type in the standard library in `FStar.Ghost`, including operations that you will need to use.
+        the ghost state (`t:erased stree`) is the purely functional specification of our mutable stateful code.
+        We have wrapped `stree` in the `erased` type to ensure that it cannot be used computationally relevantly 
+        in user code (in that sense, `erased` is similar to the `GTot` effect). As a result, all the uses of the
+        purely functional search trees in this stateful code will be erased to unit-values during code extraction. 
+        You can find more about the `erased` type and how to use it in the standard library in `FStar.Ghost`.
 
 *)
 
@@ -281,12 +282,8 @@ let rec search (t:erased stree) (r:mtree) (n:nat)
   | None -> false
   | Some nd -> 
       if n = nd.value then true else 
-      if n < nd.value then (let t1 = hide (match (reveal t) with 
-                                           | Node t1 _ _ -> t1) in 
-                            search t1 nd.left n)
-                      else (let t2 = hide (match (reveal t) with 
-                                           | Node _ _ t2 -> t2) in
-                            search t2 nd.right n)
+      if n < nd.value then search (Node?.left t) nd.left n
+                      else search (Node?.right t) nd.right n
 
 (*
 
@@ -364,18 +361,10 @@ let rec insert (t:erased stree) (r:mtree) (n:nat)
       hide (Node (reveal t1) n (reveal t2)))
   | Some nd -> 
       if n = nd.value then t else
-      if n < nd.value then (let t1 = hide (match (reveal t) with 
-                                           | Node t1 _ _ -> t1) in
-                            let t2 = hide (match (reveal t) with 
-                                           | Node _ _ t2 -> t2) in
-                            let t1' = insert t1 (nd.left) n in 
-                            hide (Node (reveal t1') nd.value (reveal t2)))
-                      else (let t1 = hide (match (reveal t) with 
-                                           | Node t1 _ _ -> t1) in
-                            let t2 = hide (match (reveal t) with 
-                                           | Node _ _ t2 -> t2) in
-                            let t2' = insert t2 (nd.right) n in 
-                            hide (Node (reveal t1) nd.value (reveal t2')))
+      if n < nd.value then (let t1' = insert (Node?.left t) (nd.left) n in 
+                            hide (Node (reveal t1') nd.value (Node?.right t)))
+                      else (let t2' = insert (Node?.right t) (nd.right) n in 
+                            hide (Node (Node?.left t) nd.value (reveal t2')))
 
 (** PART 4 **)
 

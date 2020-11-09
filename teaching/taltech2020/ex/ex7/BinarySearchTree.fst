@@ -32,7 +32,7 @@ module BinarySearchTree
 
 private type btree = 
   | Leaf : btree
-  | Node : btree -> nat -> btree -> btree
+  | Node : (left:btree) -> (value:nat) -> (right:btree) -> btree
 
 (* 
 
@@ -173,8 +173,9 @@ let is_stree (r:mtree) (t:stree) (h:heap) : GTot bool =
   Note: Here we follow a common pattern in verification of threading a ghost state through our programs, where 
         the ghost state (`t:erased stree`) is the purely functional specification of our mutable stateful code.
         We have wrapped `stree` in the `erased` type to ensure that it cannot be used computationally relevantly 
-        in user code (in that sense, `erased` is similar to the `GTot` effect). You can find more about the 
-        `erased` type in the standard library in `FStar.Ghost`, including operations that you will need to use.
+        in user code (in that sense, `erased` is similar to the `GTot` effect). As a result, all the uses of the
+        purely functional search trees in this stateful code will be erased to unit-values during code extraction. 
+        You can find more about the `erased` type and how to use it in the standard library in `FStar.Ghost`.
 
 *)
 
