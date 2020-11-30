@@ -32,7 +32,7 @@ HTML Meta     : clear
 
 <br/><br/>
 
-Tallinn, 20 November, 2019
+[(Virtually in)]{color:Gray} Tallinn, 9 December, 2020
 ~
 
 [fstar-logo]: ../../stuff/fstar-new.png { width=200px }
@@ -45,13 +45,13 @@ Tallinn, 20 November, 2019
 
 * **2011 - 2012, [University of Cambridge]{color:DarkBlue}, MPhil [(computational effects)]{color:Gray}**
 
-* **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD [(effects & dependent types)]{color:Gray}**<br/><br/>
+* **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD [(effects & dependent types)]{color:Gray}**<br/><div style="height:10px"></div>
 
-* **2011, [Institute of Cybernetics]{color:DarkRed}, Research Intern [(container datatypes)]{color:Gray}**
+* **2011, [Tallinn University of Technology]{color:DarkRed}, Research Intern <br/> &nbsp;&nbsp; [(model-based testing &nbsp; & &nbsp; container datatypes)]{color:Gray}**
 
 * **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern [(big data)]{color:Gray}**
 
-* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern [(F\*)]{color:Gray}**<br/><br/>
+* **2016, [Microsoft Research Redmond]{color:DarkRed}, Research Intern [(F\*)]{color:Gray}**<br/><div style="height:10px"></div>
 
 * **2017 - 2018, [Inria Paris]{color:DarkBlue}, PostDoc [(F\*)]{color:Gray}**
 
@@ -61,21 +61,27 @@ Tallinn, 20 November, 2019
 
 <!-------------------------------------------------------------------------------->
 
-## Today's plan ##
+## Plan ##
 
-* **[Specification]{color:DarkBlue} and [Verification]{color:DarkBlue} of Programs**
+* **Lecture**
 
-* **What is [F\*]{color:DarkRed}?**
+  * **Recap [specification]{color:DarkBlue} and [verification]{color:DarkBlue} of programs**
 
-* **Verifying [Purely Functional]{color:DarkBlue} Programs in F\***
+  * **What is [F\*]{color:DarkRed}?**
 
-* **Verifying [Stateful]{color:DarkRed} Programs in F\***
+  * **Verification of [purely functional]{color:DarkBlue} and [stateful]{color:DarkBlue} programs in F\***
 
-* **Highlights of [Other F\* Features]{color:DarkBlue}**<br/><br/>
+  * **Highlights of [other F\* features]{color:DarkRed}**<br/><div style="height:10px"></div>
+
+* **Exercise classes**
+
+  * **[Interactive live-coding]{color:DarkBlue} and [more F\* examples]{color:DarkBlue}**
+
+  * **Using F\* to write [verified low-level code]{color:DarkRed}**
 
 ~Fragment
 Slides, code, exercises, **homework**, and setup instructions <br/>
-[https://danel.ahman.ee/teaching/taltech2019/](https://danel.ahman.ee/teaching/taltech2019/)
+[https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
 
 <br/>
 ~
@@ -112,11 +118,42 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ~Fragment
 * Formally, specifications are often written as [**Hoare triples**]{color:DarkRed}
 ```
-{requires (sorted (>=) l)}                   |        {requires (True)}
-    rev l                                      |          rev (rev l)
-{ensures (fun l' -> sorted (<=) l')}         |        {ensures (fun l' -> l == l')}
+{requires (sorted (>=) l)}                           (* logical precondition *)
+    rev l
+{ensures  (fun l' -> sorted (<=) l')}               (* logical postcondition *)
 ```
 ~
+
+<!-------------------------------------------------------------------------------->
+
+## Program [specification]{color:DarkBlue}##
+
+* Consider a simple [**purely functional list reversal**]{color:DarkRed}
+```
+  let rec rev #a (l:list a) : list a =
+    match l with
+    | []     -> []
+    | hd::tl -> append (rev tl) [hd]
+```
+
+<div style="5px"></div>
+
+* The [**specification**]{color:DarkBlue} of `rev` could comprise a variety of properties, e.g., 
+
+  1. `rev (rev l) == l`
+  2. `length (rev l) == length l`
+  3. `rev l ` contains the same elements as ` l`
+  4. if ` sorted (>=) l ` then ` sorted (<=) (rev l) `
+
+<div style="5px"></div>
+
+
+* Formally, specifications are often written as [**Hoare triples**]{color:DarkRed}
+```
+{requires (True)}                                    (* logical precondition *)
+    rev (rev l)
+{ensures  (fun l' -> l == l')}                      (* logical postcondition *)
+```
 
 <!-------------------------------------------------------------------------------->
 
@@ -131,10 +168,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ```
 
 ~Fragment
-* The [**specification**]{color:DarkBlue} of `srev` could comprise a variety of properties, e.g., 
-
-  * previous functional properties &nbsp; **+** &nbsp; [**memory safety**]{color:DarkBlue}
-
+* The [**specification**]{color:DarkBlue}: &nbsp; previous functional properties &nbsp; **+** &nbsp; [**memory safety**]{color:DarkBlue} 
 ~
 
 ~Fragment
@@ -142,12 +176,21 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
     srev l
-{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\ modifies !{l} h0 h1)}
+{ensures  (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\ modifies !{l} h0 h1)}
 ```
 ~
 
 ~Fragment
-* What about [**other effects**]{color:DarkBlue} such as exceptions, input-output, ...?
+* [**Memory-safety**]{color:DarkBlue} is important for **[composing stateful programs]{color:DarkBlue}**
+```
+{requires (fun h0 -> sorted (>=) (sel h0 l1) /\ l1 =!= l2)}
+    (srev l1) || (srev l2; srev l2) 
+{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l1) /\ sel h1 l2 == sel h0 l2)}
+```
+~
+
+~Fragment
+* What about [**other effects**]{color:DarkRed} (I/O, exceptions, probability, ...)?
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -188,6 +231,10 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
   ```
   rev : l:list a -> (l':list a & (length l == length l'))
   ```
+~
+
+~Fragment
+[**F\***]{color:DarkBlue} combines [**program logics**]{color:DarkBlue} with [**expressive types**]{color:DarkBlue}!
 ~
 
 
@@ -273,16 +320,6 @@ effectful programming, SMT-based automation
     * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
     * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
   * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
-
-# The current F\* team #
-
-~Center
-[**Microsoft Research (US, UK, India), Inria Paris, MIT, Rosario, ...**]{color:DarkGreen;}
-~
-
-  |   |  
---- | --- |
-Danel Ahman<br/>Benjamin Beurdouche<br/>Karthikeyan Bhargavan<br/>Barry Bond<br/>Antoine Delignat-Lavaud&nbsp;&nbsp;&nbsp;<br/>Victor Dumitrescu<br/>Cédric Fournet<br/>Chris Hawblitzel<br/>Cătălin Hriţcu<br/>Markulf Kohlweiss<br/>Qunyan Mangus<br/>Kenji Maillard | Asher Manning<br/>Guido Martínez<br/>Zoe Paraskevopoulou<br/>Clément Pit-Claudel<br/>Jonathan Protzenko<br/>Ramkumar Ramachandra<br/>Tahina Ramananandro<br/>Aseem Rastogi<br/>[**Nikhil Swamy (benevolent dictator)**]{color:DarkRed;}<br/>Christoph M. Wintersteiger<br/>Santiago Zanella-Béguelin<br/>Gustavo Varo | 
 
 <!------------------------------------------------------------------------------>
 
