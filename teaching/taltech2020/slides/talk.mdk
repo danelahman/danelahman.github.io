@@ -1063,7 +1063,7 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 [INCLUDE=../../../code/state/CountST.fst:count_st]
 ```
 
-* {.fragment} You'll see much more involved invariants in the lab exercises
+* {.fragment} You'll see [**more involved invariants**]{color:DarkBlue} in the lab exercises
 
 <!------------------------------------------------------------------------------>
 
@@ -1173,16 +1173,16 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 let f (): Stack UInt64.t (requires (fun h0      -> True))
                          (ensures  (fun h0 r h1 -> r = 43UL))
                          
-  = push_frame ();                         (* pushing a new stack frame *)
+  = push_frame ();                                   (* pushing a new stack frame *)
     
     let b = LowStar.Buffer.alloca 1UL 64ul in
-    assert (b.(42ul) = 1UL);      (* high-level reasoning in F*'s logic *)
+    assert (b.(42ul) = 1UL);                (* high-level reasoning in F*'s logic *)
 
     b.(42ul) <- b.(42ul) +^ 42UL;
     let r = b.(42ul) in
       
-    pop_frame ();           (* popping the stack frame we pushed above, *)
-                          (* necessary for establishing Stack invariant *)
+    pop_frame ();                     (* popping the stack frame we pushed above, *)
+                                    (* necessary for establishing Stack invariant *)
     r
 ```
 ```
@@ -1195,6 +1195,7 @@ uint64_t f()
       
   b[42U] = b[42U] + (uint64_t)42U;
   uint64_t r = b[42U];
+  
   return r;
 }
 ```
@@ -1220,7 +1221,7 @@ uint64_t f()
   * User defines both the computational and specification monads.
   * Comp. and spec. monads are related by effect observations.
 
-* {.fragment} [**Layered Effects**]{color:DarkBlue} (landed in `master` just a few weeks ago)
+* {.fragment} [**Layered Effects**]{color:DarkBlue} ([draft paper 2020](https://www.fstar-lang.org/papers/layeredeffects/))
 
   * New effects on top of existing ones (like with monads in Haskell).
 
@@ -1298,7 +1299,7 @@ uint64_t f()
 
   * verifying pure and stateful programs, using monotonicity, ...
 
-[https://danel.ahman.ee/teaching/taltech2019/](https://danel.ahman.ee/teaching/taltech2019/)
+[https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
 
 
 
