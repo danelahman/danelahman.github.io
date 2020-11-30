@@ -261,75 +261,55 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 * **[Left side]{color:DarkRed;}**:
 very expressive logics, interactive proving, tactics
 
-  * but mostly only <u>purely functional programming</u><br/><br/>
+  * but mostly only **purely functional programming**<br/><br/>
 
 * **[Right side]{color:DarkBlue;}**:
 effectful programming, SMT-based automation
 
-  * but only <u>very weak logics</u>
+  * but only **very weak logics**
 
 <!------------------------------------------------------------------------------>
 
 ## Bridging the air gap: [F\*]{color:DarkRed} ##
 
 <!-- General-purpose -->
-* **[Functional programming language with effects]{color:Black;}**
+* **[Functional programming language with effects]{color:DarkBlue}**
   * like F#, OCaml, Haskell, ...
     ```
     let incr = fun (r:ref a) -> r := !r + 1
     ```
-    but with a much richer type system
-    
-  * by default <u>extracted to OCaml or F\#</u>
+    but with a **much richer type system**
+
+~Fragment
+* [**By default extracted to OCaml or F\#**]{color:DarkRed}
   
-  * subset <u>extracted to efficient C code</u> (Low\* and [KreMLin](https://github.com/FStarLang/kremlin))
+  * (Low\*) subset extracted to **efficient C code** (using [KreMLin](https://github.com/FStarLang/kremlin))
+~
 
 ~Fragment
 * **[Semi-automated verification system using SMT (Z3)]{color:DarkBlue;}**
-  * <u>push-button automation</u> like in Dafny, FramaC, Why3, Liquid Haskell, ...
+  * **push-button automation** like in Dafny, FramaC, Why3, Liquid Haskell
 ~
 
 ~Fragment
 * **[Interactive proof assistant based on dependent types]{color:DarkRed;}**
   <!-- - full dependency, inductive types, universe polymorphism -->
-  * <u>interactive proving and tactics</u> like in Coq, Agda, Lean, ...
+  * **interactive proving and tactics** like in Coq, Agda, Lean, ...
 ~
 
 <!-- * {.fragment} Other tools in this space: -->
 <!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
   <!-- - But F\* is the closest to bridging the gap by nicely integrating these three things -->
 
-
-<!-------------------------------------------------------------------------------->
-
-## F\* in action, at scale ##
-
-* **[Functional programming language with effects]{color:Black;}**
-  * F\* is programmed in F\*, but not (yet) verified
-
-*  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
-  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
-      * [miTLS](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS
-      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library 
-        [(used in <u>Firefox</u>, <u>Wireguard VPN</u>, <u>Zinc kernel crypto library</u>, <u>Tezos</u> and <u>Concordium</u> blockchains)]{color:Gray}
-      * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
-
-*  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
-  * Fallback when SMT fails; also for mechanized metatheory
-    <!-- * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\* -->
-    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for <u>secure multi-party computations</u>
-    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to <u>reversible circuits</u>
-  * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
-
 <!------------------------------------------------------------------------------>
 
-## How to use F* ##
+## Using F* ##
 
 * **Two kinds of F\* files**
 
-  * A.fsti - <u>interface</u> file for module called A (can be omitted)
+  * A.fsti - **interface** file for module called A (can be omitted)
 
-  * A.fst - <u>source code</u> file for module called A
+  * A.fst - **source code** file for module called A
 
 ~Fragment
 * **Command line: [typechecking/verification]{color:DarkBlue}**
@@ -355,6 +335,27 @@ effectful programming, SMT-based automation
 ~Fragment
 * **Interactive: [development]{color:DarkRed} + [verification]{color:DarkBlue} (Emacs with [fstar-mode](https://github.com/FStarLang/fstar-mode.el/))**
 ~
+
+<!-------------------------------------------------------------------------------->
+
+## F\* in action, at scale ##
+
+* **[Functional programming language with effects]{color:DarkRed}**
+  * F\* is programmed in F\*, but not (yet) verified
+
+*  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
+  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
+      * [miTLS](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS
+      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library 
+        [(used in **Firefox**, **Wireguard VPN**, **Zinc kernel crypto library**, **Tezos** and **Concordium** blockchains)]{color:Gray}
+      * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
+
+*  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
+  * Fallback when SMT fails; also for mechanized metatheory
+    <!-- * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\* -->
+    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for **secure multi-party computations**
+    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to **reversible circuits**
+  * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 <!------------------------------------------------------------------------------>
 
