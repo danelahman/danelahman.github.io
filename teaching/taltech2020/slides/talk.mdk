@@ -77,13 +77,13 @@ HTML Meta     : clear
 
   * **[Interactive live-coding]{color:DarkBlue} and [more F\* examples]{color:DarkBlue}**
 
-  * **Using F\* to write [verified low-level code]{color:DarkRed}**
+  * **F\* applied to writing [verified embedded code for IoT devices]{color:DarkRed}**
+  
+    * {.fragment} **If you wish to [do a dissertation on this]{color:DarkBlue}, get in touch with Juhan & me!**
 
 ~Fragment
 Slides, code, exercises, **homework**, and setup instructions <br/>
 [https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
-
-<br/>
 ~
 
 ~Fragment
@@ -301,9 +301,35 @@ effectful programming, SMT-based automation
 <!--   - DML/ATS, HTT, Idris, Trellys/Zombie, CoqHammer, ... -->
   <!-- - But F\* is the closest to bridging the gap by nicely integrating these three things -->
 
+<!-------------------------------------------------------------------------------->
+
+## F\* in action, at scale ##
+
+* **[Functional programming language with effects]{color:DarkBlue}**
+  * F\* is programmed in F\*, but not (yet) verified
+
+*  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
+  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
+      * [miTLS](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS
+      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library 
+        [(used in **Firefox**, **Wireguard VPN**, **Zinc kernel crypto library**, **Tezos** and **Concordium** blockchains)]{color:Gray}
+      * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
+  * {.fragment} **[Verified embedded code for IoT devices]{color:DarkRed}** [(with Juhan and Fabricio)]{color:Gray}
+
+*  {.fragment} **[Proof assistant based on dependent types]{color:DarkBlue;}**
+  * Fallback when SMT fails; also for mechanized metatheory
+    <!-- * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\* -->
+    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for **secure multi-party computations**
+    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to **reversible circuits**
+  * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
+
 <!------------------------------------------------------------------------------>
 
-## Using F* ##
+## How to use F\*? ##
+
+<!------------------------------------------------------------------------------>
+
+## Using F\* ##
 
 * **Two kinds of F\* files**
 
@@ -335,27 +361,6 @@ effectful programming, SMT-based automation
 ~Fragment
 * **Interactive: [development]{color:DarkRed} + [verification]{color:DarkBlue} (Emacs with [fstar-mode](https://github.com/FStarLang/fstar-mode.el/))**
 ~
-
-<!-------------------------------------------------------------------------------->
-
-## F\* in action, at scale ##
-
-* **[Functional programming language with effects]{color:DarkRed}**
-  * F\* is programmed in F\*, but not (yet) verified
-
-*  {.fragment} **[Semi-automated verification system]{color:DarkBlue;}**
-  * **[Project Everest](https://project-everest.github.io/)**: verify and deploy new, efficient HTTPS stack
-      * [miTLS](https://github.com/mitls/mitls-fstar): Verified reference implementation of TLS
-      * [HACL\*](https://github.com/mitls/hacl-star): High-Assurance Crypto Library 
-        [(used in **Firefox**, **Wireguard VPN**, **Zinc kernel crypto library**, **Tezos** and **Concordium** blockchains)]{color:Gray}
-      * [Vale](https://github.com/project-everest/vale): Verified Assembly Language for Everest
-
-*  {.fragment} **[Proof assistant based on dependent types]{color:DarkRed;}**
-  * Fallback when SMT fails; also for mechanized metatheory
-    <!-- * [MicroFStar](https://github.com/FStarLang/FStar/blob/stratified_last/examples/metatheory/MicroFStar.fst): Fragment of F\* formalized in F\* -->
-    * [Wys\*](https://www.cs.umd.edu/~aseem/wysstar.pdf): Verified DSL for **secure multi-party computations**
-    * [ReVerC](https://github.com/msr-quarc/ReVerC): Verified compiler to **reversible circuits**
-  * **Meta-F\*** ([**metaprogramming**]{color:DarkBlue} and [**tactics**]{color:DarkBlue}) increasingly used in **[Everest](https://project-everest.github.io/)**
 
 <!------------------------------------------------------------------------------>
 
