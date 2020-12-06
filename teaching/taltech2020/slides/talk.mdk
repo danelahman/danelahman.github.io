@@ -47,7 +47,7 @@ HTML Meta     : clear
 
 * **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD [(effects & dependent types)]{color:Gray}**<br/><div style="height:10px"></div>
 
-* **2011, [Tallinn University of Technology]{color:DarkRed}, Research Intern <br/> &nbsp;&nbsp; [(model-based testing &nbsp; & &nbsp; container datatypes)]{color:Gray}**
+* **2011, [Tallinn University of Technology]{color:DarkRed}, Research Intern <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [(model-based testing &nbsp; & &nbsp; container datatypes)]{color:Gray}**
 
 * **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern [(big data)]{color:Gray}**
 
@@ -116,47 +116,13 @@ Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <
 ~
 
 ~Fragment
-* Formally, [**specifications**]{color:DarkRed} are often written as [**Hoare triples**]{color:DarkRed}
+* [**Specifications**]{color:DarkRed} are connected to programs using [**Hoare triples**]{color:DarkRed}
 ```
 {requires (sorted (>=) l)}                           (* logical precondition *)
     rev l
 {ensures  (fun l' -> sorted (<=) l')}               (* logical postcondition *)
 ```
 ~
-
-<!-------------------------------------------------------------------------------->
-
-## Program [specification]{color:DarkBlue}##
-
-* Consider a simple [**purely functional list reversal**]{color:DarkRed}
-```
-  let rec rev #a (l:list a) : list a =
-    match l with
-    | []     -> []
-    | hd::tl -> append (rev tl) [hd]
-```
-
-<div style="10px"></div>
-
-* The [**specification**]{color:DarkBlue} of `rev` could comprise a variety of properties, e.g., 
-
-  1. `rev (rev l) == l`
-  2. `length (rev l) == length l`
-  3. `rev l ` contains the same elements as ` l`
-  4. if ` sorted (>=) l ` then ` sorted (<=) (rev l) `
-
-<div style="10px"></div>
-
-
-* And [**Hoare logic**]{color:DarkRed} provides a set of [**rules to compose**]{color:DarkRed} such triples
-```
-{requires (sorted (>=) l)}                           (* logical precondition 1 *)
-    let l' = rev l in
-{ensures  (fun l' -> sorted (<=) l')}               (* logical postcondition 1 *)
-{requires (sorted (<=) l')}                          (* logical precondition 2 *)
-    rev l'
-{ensures  (fun l'' -> sorted (>=) l'')}             (* logical postcondition 2 *)
-```
 
 <!-------------------------------------------------------------------------------->
 
@@ -175,11 +141,11 @@ Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <
 ~
 
 ~Fragment
-* Formally, specifications are still written as [**Hoare triples**]{color:DarkRed}
+* [**Specifications**]{color:DarkRed} are still connected to programs using [**Hoare triples**]{color:DarkRed}
   * but they can now also refer to [**initial**]{color:DarkBlue} (`h0`) and [**final**]{color:DarkBlue} (`h1`) [**heaps**]{color:DarkBlue}
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
-    srev l
+      srev l
 {ensures  (fun h0 _ h1 -> sorted (<=) (sel h1 l) /\ modifies !{l} h0 h1)}
 ```
 ~
@@ -187,9 +153,9 @@ Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <
 ~Fragment
 * [**Memory-safety**]{color:DarkRed} is important for **[composing stateful programs]{color:DarkRed}**
 ```
-{requires (fun h0 -> sorted (>=) (sel h0 l1) /\ l1 =!= l2)}
+{requires (fun h0 -> sorted (>=) (sel h0 l1) /\ sorted (>=) (sel h0 l2) /\ l1 =!= l2)}
     (srev l1) || (srev l2; srev l2) 
-{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l1) /\ sel h1 l2 == sel h0 l2)}
+{ensures (fun h0 _ h1 -> sorted (<=) (sel h1 l1) /\ sorted (>=) (sel h1 l2))}
 ```
 ~
 
@@ -425,7 +391,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   let i : int = factorial 42         let f : x:nat{x > 0} -> int = factorial
   ```
 
-* {.fragment} Refinement formulae built from [**standard logical connectives**]{color:DarkBlue}
+* {.fragment} Refinement formulae (`phi`) built from [**standard logical connectives**]{color:DarkBlue}
   
   * ` = `, ` <> `, ` && `, ` || `, ` not `, ` ...` &nbsp; [(bool-valued)]{color:Gray}
   * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...` &nbsp; [(Type0-valued)]{color:Gray}
