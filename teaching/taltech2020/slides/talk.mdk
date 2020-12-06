@@ -17,7 +17,7 @@ HTML Meta     : clear
 [INCLUDE=../../stuff/latex.tex]
 ~
 
-# <br/>Program Verification with F\* #
+# <br/><br/>Program Verification with F\* #
 
 ~Center
 
@@ -65,7 +65,7 @@ HTML Meta     : clear
 
 * **Lecture**
 
-  * **Recap [specification]{color:DarkBlue} and [verification]{color:DarkBlue} of programs**
+  * **Crash course in program [specification]{color:DarkBlue} and [verification]{color:DarkBlue}**
 
   * **What is [F\*]{color:DarkRed}?**
 
@@ -79,10 +79,10 @@ HTML Meta     : clear
 
   * **F\* applied to writing [verified embedded code for IoT devices]{color:DarkRed}**
   
-    * {.fragment} **If you wish to [do a dissertation on this]{color:DarkBlue}, get in touch with Juhan & me!**
+    * {.fragment} **If you wish to [do a dissertation on this]{color:DarkBlue}, get in touch with [Juhan]{color:DarkBlue} & [me]{color:DarkBlue}!**
 
 ~Fragment
-Slides, code, exercises, **homework**, and setup instructions <br/>
+Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <br/>
 [https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
 ~
 
@@ -92,7 +92,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 
 <!-------------------------------------------------------------------------------->
 
-# Specification and Verification #
+# [Specification]{color:DarkBlue} and [Verification]{color:DarkBlue} #
 
 <!-------------------------------------------------------------------------------->
 
@@ -116,7 +116,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ~
 
 ~Fragment
-* Formally, specifications are often written as [**Hoare triples**]{color:DarkRed}
+* Formally, [**specifications**]{color:DarkRed} are often written as [**Hoare triples**]{color:DarkRed}
 ```
 {requires (sorted (>=) l)}                           (* logical precondition *)
     rev l
@@ -136,7 +136,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
     | hd::tl -> append (rev tl) [hd]
 ```
 
-<div style="5px"></div>
+<div style="10px"></div>
 
 * The [**specification**]{color:DarkBlue} of `rev` could comprise a variety of properties, e.g., 
 
@@ -145,14 +145,17 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
   3. `rev l ` contains the same elements as ` l`
   4. if ` sorted (>=) l ` then ` sorted (<=) (rev l) `
 
-<div style="5px"></div>
+<div style="10px"></div>
 
 
-* Formally, specifications are often written as [**Hoare triples**]{color:DarkRed}
+* And [**Hoare logic**]{color:DarkRed} provides a set of [**rules to compose**]{color:DarkRed} such triples
 ```
-{requires (True)}                                    (* logical precondition *)
-    rev (rev l)
-{ensures  (fun l' -> l == l')}                      (* logical postcondition *)
+{requires (sorted (>=) l)}                           (* logical precondition 1 *)
+    let l' = rev l in
+{ensures  (fun l' -> sorted (<=) l')}               (* logical postcondition 1 *)
+{requires (sorted (<=) l')}                          (* logical precondition 2 *)
+    rev l'
+{ensures  (fun l'' -> sorted (>=) l'')}             (* logical postcondition 2 *)
 ```
 
 <!-------------------------------------------------------------------------------->
@@ -173,6 +176,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 
 ~Fragment
 * Formally, specifications are still written as [**Hoare triples**]{color:DarkRed}
+  * but they can now also refer to [**initial**]{color:DarkBlue} (`h0`) and [**final**]{color:DarkBlue} (`h1`) [**heaps**]{color:DarkBlue}
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l))}
     srev l
@@ -181,7 +185,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ~
 
 ~Fragment
-* [**Memory-safety**]{color:DarkBlue} is important for **[composing stateful programs]{color:DarkBlue}**
+* [**Memory-safety**]{color:DarkRed} is important for **[composing stateful programs]{color:DarkRed}**
 ```
 {requires (fun h0 -> sorted (>=) (sel h0 l1) /\ l1 =!= l2)}
     (srev l1) || (srev l2; srev l2) 
@@ -190,7 +194,7 @@ Slides, code, exercises, **homework**, and setup instructions <br/>
 ~
 
 ~Fragment
-* What about [**other effects**]{color:DarkRed} (I/O, exceptions, probability, ...)?
+* What about [**other effects**]{color:DarkBlue} (I/O, exceptions, probability, ...)?
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -423,7 +427,8 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 
 * {.fragment} Refinement formulae built from [**standard logical connectives**]{color:DarkBlue}
   
-  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...`
+  * ` = `, ` <> `, ` && `, ` || `, ` not `, ` ...` &nbsp; [(bool-valued)]{color:Gray}
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...` &nbsp; [(Type0-valued)]{color:Gray}
 
 
 ## Dependent types ##
@@ -1103,70 +1108,6 @@ G |- let x1 = e1 in e2 : ST t2 (requires (fun h0 -> pre))
 
 <!------------------------------------------------------------------------------>
 
-## F*'s Memory Models are Based on [Monotonicity]{color:DarkRed} ##
-
-* {.fragment} [**'Containment for free'**]{color:DarkBlue} for garbage collected references
-  ```
-  val recall_contains #a (r:ref a) 
-    : ST unit (requires (fun _       -> True))
-              (ensures  (fun h0 _ h1 -> h0 == h1 /\
-                                        h1 `contains` r))
-  ```
-* {.fragment}
-  ```
-  val (!) : #a:Type -> r:ref a -> 
-    ST a (requires (fun _       -> True))
-         (ensures  (fun h0 x h1 -> h0 == h1 /\
-                                   x == sel h0 r))
-
-  val (:=) : #a:Type -> r:ref a -> v:a -> 
-    ST unit (requires (fun _      -> True))
-            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\
-                                      sel h1 r == v))
-  ```
-
-* {.fragment} Moreover, [` ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
-  ```
-  val mref : a:Type -> rel:preorder a -> Type
-
-  let ref a = mref a (fun _ _ -> True)
-  ```
-
-<!------------------------------------------------------------------------------>
-
-## Monotonic References [` mref a rel `]{color:DarkRed} ##
-
-* {.fragment} Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
-  ```
-  val token #a #rel (r:mref a rel) : (a -> Type0) -> Type0
-  ```
-
-* {.fragment} And corresponding [**introduction**]{color:DarkRed} and [**elimination**]{color:DarkRed} rules (stateful progs.)
-  ```
-  val witness_token #a #rel (r:mref a rel) (p:(a -> Type0))
-  
-    : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
-              (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
-
-  val recall_token #a #rel (r:mref a rel) (p:(a -> Type0))
-  
-    : ST unit (requires (fun _       -> token r p))
-              (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
-  ```
-
-* {.fragment} Enabling the following [**useful verification pattern**]{color:DarkBlue}
-  ```
-    let p (x:nat) = x > 0 in                       (* assuming (r : mref nat `<=`) *)       
-
-    r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
-  ```
-
-* {.fragment} **Examples:** [**counters**]{color:DarkBlue}, [**logs**]{color:DarkRed}, [**network traffic history**]{color:DarkBlue}, [**state continuity**]{color:DarkRed}, ...
-
-<!--  * {.fragment} also crucial for, e.g., verifying the [**Ariadne state continuity protocol**]{color:DarkRed} -->
-
-<!------------------------------------------------------------------------------>
-
 # Highlights of [Other F\* Features]{color:DarkBlue} #
 
 <!------------------------------------------------------------------------------>
@@ -1295,17 +1236,93 @@ uint64_t f()
 
 * Used successfully in [**security and crypto verification**]{color:DarkRed}
 
-  * miTLS: F\*-verified reference implementation of TLS
+  * [miTLS](https://github.com/mitls/mitls-fstar): F\*-verified reference implementation of TLS
 
-  * HACL*: F\*-verified crypto (used in Firefox and Wireguard)
+  * [HACL\*](https://github.com/mitls/hacl-star): F\*-verified crypto (used in Firefox, Wireguard, ...)
 
-  * Vale: F\*-verified assembly language<br/><br/>
+  * [Vale](https://github.com/project-everest/vale): F\*-verified assembly language<br/><br/>
 
 * Small [**exercises for the lab sessions**]{color:DarkBlue} to try out F\* yourselves
 
   * verifying pure and stateful programs, using monotonicity, ...
 
 [https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
+
+
+<!------------------------------------------------------------------------------>
+
+# [Bonus:]{color:DarkRed} [Monotonic state]{color:DarkBlue} #
+
+
+<!------------------------------------------------------------------------------>
+
+## F*'s Memory Models are Based on [Monotonicity]{color:DarkRed} ##
+
+* {.fragment} [**'Containment for free'**]{color:DarkBlue} for garbage collected references
+  ```
+  val recall_contains #a (r:ref a) 
+    : ST unit (requires (fun _       -> True))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\
+                                        h1 `contains` r))
+  ```
+* {.fragment}
+  ```
+  val (!) : #a:Type -> r:ref a -> 
+    ST a (requires (fun _       -> True))
+         (ensures  (fun h0 x h1 -> h0 == h1 /\
+                                   x == sel h0 r))
+
+  val (:=) : #a:Type -> r:ref a -> v:a -> 
+    ST unit (requires (fun _      -> True))
+            (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\
+                                      sel h1 r == v))
+  ```
+
+* {.fragment} Moreover, [` ref a `]{color:DarkBlue} is actually a [` mref a rel `]{color:DarkBlue} with a trivial [` rel`]{color:DarkBlue}
+  ```
+  val mref : a:Type -> rel:preorder a -> Type
+
+  let ref a = mref a (fun _ _ -> True)
+  ```
+
+<!------------------------------------------------------------------------------>
+
+## Monotonic References [` mref a rel `]{color:DarkRed} ##
+
+* {.fragment} Such monotonic references also come with a [**modal operator**]{color:DarkBlue}
+  ```
+  val token #a #rel (r:mref a rel) : (a -> Type0) -> Type0
+  ```
+
+* {.fragment} And corresponding [**introduction**]{color:DarkRed} and [**elimination**]{color:DarkRed} rules (stateful progs.)
+  ```
+  val witness_token #a #rel (r:mref a rel) (p:(a -> Type0))
+  
+    : ST unit (requires (fun h0      -> p (sel h0 r) /\ stable p rel))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\ token r p))
+
+  val recall_token #a #rel (r:mref a rel) (p:(a -> Type0))
+  
+    : ST unit (requires (fun _       -> token r p))
+              (ensures  (fun h0 _ h1 -> h0 == h1 /\ p (sel h1 r)))
+  ```
+
+* {.fragment} Enabling the following [**useful verification pattern**]{color:DarkBlue}
+  ```
+    let p (x:nat) = x > 0 in                       (* assuming (r : mref nat `<=`) *)       
+
+    r := !r + 1;  witness r p;  black_box r;  recall r p;  assert (p !r)
+  ```
+
+* {.fragment} **Examples:** [**counters**]{color:DarkBlue}, [**logs**]{color:DarkRed}, [**network traffic history**]{color:DarkBlue}, [**state continuity**]{color:DarkRed}, ...
+
+<!--  * {.fragment} also crucial for, e.g., verifying the [**Ariadne state continuity protocol**]{color:DarkRed} -->
+
+
+
+
+
+
 
 
 
