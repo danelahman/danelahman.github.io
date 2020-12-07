@@ -47,7 +47,7 @@ HTML Meta     : clear
 
 * **2012 - 2017, [University of Edinburgh]{color:DarkBlue}, PhD [(effects & dependent types)]{color:Gray}**<br/><div style="height:10px"></div>
 
-* **2011, [Tallinn University of Technology]{color:DarkRed}, Research Intern <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [(model-based testing &nbsp; & &nbsp; container datatypes)]{color:Gray}**
+* **2011, [Tallinn University of Technology]{color:DarkRed}, Research Intern <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [(model-based testing & container datatypes)]{color:Gray}**
 
 * **2014, [Microsoft Research Silicon Valley]{color:DarkRed}, Research Intern [(big data)]{color:Gray}**
 
@@ -73,13 +73,13 @@ HTML Meta     : clear
 
   * **Highlights of [other F\* features]{color:DarkRed}**<br/><div style="height:10px"></div>
 
-* **Exercise classes**
+* **Exercise class**
 
   * **[Interactive live-coding]{color:DarkBlue} and [more F\* examples]{color:DarkBlue}**
 
   * **F\* applied to writing [verified embedded code for IoT devices]{color:DarkRed}**
   
-    * {.fragment} **If you wish to [do a dissertation on this]{color:DarkBlue}, get in touch with [Juhan]{color:DarkBlue} & [me]{color:DarkBlue}!**
+    * {.fragment} **If you would like to [do a dissertation in this area]{color:DarkBlue}, contact [Juhan]{color:DarkBlue} & [me]{color:DarkBlue}!**
 
 ~Fragment
 Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <br/>
@@ -116,12 +116,15 @@ Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <
 ~
 
 ~Fragment
-* [**Specifications**]{color:DarkRed} are connected to programs using [**Hoare triples**]{color:DarkRed}
-```
-{requires (sorted (>=) l)}                           (* logical precondition *)
-    rev l
-{ensures  (fun l' -> sorted (<=) l')}               (* logical postcondition *)
-```
+* [**Specs.**]{color:DarkRed} are connected to programs that satisfy them using [**Hoare triples**]{color:DarkRed}:
+  * [`{logical precondition}`]{color:DarkBlue} &nbsp; `program` &nbsp; [`{logical postcondition}`]{color:DarkBlue}
+~
+
+~Fragment
+* For example, one spec. for `rev l` would be (using an [**F\*-like notation**]{color:DarkRed})
+    ```
+    {requires (sorted (>=) l)}  rev l  {ensures  (fun l' -> sorted (<=) l')}
+    ```
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -160,7 +163,7 @@ Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <
 ~
 
 ~Fragment
-* What about [**other effects**]{color:DarkBlue} (I/O, exceptions, probability, ...)?
+* Similar story also for [**other effects**]{color:DarkBlue} (I/O, exceptions, probability, ...)
 ~
 
 <!-------------------------------------------------------------------------------->
@@ -251,7 +254,7 @@ effectful programming, SMT-based automation
     but with a **much richer type system**
 
 ~Fragment
-* [**By default extracted to OCaml or F\#**]{color:DarkRed}
+* **By default [extracted to OCaml or F\#]{color:DarkRed}**
   
   * (Low\*) subset extracted to **efficient C code** (using [KreMLin](https://github.com/FStarLang/kremlin))
 ~
@@ -360,7 +363,7 @@ effectful programming, SMT-based automation
     | Cons h t -> Cons (f h) (map f t)
   ```
 
-* {.fragment} Lambdas
+* {.fragment} Lambda abstractions
   ```
   map (fun x -> x + 42) [1;2;3]
   ```
@@ -394,7 +397,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
 * {.fragment} Refinement formulae (`phi`) built from [**standard logical connectives**]{color:DarkBlue}
   
   * ` = `, ` <> `, ` && `, ` || `, ` not `, ` ...` &nbsp; [(bool-valued)]{color:Gray}
-  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...` &nbsp; [(Type0-valued)]{color:Gray}
+  * ` == `, ` =!= `, ` /\ `, ` \/ `, ` ~ `, ` forall `, ` exists ` , ` ...` &nbsp; [(prop-valued)]{color:Gray}
 
 
 ## Dependent types ##
@@ -410,7 +413,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   val incr' : x:nat{odd x} -> y:nat{even y}
   ```
 
-* {.fragment} ([**Parameterised**]{color:DarkBlue} and [**indexed**]{color:DarkBlue}) inductive datatypes; [**implicit arguments**]{color:DarkBlue}
+* {.fragment} **[Indexed inductive datatypes]{color:DarkBlue} and [implicit arguments]{color:DarkBlue} (# notation)**
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
@@ -813,7 +816,7 @@ let rec progress #e #t h =
 <!------------------------------------------------------------------------------>
 
 ## Verifying [potentially divergent]{color:DarkRed} programs ##
-### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (partial correctness) ###
+### The <u>only variant</u>: [intrinsically]{color:DarkBlue} (at definition time) ###
 
 * Using [**refinement types**]{color:DarkBlue}
 ```
@@ -879,8 +882,8 @@ Dv t = Div t (requires True) (ensures (fun _ -> True))
   ```
   val incr : r:ref int -> 
     ST unit (requires (fun h0      -> True))                        
-            (ensures  (fun h0 _ h2 -> modifies !{r} h0 h2 /\ 
-                                      sel h2 r == sel h0 r + 1))
+            (ensures  (fun h0 _ h2 -> sel h2 r == sel h0 r + 1 /\ 
+                                      modifies !{r} h0 h2))
   ```
   - {.fragment} **[precondition]{color:DarkBlue}** ([requires]{color:Blue}) is a predicate on **[initial states]{color:DarkBlue}**
   - {.fragment} **[postcondition]{color:DarkRed}** ([ensures]{color:Blue}) relates [**initial states**]{color:DarkRed}, [**results**]{color:DarkRed}, and [**final states**]{color:DarkRed}
@@ -909,7 +912,7 @@ module Heap
   val contains : #a:Type -> heap -> ref a -> Type0
 
   let modifies (s:FStar.TSet.set nat) (h0 h1 : heap) = 
-    forall a (r:ref a) . (~(addr_of r `mem` s) /\ h0 `contains` r)
+    forall a (r:ref a) . (h0 `contains` r /\ ~(addr_of r `mem` s))
                                                   ==> sel h1 r == sel h0 r
 ```
 
@@ -934,44 +937,39 @@ module ST
 
 <!------------------------------------------------------------------------------>
 
-## Verifying `incr` (intuition) ##
+## How does F\* verify `incr` (intuition) ##
 
-```
-let incr r = r := !r + 1
-```
 ~Fragment
 ```
 [INCLUDE=../../../code/state/IncrST.fst:incr_type]
 ```
 ~
+```
+let incr r = r := !r + 1
+```
 ~Fragment
+1. F\*'s internal representation makes [**sequencing explicit**]{color:DarkBlue}
 ```
-[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
-```
-```
-val (!) : #a:Type -> r:ref a -> 
-  ST a (requires (fun _       -> True))
-       (ensures  (fun h0 x h1 -> h0 == h1 /\ x == sel h0 r))
-
-val (:=) : #a:Type -> r:ref a -> v:a -> 
-  ST unit (requires (fun _       -> True))
-          (ensures  (fun h0 _ h1 -> modifies !{r} h0 h1 /\ sel h1 r == v))
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2code]
 ```
 ~
-<!--~Fragment
+~Fragment
+2. F\* uses the specs. of `!` and `:=` to [**infer a specification for `incr`**]{color:DarkRed}
 ```
-[INCLUDE=../../../code/state/IncrST.fst:modifies_trans]
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2spec]
 ```
-~-->
-
-<!-- modifies !{} h0 h1 /\ modifies !{r} h1 h2 ==> modifies !{r} h0 h2 -->
+~
+~Fragment
+3. SMT-solver checks [**if the inferred spec. implies the user-provided one**]{color:DarkBlue}
+~
 
 <!------------------------------------------------------------------------------>
 
 ## Typing rule for let / sequencing (intuition) ##
 
 ```
-[INCLUDE=../../../code/state/Incr2ST.fst:incr2]
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2spec]
+[INCLUDE=../../../code/state/Incr2ST.fst:incr2code]
 ```
 
 <br/>
