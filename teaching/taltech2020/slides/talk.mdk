@@ -77,11 +77,13 @@ HTML Meta     : clear
 
   * **[Interactive live-coding]{color:DarkBlue} and [more F\* examples]{color:DarkBlue}**
 
-  * **F\* applied to writing [verified embedded code for IoT devices]{color:DarkRed}**
+  * **F\* applied to writing [verified embedded code for IoT devices]{color:DarkRed}**<br/><div style="height:10px"></div>
+
+* {.fragment} **Interested in [doing a dissertation in this area]{color:DarkBlue}? &nbsp; `==>` &nbsp; [@Juhan]{color:DarkBlue} &nbsp; & &nbsp; [@me]{color:DarkBlue}**
 
 ~Fragment
 Slides, code, exercises, **[homework]{color:DarkRed}**, and setup instructions <br/>
-[https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)
+[https://danel.ahman.ee/teaching/taltech2020/](https://danel.ahman.ee/teaching/taltech2020/)<br/><div style="height:10px"></div>
 ~
 
 ~Fragment
@@ -411,7 +413,7 @@ type nat = x:int{x >= 0}                      (* general form x:t{phi x} *)
   val incr' : x:nat{odd x} -> y:nat{even y}
   ```
 
-* {.fragment} **[Indexed inductive datatypes]{color:DarkBlue} and [implicit arguments]{color:DarkBlue} (# notation)**
+* {.fragment} **[Indexed inductive datatypes]{color:DarkBlue} and [implicit arguments]{color:DarkBlue} (#-notation)**
   ```
   type vec (a:Type) : nat -> Type =
     | Nil  : vec a 0
@@ -1194,7 +1196,7 @@ uint64_t f()
 
 * A [**semi-automated SMT-based program verifier**]{color:DarkRed}
 
-* An [**interactive dependently typed proof assistant**]{color:DarkBlue}
+* An [**interactive dependently typed proof assistant**]{color:DarkBlue}<br/>
 
 
 * Used successfully in [**security and crypto verification**]{color:DarkRed}
@@ -1203,12 +1205,12 @@ uint64_t f()
 
   * [HACL\*](https://github.com/mitls/hacl-star): F\*-verified crypto (used in Firefox, Wireguard, ...)
 
-  * [Vale](https://github.com/project-everest/vale): F\*-verified assembly language
+  * [Vale](https://github.com/project-everest/vale): F\*-verified assembly language<br/><div style="height:10px"></div>
 
 
 ~Fragment
 * Also applied to **[embedded IoT code]{color:DarkRed}** [(WIP with Juhan and Fabricio)]{color:Gray}
-  * {.fragment} If you would like to [**do a dissertation in this area**]{color:DarkBlue}, contact [**Juhan**]{color:DarkBlue} & [**me**]{color:DarkBlue}!<br/><br/>
+  * {.fragment} If you would like to [**do a dissertation in this area**]{color:DarkBlue}, contact [**Juhan**]{color:DarkBlue} & [**me**]{color:DarkBlue}!<br/><div style="height:10px"></div>
 ~
 
 
